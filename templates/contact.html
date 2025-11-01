@@ -15,7 +15,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: url("{{ url_for('static', filename='IMAGES/Room_back.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/Room_back.png') }}") no-repeat center center / cover;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -30,7 +30,7 @@
 ========================================================= */
 .nexus-nav {
   width: 100%;
-  background: url("{{ url_for('static', filename='IMAGES/Nexus_NAV.png') }}") 
+  background: url("{{ url_for('static', filename='images/Nexus_NAV.png') }}") 
               no-repeat center center / cover;
   height: 120px;
   display: flex;
@@ -217,7 +217,7 @@
 ========================================================= -->
 <div class="nexus-nav">
   <div class="back-button" onclick="window.location.href='/'">
-    <img src="{{ url_for('static', filename='IMAGES/back.svg') }}" alt="Back">
+    <img src="{{ url_for('static', filename='images/back.svg') }}" alt="Back">
   </div>
   <h1></h1>
 </div>
@@ -234,17 +234,17 @@
 
   <!-- PIE AI CARD -->
   <div class="contact-card" onclick="openPopup('piePopup')">
-    <img src="{{ url_for('static', filename='IMAGES/Pie_card.svg') }}" alt="Pie AI Contact Card">
+    <img src="{{ url_for('static', filename='images/Pie_card.svg') }}" alt="Pie AI Contact Card">
   </div>
 
   <!-- NEXUS 33 CARD -->
   <div class="contact-card" onclick="openPopup('nexusPopup')">
-    <img src="{{ url_for('static', filename='IMAGES/Nexus_card.svg') }}" alt="Nexus 33 Card">
+    <img src="{{ url_for('static', filename='images/Nexus_card.svg') }}" alt="Nexus 33 Card">
   </div>
 
   <!-- JULIAN CARD -->
   <div class="contact-card" onclick="openPopup('julianPopup')">
-    <img src="{{ url_for('static', filename='IMAGES/Julian.svg') }}" alt="Julian Klein Contact Card">
+    <img src="{{ url_for('static', filename='images/Julian.svg') }}" alt="Julian Klein Contact Card">
   </div>
 </div>
 

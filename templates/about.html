@@ -62,8 +62,8 @@
 .about-hero {
   position: relative;
   background:
-    url("{{ url_for('static', filename='IMAGES/About_BG_S1.png') }}") no-repeat center center / cover,
-    url("{{ url_for('static', filename='IMAGES/About_Girl.png') }}") no-repeat right center / contain;
+    url("{{ url_for('static', filename='images/About_BG_S1.png') }}") no-repeat center center / cover,
+    url("{{ url_for('static', filename='images/About_Girl.png') }}") no-repeat right center / contain;
   color: #fff;
   min-height: 90vh;
   display: flex;
@@ -175,7 +175,7 @@
        WHY PIE AI SECTION
     ========================================================= */
     .why-section {
-      background: url("{{ url_for('static', filename='IMAGES/BG_Y.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/BG_Y.png') }}") no-repeat center center / cover;
       text-align: center;
       padding: 120px 100px;
       color: #fff;
@@ -239,7 +239,7 @@
    FOOTER
 ========================================================= */
 footer {
-  background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+  background: url("{{ url_for('static', filename='images/GoldXBG.png') }}") no-repeat center center / cover;
   color: #d4af37;
   display: flex;
   justify-content: space-around;
@@ -308,7 +308,7 @@ footer ul li a:hover {
 
 <!-- === NAVBAR === -->
 <div class="navbar">
-  <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" 
+  <img src="{{ url_for('static', filename='images/Home_button.svg') }}" 
        alt="Pie AI Logo" 
        onclick="window.location.href='/'" 
        style="cursor: pointer;">
@@ -339,7 +339,7 @@ footer ul li a:hover {
   ========================================================= -->
   <section class="about-beginning">
     <div class="logo-left">
-      <img src="{{ url_for('static', filename='IMAGES/Old_Logo_L.png') }}" alt="Old Logo Left">
+      <img src="{{ url_for('static', filename='images/Old_Logo_L.png') }}" alt="Old Logo Left">
     </div>
     <h2>The Beginning</h2>
     <div class="beginning-text">
@@ -357,7 +357,7 @@ footer ul li a:hover {
       </p>
     </div>
     <div class="logo-right">
-      <img src="{{ url_for('static', filename='IMAGES/Old_Logo_R.png') }}" alt="Old Logo Right">
+      <img src="{{ url_for('static', filename='images/Old_Logo_R.png') }}" alt="Old Logo Right">
     </div>
   </section>
 
@@ -378,7 +378,7 @@ footer ul li a:hover {
   <div class="footer-left">
     <!-- Home button -->
     <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" alt="Pie AI Logo">
+      <img src="{{ url_for('static', filename='images/Home_button.svg') }}" alt="Pie AI Logo">
     </a>
     <p>
       Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
@@ -425,11 +425,11 @@ function showScreen(type) {
   text.classList.remove('active');
 
   if (type === 'customer') {
-    img.src = "{{ url_for('static', filename='IMAGES/Customer_chat.png') }}";
+    img.src = "{{ url_for('static', filename='images/Customer_chat.png') }}";
   } else if (type === 'manager') {
-    img.src = "{{ url_for('static', filename='IMAGES/Manager_chat.png') }}";
+    img.src = "{{ url_for('static', filename='images/Manager_chat.png') }}";
   } else if (type === 'account') {
-    img.src = "{{ url_for('static', filename='IMAGES/Manager_acount.png') }}";
+    img.src = "{{ url_for('static', filename='images/Manager_acount.png') }}";
   } else if (type === 'how') {
     img.classList.add('fade-out');
     setTimeout(() => text.classList.add('active'), 400);
