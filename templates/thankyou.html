@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You | Pie AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lustria&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       GLOBAL STYLES
+    ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Lustria', serif;
+      background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* =========================================================
+       LOGO
+    ========================================================= */
+    .logo {
+      width: 90px;
+      height: auto;
+      margin-bottom: 40px;
+      animation: fadeIn 1.6s ease-in-out forwards;
+    }
+
+    /* =========================================================
+       THANK YOU TEXT
+    ========================================================= */
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 5rem;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+      animation: slideUp 1.8s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(1.1); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* =========================================================
+       FOOTER TEXT
+    ========================================================= */
+    footer {
+      position: absolute;
+      bottom: 25px;
+      color: #d4af37;
+      font-size: 0.9rem;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <img src="{{ url_for('static', filename='IMAGES/lil_Pie_logo.png') }}" alt="Pie AI Logo" class="logo">
+
+  <h1>Thank You</h1>
+
+  <footer>© 2024 Nexus 33 LLC. All rights reserved.</footer>
+
+  <!-- =========================================================
+       AUTO REDIRECT SCRIPT
+  ========================================================= -->
+  <script>
+    // Redirect back to the home page after 5 seconds (5000 ms)
+    setTimeout(function() {
+      window.location.href = "{{ url_for('home') }}";
+    }, 5000);
+  </script>
+</body>
+</html>

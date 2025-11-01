@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Pie AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       GLOBAL STYLES
+    ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background-color: #000;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      padding-top: 80px;
+    }
+
+    /* =========================================================
+       NAVBAR
+    ========================================================= */
+    .navbar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 40px;
+    }
+
+    .navbar img { height: 45px; width: auto; }
+
+    .navbar h1 {
+      color: #d4af37;
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+      margin-right: 80px;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .navbar h1:hover {
+      color: #fff;
+      text-shadow: 0 0 8px #d4af37;
+    }
+
+/* =========================================================
+   ABOUT HERO SECTION — Text as the focal point
+========================================================= */
+.about-hero {
+  position: relative;
+  background:
+    url("{{ url_for('static', filename='IMAGES/About_BG_S1.png') }}") no-repeat center center / cover,
+    url("{{ url_for('static', filename='IMAGES/About_Girl.png') }}") no-repeat right center / contain;
+  color: #fff;
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 80px 40px;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 0;
+}
+
+.about-text {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 70px 80px;
+  border-radius: 22px;
+  box-shadow: 0 0 50px rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(6px);
+  animation: fadeUp 1.2s ease-out both;
+  text-align: center;
+}
+
+.about-text h1 {
+  font-family: 'Lustria', serif;
+  color: #ffd75e;
+  font-size: 2.8rem;           /* Increased from 2.2rem */
+  margin-bottom: 16px;
+  text-shadow: 0 0 25px rgba(255, 215, 94, 0.8);
+  letter-spacing: 2px;
+}
+
+.about-text h2 {
+  color: #f9f9f9;
+  font-size: 1.5rem;           /* Increased from 1.2rem */
+  font-weight: 500;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.about-text p {
+  color: #ffffff;
+  line-height: 2;
+  font-size: 1.25rem;          /* Increased from 1.1rem */
+  font-weight: 300;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  opacity: 0.96;
+}
+
+
+/* Subtle fade-up animation for presence */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+    /* =========================================================
+       THE BEGINNING SECTION
+    ========================================================= */
+    .about-beginning {
+      background: linear-gradient(to bottom, #1a1a1a, #000);
+      text-align: center;
+      padding: 120px 100px;
+      position: relative;
+    }
+
+    .about-beginning h2 {
+      font-family: 'Lustria', serif;
+      color: #d4af37;
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+    }
+
+    .beginning-text {
+      color: #fff;
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .logo-left img, .logo-right img {
+      position: absolute;
+      top: 40px;
+      width: 150px;
+      opacity: 0.4;
+    }
+
+    .logo-left img { left: 80px; }
+    .logo-right img { right: 80px; }
+
+    /* =========================================================
+       WHY PIE AI SECTION
+    ========================================================= */
+    .why-section {
+      background: url("{{ url_for('static', filename='IMAGES/BG_Y.png') }}") no-repeat center center / cover;
+      text-align: center;
+      padding: 120px 100px;
+      color: #fff;
+      position: relative;
+    }
+
+    .why-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    .why-text {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .dropcap {
+      font-size: 4rem;
+      font-family: 'Lustria', serif;
+      color: #fff;
+    }
+
+    .why-text h1 { font-size: 2.2rem; margin-bottom: 30px; }
+    .why-text p { font-size: 1.3rem; line-height: 1.7; margin-bottom: 20px; }
+
+    .why-text .quote {
+      color: #d4af37;
+      font-weight: 600;
+      border-top: 2px solid #d4af37;
+      border-bottom: 2px solid #d4af37;
+      padding: 12px 0;
+      margin: 40px auto 60px;
+      display: inline-block;
+    }
+
+    .read-more {
+      background: linear-gradient(to right, #d4af37, #b48a1d);
+      color: #000;
+      border: none;
+      border-radius: 40px;
+      padding: 16px 80px;
+      font-family: 'Lustria', serif;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+    }
+
+    .read-more:hover {
+      background: #fff5cc;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.7);
+      transform: scale(1.05);
+    }
+
+    /* =========================================================
+   FOOTER
+========================================================= */
+footer {
+  background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+  color: #d4af37;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 60px 80px;
+  flex-wrap: wrap;
+  text-shadow: 0 0 10px rgb(0, 0, 0);
+}
+
+footer img {
+  height: 50px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+footer img:hover {
+  transform: scale(1.1);
+}
+
+footer p {
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+footer h4 {
+  font-family: 'Lustria', serif;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  color: #d0c7a1;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer ul li {
+  margin-bottom: 8px;
+}
+
+footer ul li a {
+  color: #d4af37;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer ul li a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  color: #d4af37;
+  font-size: 0.9rem;
+  padding: 25px 0;
+  text-shadow: 0 0 8px rgba(127, 129, 17, 0.4);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+  </style>
+
+
+<!-- === NAVBAR === -->
+<div class="navbar">
+  <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" 
+       alt="Pie AI Logo" 
+       onclick="window.location.href='/'" 
+       style="cursor: pointer;">
+  <h1>PIE AI</h1>
+</div>
+
+  <!-- =========================================================
+       ABOUT HERO SECTION
+  ========================================================= -->
+  <section class="about-hero">
+    <div class="about-text">
+      <h1>- PIE AI -</h1>
+      <h2>Mission</h2>
+      <p>
+        At Pie AI, our mission is to revolutionize the restaurant industry through AI-driven innovation,
+        ensuring a safer and more seamless dining experience for all. We are committed to enhancing food safety
+        and accessibility, particularly for individuals with allergies, by providing real-time, accurate menu
+        information for restaurants. Pie AI reduces operational strain by streamlining customer interactions,
+        minimizing reliance on servers and managers for routine inquiries. By optimizing efficiency and enhancing safety,
+        we empower businesses to deliver exceptional service while creating a more inclusive and effortless dining
+        experience for every guest.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       THE BEGINNING SECTION
+  ========================================================= -->
+  <section class="about-beginning">
+    <div class="logo-left">
+      <img src="{{ url_for('static', filename='IMAGES/Old_Logo_L.png') }}" alt="Old Logo Left">
+    </div>
+    <h2>The Beginning</h2>
+    <div class="beginning-text">
+      <p>
+        Pie AI started as a simple idea — born from firsthand experience in the restaurant industry.
+        I began working at the same local spot when I was 15, starting as a busser. Over time, I worked my way up —
+        through serving and eventually to bartender. I saw the challenges restaurants face in ensuring allergy safety for customers.
+        Servers often struggled to provide accurate allergen information, creating risks for both diners and businesses.
+      </p>
+      <p>
+        With a background in business and a passion for problem-solving, I set out to build a solution.
+        Teaching myself to code and mastering AI technology, I developed Pie AI from the ground up —
+        testing, refining, and optimizing it along the way. Today, Pie AI stands as an innovative tool designed
+        to enhance restaurant efficiency, improve customer safety, and streamline dining experiences for all.
+      </p>
+    </div>
+    <div class="logo-right">
+      <img src="{{ url_for('static', filename='IMAGES/Old_Logo_R.png') }}" alt="Old Logo Right">
+    </div>
+  </section>
+
+<!-- =========================================================
+       WHY PIE AI SECTION
+  ========================================================= -->
+  <section class="why-section">
+    <div class="why-text">
+      <h1><span class="dropcap">D</span>ining out should always feel safe ! </h1>
+      <p>Every year, thousands of people experience allergic reactions in restaurants often because of small, preventable mistakes. Pie AI empowers restaurants to update menus in real time, communicate with clarity, and safeguard every guest, one meal at a time</p>
+      <p class="quote">Quotes from : <span>CDC, U.S : NIH / Pub Med : Public Health Management</span></p>
+      <button class="read-more" onclick="window.location.href='/why'">Read More</button>
+    </div>
+  </section>
+
+ <!-- === FOOTER === -->
+<footer>
+  <div class="footer-left">
+    <!-- Home button -->
+    <a href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" alt="Pie AI Logo">
+    </a>
+    <p>
+      Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
+    </p>
+  </div>
+
+  <div class="footer-center">
+    <h4>Company</h4>
+    <ul>
+      <!-- Goes to about.html -->
+      <li><a href="{{ url_for('about_page') }}">About Us</a></li>
+
+      <!-- Scrolls to features section on home page -->
+      <li><a href="{{ url_for('home') }}#features">Features</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-support">
+    <h4>Support</h4>
+    <ul>
+      <!-- Goes to contact.html -->
+      <li><a href="{{ url_for('contact_page') }}">Contact Us</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>All Rights Reserved © 2024</p><p>Nexus 33 LLC & Pie-AI.com</p> <p>A MRK Production</p>
+</div>
+<script>
+function showScreen(type) {
+  const img = document.getElementById('screenImage');
+  const text = document.getElementById('howText');
+  const buttons = document.querySelectorAll('.phone-buttons button');
+
+  // Reset all buttons
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  // Set clicked button active
+  event.target.classList.add('active');
+
+  // Handle transitions
+  img.classList.remove('fade-out');
+  text.classList.remove('active');
+
+  if (type === 'customer') {
+    img.src = "{{ url_for('static', filename='IMAGES/Customer_chat.png') }}";
+  } else if (type === 'manager') {
+    img.src = "{{ url_for('static', filename='IMAGES/Manager_chat.png') }}";
+  } else if (type === 'account') {
+    img.src = "{{ url_for('static', filename='IMAGES/Manager_acount.png') }}";
+  } else if (type === 'how') {
+    img.classList.add('fade-out');
+    setTimeout(() => text.classList.add('active'), 400);
+  }
+}
+</script>

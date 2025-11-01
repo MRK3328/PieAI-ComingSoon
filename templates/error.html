@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Error | Pie AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       GLOBAL STYLES
+    ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* =========================================================
+       BACK ARROW
+    ========================================================= */
+    .back-arrow {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      font-size: 2.5rem;
+      color: #d4af37;
+      text-decoration: none;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .back-arrow:hover {
+      color: #fff;
+      transform: translateX(-5px);
+    }
+
+    /* =========================================================
+       LOGO
+    ========================================================= */
+    .logo {
+      width: 80px;
+      height: auto;
+      margin-bottom: 30px;
+      animation: fadeIn 1.4s ease-in-out forwards;
+    }
+
+    /* =========================================================
+       TEXT
+    ========================================================= */
+    .error-text h2 {
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 40px;
+      animation: slideUp 1.6s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    /* =========================================================
+       SAD FACE SECTION
+    ========================================================= */
+    .sad-face {
+      width: 160px;
+      height: 160px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+      animation: fadeIn 2s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    .sad-face img {
+      width: 70%;
+      height: auto;
+    }
+
+    .sad-face p {
+      position: absolute;
+      margin-top: 230px;
+      font-size: 1rem;
+      color: #fff;
+      opacity: 0.9;
+      animation: fadeInText 2.3s ease-in-out forwards;
+    }
+
+    /* =========================================================
+       ANIMATIONS
+    ========================================================= */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(1.1); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Back Arrow -->
+  <a href="javascript:history.back()" class="back-arrow">‹</a>
+
+  <!-- Logo -->
+  <img src="{{ url_for('static', filename='IMAGES/lil_Pie_logo.png') }}" alt="Pie AI Logo" class="logo">
+
+  <!-- Error Text -->
+  <div class="error-text">
+    <h2>We’re really sorry</h2>
+  </div>
+
+  <!-- Sad Face -->
+  <div class="sad-face">
+    <img src="{{ url_for('static', filename='IMAGES/xx(face.png') }}" alt="Sad Face Icon">
+  </div>
+  <p>This page is currently not available</p>
+</body>
+</html>

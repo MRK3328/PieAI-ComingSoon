@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Nexus 33</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       GLOBAL STYLES
+    ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='IMAGES/Room_back.png') }}") no-repeat center center / cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      color: #c6bd7b;
+      overflow-x: hidden;
+    }
+
+    /* =========================================================
+   NAVIGATION BAR (Nexus 33 Banner)
+========================================================= */
+.nexus-nav {
+  width: 100%;
+  background: url("{{ url_for('static', filename='IMAGES/Nexus_NAV.png') }}") 
+              no-repeat center center / cover;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0 0 15px 15px;
+}
+
+.nexus-nav h1 {
+  font-family: 'Lustria', serif;
+  font-size: 2.6rem;
+  letter-spacing: 3px;
+  color: #d4af37;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+/* =========================================================
+   BACK BUTTON (Left Corner)
+========================================================= */
+.back-button {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.back-button img {
+  height: 45px;
+  width: auto;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
+  opacity: 0.9;
+}
+
+.back-button:hover {
+  transform: translateY(-50%) scale(1.1);
+  filter: brightness(1.2);
+  opacity: 1;
+}
+
+    /* =========================================================
+       PAGE HEADER TEXT
+    ========================================================= */
+    .header-text {
+      text-align: center;
+      margin-top: 20px;
+      color: #fff;
+    }
+
+    .header-text h2 {
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 40px;
+    }
+
+   /* =========================================================
+   CONTACT CARD LAYOUT
+========================================================= */
+.contact-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+  margin: 60px 0;
+}
+
+.contact-card {
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+/* =========================================================
+   POPUP STYLING
+========================================================= */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup.active {
+  display: flex;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.popup-content {
+  background: #111;
+  border: 2px solid #d4af37;
+  border-radius: 15px;
+  padding: 40px 60px;
+  text-align: center;
+  color: #f5e7b3;
+  font-family: 'Lustria', serif;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+  max-width: 400px;
+  width: 90%;
+}
+
+.popup-content h2 {
+  margin-bottom: 20px;
+  color: #d4af37;
+}
+
+.popup-content a {
+  display: block;
+  color: #f5e7b3;
+  text-decoration: none;
+  margin: 10px 0;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.popup-content a:hover {
+  color: #fff5cc;
+}
+
+.close-btn {
+  margin-top: 25px;
+  padding: 10px 40px;
+  border: none;
+  background: linear-gradient(to right, #d4af37, #b48a1d);
+  color: #000;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #fff5cc;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to   {opacity: 1; transform: scale(1);}
+}
+
+
+    /* =========================================================
+       REFLECTION EFFECT
+    ========================================================= */
+    .contact-card::after {
+      content: "";
+      position: absolute;
+      bottom: -110px;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(0,0,0,0));
+      opacity: 0.25;
+      transform: scaleY(-1);
+    }
+
+    /* =========================================================
+       FOOTER TEXT
+    ========================================================= */
+    footer {
+      margin-top: 80px;
+      font-size: 0.9rem;
+      color: #d4af37;
+      text-align: center;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================================================
+     NAVIGATION BAR (Nexus 33 Banner with Back Button)
+========================================================= -->
+<div class="nexus-nav">
+  <div class="back-button" onclick="window.location.href='/'">
+    <img src="{{ url_for('static', filename='IMAGES/back.svg') }}" alt="Back">
+  </div>
+  <h1></h1>
+</div>
+
+  <!-- Header Text -->
+  <div class="header-text">
+    <h2>Pie AI is a Nexus 33 Project</h2>
+  </div>
+
+<!-- =========================================================
+     CONTACT CARDS WITH POPUPS
+========================================================= -->
+<div class="contact-section">
+
+  <!-- PIE AI CARD -->
+  <div class="contact-card" onclick="openPopup('piePopup')">
+    <img src="{{ url_for('static', filename='IMAGES/Pie_card.svg') }}" alt="Pie AI Contact Card">
+  </div>
+
+  <!-- NEXUS 33 CARD -->
+  <div class="contact-card" onclick="openPopup('nexusPopup')">
+    <img src="{{ url_for('static', filename='IMAGES/Nexus_card.svg') }}" alt="Nexus 33 Card">
+  </div>
+
+  <!-- JULIAN CARD -->
+  <div class="contact-card" onclick="openPopup('julianPopup')">
+    <img src="{{ url_for('static', filename='IMAGES/Julian.svg') }}" alt="Julian Klein Contact Card">
+  </div>
+</div>
+
+<!-- =========================================================
+     POPUP WINDOWS
+========================================================= -->
+<div id="piePopup" class="popup">
+  <div class="popup-content">
+    <h2>Contact Pie AI Support</h2>
+    <p><a href="mailto:Support@Pie-ai.com">Support@Pie-ai.com</a></p>
+    <p><a href="https://www.pie-ai.com" target="_blank">www.Pie-ai.com</a></p>
+    <button class="close-btn" onclick="closePopup('piePopup')">Close</button>
+  </div>
+</div>
+
+<div id="nexusPopup" class="popup">
+  <div class="popup-content">
+    <h2>Nexus 33</h2>
+    <p><a href="https://www.Nexus33LLC.com" target="_blank">www.Nexus33LLC.com</a></p>
+    <button class="close-btn" onclick="closePopup('nexusPopup')">Close</button>
+  </div>
+</div>
+
+<div id="julianPopup" class="popup">
+  <div class="popup-content">
+    <h2>Julian Klein — CEO</h2>
+    <p><a href="mailto:CEO@Nexus33LLC.com">CEO@Nexus33LLC.com</a></p>
+    <p><a href="https://www.Nexus33LLC.com" target="_blank">www.Nexus33LLC.com</a></p>
+    <button class="close-btn" onclick="closePopup('julianPopup')">Close</button>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer>
+    © 2024 Nexus 33 LLC. All rights reserved.
+  </footer>
+<script>
+function openPopup(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closePopup(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// Allow clicking outside popup to close it
+window.addEventListener('click', e => {
+  document.querySelectorAll('.popup.active').forEach(popup => {
+    if (e.target === popup) popup.classList.remove('active');
+  });
+});
+</script>
+
+</body>
+</html>

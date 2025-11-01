@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Pie AI | Safer Dining with AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background-color: #000;
+      overflow-x: hidden;
+    }
+
+    /* === NAVBAR === */
+    .navbar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: rgba(0,0,0,0.85);
+      border-bottom: 1px solid rgba(212,175,55,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 40px;
+      z-index: 1000;
+    }
+    .navbar img { height: 45px; width: auto; }
+    .navbar h1 {
+      color: #d4af37;
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+      margin-right: 80px;
+    }
+
+    /* === HERO SECTION === */
+    .hero {
+      background: url("{{ url_for('static', filename='IMAGES/soup_BG_65.png') }}") no-repeat center center / cover;
+      padding: 160px 40px 120px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: auto;
+    }
+    .hero-content h1 {
+      font-family: 'Lustria', serif;
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+    }
+    .hero-content p {
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    /* === QUOTE SECTION === */
+.quote-section {
+  background: url("{{ url_for('static', filename='IMAGES/Y_BG_S2.png') }}") no-repeat center center / cover;
+  padding: 120px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.quote-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 0;
+}
+
+.quote-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+/* === QUOTE BOXES === */
+.quote-box {
+  background: rgba(15, 15, 15, 0.75);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 350px;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.quote-box:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* === QUOTE TEXT === */
+.quote-box h3 {
+  color: #d4af37;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.quote-box p {
+  color: #ffffff;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  font-family: 'Lustria', serif;
+  font-weight: 300;
+}
+
+/* === QUOTE SOURCE === */
+.quote-source {
+  color: #c9b573;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.4);
+  padding-top: 10px;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.quote-box:hover .quote-source {
+  color: #fff5cc;
+}
+
+
+    /* =========================================================
+   FOOTER
+========================================================= */
+footer {
+  background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+  color: #d4af37;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 60px 80px;
+  flex-wrap: wrap;
+  text-shadow: 0 0 10px rgb(0, 0, 0);
+}
+
+footer img {
+  height: 50px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+footer img:hover {
+  transform: scale(1.1);
+}
+
+footer p {
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+footer h4 {
+  font-family: 'Lustria', serif;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  color: #d0c7a1;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer ul li {
+  margin-bottom: 8px;
+}
+
+footer ul li a {
+  color: #d4af37;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer ul li a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  color: #d4af37;
+  font-size: 0.9rem;
+  padding: 25px 0;
+  text-shadow: 0 0 8px rgba(127, 129, 17, 0.4);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+  </style>
+
+
+<!-- === NAVBAR === -->
+<div class="navbar">
+  <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" 
+       alt="Pie AI Logo" 
+       onclick="window.location.href='/'" 
+       style="cursor: pointer;">
+  <h1>PIE AI</h1>
+</div>
+
+  <!-- === HERO SECTION === -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Every Meal Should Be Safe</h1>
+      <p>Every day, people trust restaurants with their health — yet food allergies continue to cause thousands of emergency visits and hundreds of deaths each year.</p>
+      <p>Many of these incidents happen simply because staff don’t have fast, reliable access to accurate allergen information. Pie AI was created to fix this.</p>
+      <p>Our goal is to make dining safer, smarter, and more human — helping restaurants communicate clearly, update menus in real time, and protect customers from preventable mistakes.</p>
+    </div>
+  </section>
+
+ <!-- === QUOTE SECTION === -->
+<section class="quote-section">
+  <div class="quote-container">
+
+    <div class="quote-box" onclick="window.open('https://www.cdc.gov/mmwr/volumes/66/wr/mm6615a2.htm', '_blank')">
+      <h3>ONE MISTAKE CAN BE THE DIFFERENCE</h3>
+      <p>“Nearly half of all fatal food allergy reactions start in restaurants.”</p>
+      <div class="quote-source">CDC, U.S. Centers for Disease Control and Prevention</div>
+    </div>
+
+    <div class="quote-box" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/33338685/', '_blank')">
+      <h3>FOOD SAFETY ISN’T OPTIONAL</h3>
+      <p>“Over 50% of allergy reactions happen even after customers warn restaurant staff.”</p>
+      <div class="quote-source">NIH / PubMed</div>
+    </div>
+
+    <div class="quote-box" onclick="window.open('https://journals.lww.com/jphmp/fulltext/2020/11000/deaths%2C_hospitalizations%2C_and_emergency_department.8.aspx', '_blank')">
+      <h3>A SINGLE INGREDIENT CAN CHANGE EVERYTHING</h3>
+      <p>“More than 30,000 Americans end up in emergency rooms each year because of food served in restaurants.”</p>
+      <div class="quote-source">Journal of Public Health Management & Practice</div>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- === FOOTER === -->
+<footer>
+  <div class="footer-left">
+    <!-- Home button -->
+    <a href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='IMAGES/Home_button.svg') }}" alt="Pie AI Logo">
+    </a>
+    <p>
+      Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
+    </p>
+  </div>
+
+  <div class="footer-center">
+    <h4>Company</h4>
+    <ul>
+      <!-- Goes to about.html -->
+      <li><a href="{{ url_for('about_page') }}">About Us</a></li>
+
+      <!-- Scrolls to features section on home page -->
+      <li><a href="{{ url_for('home') }}#features">Features</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-support">
+    <h4>Support</h4>
+    <ul>
+      <!-- Goes to contact.html -->
+      <li><a href="{{ url_for('contact_page') }}">Contact Us</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>All Rights Reserved © 2024</p>
+  <p>Nexus 33 LLC & Pie-AI.com</p>
+  <p>A MRK Production</p>
+</div>
+
+</body>
+</html>

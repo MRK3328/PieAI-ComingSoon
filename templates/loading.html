@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading | Pie AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lustria&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       GLOBAL STYLES
+    ========================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Lustria', serif;
+      color: #fff;
+    }
+
+    /* =========================================================
+       OVERLAY EFFECT
+    ========================================================= */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    /* =========================================================
+       LOGO ANIMATION
+    ========================================================= */
+    .logo {
+      width: 240px;
+      height: auto;
+      opacity: 0;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+      animation: fadeIn 2s ease forwards, pulse 2.4s infinite ease-in-out 2s;
+      z-index: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(1.2); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.6)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.9)); transform: scale(1.05); }
+    }
+
+    /* =========================================================
+       TEXT SPELL / LOADING EFFECT
+    ========================================================= */
+    .loading-text {
+      position: absolute;
+      bottom: 80px;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #f5e7b3;
+      letter-spacing: 2px;
+      opacity: 0.8;
+      animation: glowText 2s infinite ease-in-out;
+      z-index: 1;
+    }
+
+    @keyframes glowText {
+      0%, 100% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.6); opacity: 0.8; }
+      50% { text-shadow: 0 0 25px rgba(212, 175, 55, 0.9); opacity: 1; }
+    }
+
+    /* =========================================================
+       SPARKLE PARTICLES (MAGICAL EFFECT)
+    ========================================================= */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #d4af37;
+      border-radius: 50%;
+      opacity: 0;
+      animation: sparkleMove 6s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes sparkleMove {
+      0% { opacity: 0; transform: translateY(0) scale(0.4); }
+      20% { opacity: 1; transform: translateY(-60px) scale(1); }
+      80% { opacity: 1; transform: translateY(-200px) scale(0.6); }
+      100% { opacity: 0; transform: translateY(-260px) scale(0); }
+    }
+
+    /* Generate random sparkle positions */
+    .sparkle:nth-child(1) { left: 30%; animation-delay: 0s; }
+    .sparkle:nth-child(2) { left: 40%; animation-delay: 1s; }
+    .sparkle:nth-child(3) { left: 50%; animation-delay: 2s; }
+    .sparkle:nth-child(4) { left: 60%; animation-delay: 0.5s; }
+    .sparkle:nth-child(5) { left: 70%; animation-delay: 1.5s; }
+
+  </style>
+</head>
+
+<body>
+  <!-- Sparkles -->
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+
+  <!-- Logo -->
+  <img src="{{ url_for('static', filename='IMAGES/Logo_Pieai.png') }}" alt="Pie AI Logo" class="logo">
+
+  <!-- Text -->
+  <div class="loading-text">Preparing your connection...</div>
+
+  <!-- Redirect Script -->
+  <script>
+    setTimeout(() => {
+      window.location.href = "/links"; // Redirect after 3 seconds
+    }, 3000);
+  </script>
+</body>
+</html>

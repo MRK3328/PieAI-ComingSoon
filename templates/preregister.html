@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join the Movement | Pie AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background: url("{{ url_for('static', filename='IMAGES/GoldXBG.png') }}") no-repeat center center / cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ================= BACK BUTTON ================= */
+    .back-btn {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      z-index: 10;
+      background: #0000004c;
+      color: #fff;
+      border: 2px solid #867e61;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-family: 'Lustria', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+    .back-btn:hover {
+      background: #d4af37;
+      color: #000;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+      transform: scale(1.05);
+    }
+
+    /* ================= FORM CONTAINER ================= */
+    .form-container {
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 20px;
+      padding: 40px 50px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+      backdrop-filter: blur(6px);
+      animation: fadeIn 1s ease-in-out forwards;
+      transition: all 0.5s ease;
+    }
+    @keyframes fadeIn { from {opacity: 0; transform: scale(1.03);} to {opacity: 1; transform: scale(1);} }
+
+    .form-logo { width: 200px; height: auto; margin-bottom: 5px; }
+    h1 { color: #d4af37; font-size: 1.8rem; letter-spacing: 2px; font-family: 'Lustria', serif; }
+    h2 { color: #fff; font-size: 1rem; font-weight: 400; margin-bottom: 25px; }
+
+    /* ================= TOGGLE SWITCHES ================= */
+    .switch-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .switch {
+      position: relative;
+      width: 110px;
+      height: 40px;
+      border-radius: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: background 0.4s ease;
+    }
+    .switch.active {
+      background: linear-gradient(to right, #d4af37, #b48a1d);
+      box-shadow: 0 0 20px rgba(212,175,55,0.5);
+    }
+    .switch span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Lustria', serif;
+      font-size: 0.9rem;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    /* ================= INPUTS ================= */
+    .input-group { text-align: left; margin-bottom: 18px; }
+    .input-group label {
+      color: #d4af37;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .input-group input, .input-group textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-group input:focus, .input-group textarea:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+    }
+    textarea { resize: none; height: 120px; }
+
+    /* ================= SUBMIT BUTTON ================= */
+    .submit-btn {
+      background: linear-gradient(to right, #d4af37, #b48a1d);
+      color: #000;
+      border: none;
+      border-radius: 40px;
+      padding: 14px 70px;
+      font-size: 1rem;
+      font-family: 'Lustria', serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+    }
+    .submit-btn:hover {
+      background: #fff5cc;
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.7);
+    }
+
+    /* ================= FORM VISIBILITY ================= */
+    #supporterForm, #restaurantForm {
+      display: none;
+      transition: opacity 0.5s ease;
+    }
+    #supporterForm.active, #restaurantForm.active {
+      display: block;
+      opacity: 1;
+    }
+    .hidden { display: none; }
+
+    /* ================= GOLD TOGGLE SWITCH ================= */
+    .toggle-btn {
+      width: 100px;
+      height: 40px;
+      border-radius: 40px;
+      background: #2b2b2b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      margin-top: 8px;
+    }
+    .toggle-btn.active {
+      background: linear-gradient(to right, #d4af37, #b48a1d);
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+    }
+    .toggle-text {
+      font-family: 'Lustria', serif;
+      color: #fff;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+    }
+    .toggle-btn.active .toggle-text {
+      color: #000;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <button class="back-btn" onclick="window.location.href='/'">Back</button>
+
+  <div class="form-container">
+    <img src="{{ url_for('static', filename='IMAGES/lil_Pie_logo.png') }}" alt="Pie AI Logo" class="form-logo">
+    <h1>PIE AI</h1>
+    <h2>Join the Movement</h2>
+
+    <!-- SWITCH -->
+    <div class="switch-container">
+      <div id="supportSwitch" class="switch active"><span>Supporter</span></div>
+      <div id="restaurantSwitch" class="switch"><span>Restaurant</span></div>
+    </div>
+
+    <!-- SUPPORTER FORM -->
+    <form id="supporterForm" class="active" method="POST" action="{{ url_for('preregister_page') }}">
+  <input type="hidden" name="role" value="Supporter">
+
+  <div class="input-group">
+    <label for="supporterName">Your Name</label>
+    <input type="text" id="supporterName" name="name" placeholder="Enter your name" required>
+  </div>
+
+  <div class="input-group">
+    <label for="supporterComment">Why do you support Pie AI?</label>
+    <textarea id="supporterComment" name="message" placeholder="Share your thoughts..."></textarea>
+  </div>
+
+
+      <!-- New Gold Toggle -->
+      <div class="input-group">
+        <label>Get Updates?</label>
+        <div class="toggle-btn" id="updateToggle">
+          <span class="toggle-text">Yes</span>
+        </div>
+      </div>
+
+      <div id="emailGroup" class="input-group hidden">
+        <label for="supporterEmail">Email (for updates)</label>
+        <input type="email" id="supporterEmail" name="email" placeholder="example@email.com">
+      </div>
+
+      <button type="submit" class="submit-btn">Join Now</button>
+    </form>
+
+    <!-- RESTAURANT FORM -->
+    <form id="restaurantForm" method="POST" action="{{ url_for('preregister_page') }}">
+  <input type="hidden" name="role" value="Restaurant">
+
+  <div class="input-group">
+    <label for="restaurant">Restaurant Name / Owner</label>
+    <input type="text" id="restaurant" name="name" placeholder="Restaurant name" required>
+    <small>We will never spam or share your email</small>
+  </div>
+
+  <div class="input-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+  </div>
+
+  <div class="input-group">
+    <label for="phone">Phone Number (Optional)</label>
+    <input type="text" id="phone" name="phone" placeholder="(000) 000-0000">
+  </div>
+
+  <div class="input-group">
+    <label for="referral">How did you hear about us?</label>
+    <textarea id="referral" name="message" placeholder="Write here..."></textarea>
+  </div>
+
+  <button type="submit" class="submit-btn">Next</button>
+</form>
+
+  <script>
+    const supportSwitch = document.getElementById("supportSwitch");
+    const restaurantSwitch = document.getElementById("restaurantSwitch");
+    const supporterForm = document.getElementById("supporterForm");
+    const restaurantForm = document.getElementById("restaurantForm");
+    const updateToggle = document.getElementById("updateToggle");
+    const emailGroup = document.getElementById("emailGroup");
+
+    supportSwitch.addEventListener("click", () => {
+      supportSwitch.classList.add("active");
+      restaurantSwitch.classList.remove("active");
+      supporterForm.classList.add("active");
+      restaurantForm.classList.remove("active");
+    });
+
+    restaurantSwitch.addEventListener("click", () => {
+      restaurantSwitch.classList.add("active");
+      supportSwitch.classList.remove("active");
+      supporterForm.classList.remove("active");
+      restaurantForm.classList.add("active");
+    });
+
+    // Toggle button for "Get Updates"
+    updateToggle.addEventListener("click", () => {
+      updateToggle.classList.toggle("active");
+      const text = updateToggle.querySelector(".toggle-text");
+      const isActive = updateToggle.classList.contains("active");
+      text.textContent = isActive ? "No" : "Yes";
+      emailGroup.classList.toggle("hidden", !isActive);
+    });
+  </script>
+</body>
+</html>
