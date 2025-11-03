@@ -68,7 +68,7 @@
     ========================================================= */
     .hero {
       height: 100vh;
-      background: url("{{ url_for('static', filename='images/Full_PC_BG.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/full_pc_bg.png') }}") no-repeat center center / cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -152,7 +152,7 @@
        WHY PIE AI SECTION
     ========================================================= */
     .why-section {
-      background: url("{{ url_for('static', filename='images/BG_Y.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/bg_y.png') }}") no-repeat center center / cover;
       text-align: center;
       padding: 120px 100px;
       color: #fff;
@@ -494,7 +494,7 @@
     ========================================================= */
     .preregister {
       height: 100vh;
-      background: url("{{ url_for('static', filename='images/Pre_bG.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/pre_bg.png') }}") no-repeat center center / cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -565,7 +565,7 @@
    ABOUT US SEGMENT
 ========================================================= */
 .about-segment {
-  background: url("{{ url_for('static', filename='images/Seg_about_BG.png') }}") 
+  background: url("{{ url_for('static', filename='images/seg_about_bg.png') }}") 
               no-repeat center center / cover;
   position: relative;
   height: 100vh;
@@ -641,7 +641,7 @@
    FOOTER
 ========================================================= */
 footer {
-  background: url("{{ url_for('static', filename='images/GoldXBG.png') }}") no-repeat center center / cover;
+  background: url("{{ url_for('static', filename='images/goldxbg.png') }}") no-repeat center center / cover;
   color: #d4af37;
   display: flex;
   justify-content: space-around;
@@ -709,7 +709,7 @@ footer ul li a:hover {
 
   <!-- === NAVBAR === -->
 <div class="navbar">
-  <img src="{{ url_for('static', filename='images/Home_button.svg') }}" 
+  <img src="{{ url_for('static', filename='images/home_button.svg') }}" 
        alt="Pie AI Logo" 
        onclick="window.location.href='/'" 
        style="cursor: pointer;">
@@ -768,7 +768,7 @@ Whether you’re managing peak hours, last minute menu changes, or staff coordin
 
     <!-- Phone Background -->
     <img 
-      src="{{ url_for('static', filename='images/Phone_pieai.png') }}" 
+      src="{{ url_for('static', filename='images/phone_pieai.png') }}" 
       alt="Pie AI Phone" 
       class="chop-board"
       onclick="resetPhone()"
@@ -777,7 +777,7 @@ Whether you’re managing peak hours, last minute menu changes, or staff coordin
     <!-- Dynamic Screen -->
     <div class="phone-screen" id="phoneScreen">
       <img 
-        src="{{ url_for('static', filename='images/Welcome.png') }}" 
+        src="{{ url_for('static', filename='images/welcome.png') }}" 
         alt="Default Screen" 
         id="screenImage" 
         class="screen-image active"
@@ -921,7 +921,7 @@ Whether you’re managing peak hours, last minute menu changes, or staff coordin
   <div class="footer-left">
     <!-- Home button -->
     <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='images/Home_button.svg') }}" alt="Pie AI Logo">
+      <img src="{{ url_for('static', filename='images/home_button.svg') }}" alt="Pie AI Logo">
     </a>
     <p>
       Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
@@ -968,13 +968,13 @@ function showScreen(type) {
   buttons.forEach(btn => btn.classList.remove('active'));
 
   if (type === 'customer') {
-    img.src = "{{ url_for('static', filename='images/Customer chat.png') }}";
+    img.src = "{{ url_for('static', filename='images/customer chat.png') }}";
     img.classList.add('active');
   } else if (type === 'manager') {
-    img.src = "{{ url_for('static', filename='images/Manager chat.png') }}";
+    img.src = "{{ url_for('static', filename='images/manager chat.png') }}";
     img.classList.add('active');
   } else if (type === 'account') {
-    img.src = "{{ url_for('static', filename='images/Manager acount.png') }}";
+    img.src = "{{ url_for('static', filename='images/manager acount.png') }}";
     img.classList.add('active');
   } else if (type === 'how') {
     howText.classList.add('active');

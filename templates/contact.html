@@ -15,7 +15,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: url("{{ url_for('static', filename='images/Room_back.png') }}") no-repeat center center / cover;
+      background: url("{{ url_for('static', filename='images/room_back.png') }}") no-repeat center center / cover;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -30,7 +30,7 @@
 ========================================================= */
 .nexus-nav {
   width: 100%;
-  background: url("{{ url_for('static', filename='images/Nexus_NAV.png') }}") 
+  background: url("{{ url_for('static', filename='images/nexus_nav.png') }}") 
               no-repeat center center / cover;
   height: 120px;
   display: flex;
@@ -45,7 +45,7 @@
   font-family: 'Lustria', serif;
   font-size: 2.6rem;
   letter-spacing: 3px;
-  color: #d4af37;
+  color: #837a5e;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
@@ -117,7 +117,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.779);
   justify-content: center;
   align-items: center;
   z-index: 2000;
@@ -129,8 +129,8 @@
 }
 
 .popup-content {
-  background: #111;
-  border: 2px solid #d4af37;
+  background: #11111170;
+  border: 2px solid #837a5e;
   border-radius: 15px;
   padding: 40px 60px;
   text-align: center;
@@ -163,7 +163,7 @@
   margin-top: 25px;
   padding: 10px 40px;
   border: none;
-  background: linear-gradient(to right, #d4af37, #b48a1d);
+  background: linear-gradient(to right, #837a5e, #b48a1d);
   color: #000;
   border-radius: 30px;
   font-size: 1rem;
@@ -234,17 +234,17 @@
 
   <!-- PIE AI CARD -->
   <div class="contact-card" onclick="openPopup('piePopup')">
-    <img src="{{ url_for('static', filename='images/Pie_card.svg') }}" alt="Pie AI Contact Card">
+    <img src="{{ url_for('static', filename='images/pie_card.svg') }}" alt="Pie AI Contact Card">
   </div>
 
   <!-- NEXUS 33 CARD -->
   <div class="contact-card" onclick="openPopup('nexusPopup')">
-    <img src="{{ url_for('static', filename='images/Nexus_card.svg') }}" alt="Nexus 33 Card">
+    <img src="{{ url_for('static', filename='images/nexus_card.svg') }}" alt="Nexus 33 Card">
   </div>
 
   <!-- JULIAN CARD -->
   <div class="contact-card" onclick="openPopup('julianPopup')">
-    <img src="{{ url_for('static', filename='images/Julian.svg') }}" alt="Julian Klein Contact Card">
+    <img src="{{ url_for('static', filename='images/julian.svg') }}" alt="Julian Klein Contact Card">
   </div>
 </div>
 
