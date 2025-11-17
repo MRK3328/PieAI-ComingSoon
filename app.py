@@ -7,7 +7,14 @@ app = Flask(__name__)
 # ===========================================
 # GOOGLE SHEETS CONNECTION
 # ===========================================
-gc = gspread.service_account(filename="static/credentials/pie-ai-pre-register-form-6c7a562f4b99.json")
+import os, json
+from google.oauth2.service_account import Credentials
+import gspread
+
+credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+credentials_dict = json.loads(credentials_json)
+
+gc = gspread.authorize(Credentials.from_service_account_info(credentials_dict))
 sheet = gc.open_by_key("1h4AMu9vc6ZyRrc6tN54pYe36J3Cjnh0CRLstjP3rqpw").sheet1
 
 # ===========================================
