@@ -1,0 +1,5 @@
+# Ignore credentials and secrets
+static/credentials/
+*.json
+.env
+__pycache__/
