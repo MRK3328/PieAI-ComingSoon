@@ -7,15 +7,27 @@ app = Flask(__name__)
 # ===========================================
 # GOOGLE SHEETS CONNECTION
 # ===========================================
-import os, json
-from google.oauth2.service_account import Credentials
+import os
+import json
 import gspread
+from google.oauth2.service_account import Credentials
 
+# ✅ Step 1: Get JSON from environment
 credentials_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+
+# ✅ Step 2: Safety check
+if not credentials_json:
+    raise ValueError("Missing GOOGLE_APPLICATION_CREDENTIALS_JSON")
+
+# ✅ Step 3: Parse JSON string into dict
 credentials_dict = json.loads(credentials_json)
 
+# ✅ Step 4: Authorize gspread
 gc = gspread.authorize(Credentials.from_service_account_info(credentials_dict))
+
+# ✅ Step 5: Open the sheet
 sheet = gc.open_by_key("1h4AMu9vc6ZyRrc6tN54pYe36J3Cjnh0CRLstjP3rqpw").sheet1
+
 
 # ===========================================
 # ROUTES
