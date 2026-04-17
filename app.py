@@ -1,22 +1,28 @@
 from flask import Flask, render_template, request, redirect, session
+from flask_mail import Mail, Message
 from datetime import datetime
 import os
-import json
 from dotenv import load_dotenv
-import gspread
-from google.oauth2.service_account import Credentials
 
-# Load environment variables from .env file
 load_dotenv()
 
-# AUTH (pure logic)
 from backend.auth import authenticate_user
-
-# RESTAURANT BLUEPRINT (routes only)
 from backend.restaurants.restaurants import restaurants_bp
 
 app = Flask(__name__)
 app.secret_key = "CHANGE_THIS_SECRET_KEY"
+
+# ============================================================
+# MAIL CONFIG
+# ============================================================
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+
+mail = Mail(app)
 
 # ============================================================
 # REGISTER BLUEPRINTS
@@ -33,31 +39,7 @@ RESTAURANT_DATA_DIR = os.path.join(BASE_DIR, "backend", "restaurants")
 RESTAURANT_STATIC_DIR = os.path.join(BASE_DIR, "static", "restaurants")
 
 # ============================================================
-# GOOGLE SHEETS HELPER
-# ============================================================
-
-def get_sheet():
-    scope = [
-        "https://spreadsheets.google.com/feeds",
-        "https://www.googleapis.com/auth/drive"
-    ]
-
-    # Try environment variable first (Render), fall back to local file
-    creds_json = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
-    if creds_json:
-        creds = Credentials.from_service_account_info(
-            json.loads(creds_json), scopes=scope
-        )
-    else:
-        creds = Credentials.from_service_account_file(
-            os.path.join(BASE_DIR, "credentials.json"), scopes=scope
-        )
-
-    client = gspread.authorize(creds)
-    return client.open("Pie AI | Pre-Launch Support List").sheet1
-
-# ============================================================
-# Pie AI home PUBLIC PAGES
+# PUBLIC PAGES
 # ============================================================
 
 @app.route('/')
@@ -97,7 +79,7 @@ def privacy_page():
     return render_template('privacy.html')
 
 # ============================================================
-# EARLY ACCESS — WAVE FORM (Google Sheets)
+# EARLY ACCESS — WAVE FORM
 # ============================================================
 
 @app.route('/join-wave', methods=['POST'])
@@ -110,20 +92,23 @@ def join_wave():
         if not email or '@' not in email:
             return {'success': False, 'error': 'Invalid email'}, 400
 
-        sheet = get_sheet()
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        # Columns: Timestamp | Type | Name | Email | Message | Phone
-        sheet.append_row([timestamp, entry_type, '', email, '', ''])
+        msg = Message(
+            subject=f"New Pie AI Sign Up — {entry_type}",
+            sender=os.environ.get('MAIL_USERNAME'),
+            recipients=[os.environ.get('MAIL_USERNAME')],
+            body=f"New sign up!\n\nType: {entry_type}\nEmail: {email}\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
+        mail.send(msg)
+        print(f"✅ Email sent for: {email} ({entry_type})")
 
         return {'success': True}, 200
 
     except Exception as e:
-        print(f"Sheet write error: {e}")
+        print(f"❌ Mail error: {e}")
         return {'success': False, 'error': str(e)}, 500
 
 # ============================================================
-# RESTAURANT SETUP (ONBOARDING FLOW)
+# RESTAURANT SETUP
 # ============================================================
 
 @app.route('/restaurant-setup-1')

@@ -650,23 +650,29 @@
   }
 
   // Wave form submit
-  function submitWave() {
+async function submitWave() {
     const email = document.getElementById('waveEmail').value.trim();
     if (!email || !email.includes('@')) {
       document.getElementById('waveEmail').style.borderBottom = '1px solid rgba(201,168,76,0.6)';
       document.getElementById('waveEmail').placeholder = 'Please enter a valid email';
       return;
     }
-    // Hide form, show success
+
+    try {
+      await fetch('/join-wave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, type: selectedType })
+      });
+    } catch (err) {
+      console.error('Submit error:', err);
+    }
+
     document.querySelector('.wave-form').style.display = 'none';
     document.querySelector('.wave-selector').style.opacity = '0.4';
     document.querySelector('.wave-selector').style.pointerEvents = 'none';
     document.getElementById('waveSuccess').classList.add('visible');
-
-    // In production: POST to your Flask endpoint here
-    // fetch('/join-wave', { method:'POST', body: JSON.stringify({email, type: selectedType}), headers:{'Content-Type':'application/json'} })
   }
-
   // Gallery
   document.addEventListener('DOMContentLoaded', () => {
     const slides = [
@@ -674,7 +680,7 @@
       { title: "Manager Dashboard", desc: "A live view of questions, top intents, and engagement. Update specials in seconds" },
       { title: "Control Panel",     desc: "Activate categories, set availability windows, and control exactly what customers see" },
       { title: "File Upload",       desc: "Upload any format — Excel, PDF, Word, image. Pie AI parses it and builds your profile" },
-      { title: "Item Editor",       desc: "Custom accent colors, header images, and AI personality tailored to your brand" }
+      { title: "Item Editor",       desc: "Managers can control and update each menu item, including allergens and availability" }
     ];
     let current = 0;
     const total = slides.length;
