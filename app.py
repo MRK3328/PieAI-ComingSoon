@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from datetime import datetime
 import os
+import json
 from dotenv import load_dotenv
 import gspread
 from google.oauth2.service_account import Credentials
@@ -40,9 +41,18 @@ def get_sheet():
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive"
     ]
-    creds = Credentials.from_service_account_file(
-        os.path.join(BASE_DIR, "credentials.json"), scopes=scope
-    )
+
+    # Try environment variable first (Render), fall back to local file
+    creds_json = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
+    if creds_json:
+        creds = Credentials.from_service_account_info(
+            json.loads(creds_json), scopes=scope
+        )
+    else:
+        creds = Credentials.from_service_account_file(
+            os.path.join(BASE_DIR, "credentials.json"), scopes=scope
+        )
+
     client = gspread.authorize(creds)
     return client.open("Pie AI | Pre-Launch Support List").sheet1
 
