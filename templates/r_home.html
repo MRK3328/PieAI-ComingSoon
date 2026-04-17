@@ -1,0 +1,518 @@
+{% extends "_r_base.html" %}
+{% block content %}
+
+<style>
+
+  :root {
+    --gold:        #c9a84c;
+    --gold-light:  #e8cc7a;
+    --gold-dim:    rgba(201,168,76,0.12);
+    --gold-border: rgba(201,168,76,0.22);
+    --ink:         #0c0c0a;
+    --surface:     #111108;
+    --surface2:    #161612;
+    --text:        #f0ead8;
+    --text-dim:    rgba(240,234,216,0.45);
+    --text-mid:    rgba(240,234,216,0.7);
+  }
+
+  /* ================================
+     PAGE SHELL
+  ================================ */
+  .page-shell {
+    margin: 24px auto 80px;
+    width: calc(100% - 48px);
+    max-width: 1200px;
+    background: rgba(10,10,8,0.85);
+    border: 0.5px solid var(--gold-border);
+    border-radius: 20px;
+    padding: 36px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+
+  /* ================================
+     PAGE HEADER
+  ================================ */
+  .home-header {
+    margin-bottom: 32px;
+    padding-bottom: 22px;
+    border-bottom: 0.5px solid var(--gold-border);
+  }
+
+  .home-tag {
+    font-size: 0.62em;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .home-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4em;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .home-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* ================================
+     SNAPSHOT — 3 STAT CARDS
+  ================================ */
+  .snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .snap-card {
+    background: var(--surface2);
+    border: 0.5px solid var(--gold-border);
+    padding: 26px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+
+  .snap-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .snap-card:hover { border-color: rgba(201,168,76,0.4); }
+  .snap-card:hover::before { opacity: 1; }
+
+  .snap-label {
+    font-size: 0.62em;
+    color: var(--gold);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .snap-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8em;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  /* ================================
+     MAIN GRID
+  ================================ */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  /* ================================
+     SHARED PANEL
+  ================================ */
+  .panel {
+    background: var(--surface2);
+    border: 0.5px solid var(--gold-border);
+    padding: 26px;
+    position: relative;
+  }
+
+  .panel-label {
+    font-size: 0.62em;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18px;
+    opacity: 0.7;
+  }
+
+  /* ================================
+     SYSTEM OVERVIEW — LEFT
+  ================================ */
+  .system-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .system-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 0.5px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .system-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+  }
+
+  .system-item.active::before   { background: #2ecc71; }
+  .system-item.warning::before  { background: var(--gold); }
+  .system-item.approved::before { background: #2ecc71; }
+  .system-item.error::before    { background: #e74c3c; }
+  .system-item.info::before     { background: #3498db; }
+
+  .system-name {
+    font-size: 0.85em;
+    color: var(--text-mid);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .system-badge {
+    font-size: 0.62em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 4px 10px;
+    border: 0.5px solid;
+  }
+
+  .badge-success {
+    color: #2ecc71;
+    border-color: rgba(46,204,113,0.3);
+    background: rgba(46,204,113,0.06);
+  }
+
+  .badge-warning {
+    color: var(--gold);
+    border-color: var(--gold-border);
+    background: var(--gold-dim);
+  }
+
+  .badge-error {
+    color: #e74c3c;
+    border-color: rgba(231,76,60,0.3);
+    background: rgba(231,76,60,0.06);
+  }
+
+  .badge-info {
+    color: #3498db;
+    border-color: rgba(52,152,219,0.3);
+    background: rgba(52,152,219,0.06);
+  }
+
+  /* ================================
+     RECENT ACTIVITY — RIGHT
+  ================================ */
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .update-card {
+    background: var(--surface);
+    border: 0.5px solid rgba(255,255,255,0.05);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, opacity 0.3s, transform 0.3s;
+  }
+
+  .update-card:hover { border-color: var(--gold-border); }
+
+  .update-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+  }
+
+  .update-card.success::before { background: #2ecc71; }
+  .update-card.warning::before { background: var(--gold); }
+  .update-card.error::before   { background: #e74c3c; }
+  .update-card.info::before    { background: #3498db; }
+
+  /* Fade out on remove */
+  .update-card.removing {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  .update-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .update-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-dot.success { background: #2ecc71; }
+  .status-dot.warning { background: var(--gold); }
+  .status-dot.error   { background: #e74c3c; }
+  .status-dot.info    { background: #3498db; }
+
+  .update-date {
+    font-size: 0.72em;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .update-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .update-tag {
+    font-size: 0.62em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 3px 10px;
+    border: 0.5px solid var(--gold-border);
+    color: var(--gold);
+    background: var(--gold-dim);
+    white-space: nowrap;
+  }
+
+  .update-text {
+    font-size: 0.83em;
+    color: var(--text-mid);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ================================
+     DELETE BUTTON
+  ================================ */
+  .delete-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: 0.5px solid rgba(231,76,60,0.25);
+    color: rgba(231,76,60,0.4);
+    font-size: 0.62em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .delete-btn:hover {
+    border-color: rgba(231,76,60,0.7);
+    color: #e74c3c;
+    background: rgba(231,76,60,0.06);
+  }
+
+  /* ================================
+     EMPTY STATE
+  ================================ */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-dim);
+    font-size: 0.82em;
+    letter-spacing: 1px;
+  }
+
+  /* ================================
+     MOBILE
+  ================================ */
+  @media (max-width: 980px) {
+    .page-shell { width: calc(100% - 24px); padding: 24px 20px; margin: 16px auto 60px; }
+    .snapshot-grid { grid-template-columns: 1fr; }
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .home-title { font-size: 1.8em; }
+    .snap-value { font-size: 2.2em; }
+  }
+
+</style>
+
+<!-- ================================
+     PAGE SHELL
+================================ -->
+<div class="page-shell">
+
+  <!-- PAGE HEADER -->
+  <div class="home-header">
+    <div class="home-tag">Dashboard</div>
+    <div class="home-title">Good to see you — <em>here's your overview</em></div>
+  </div>
+
+  <!-- ================================
+       SNAPSHOT — 3 STATS
+  ================================ -->
+  <div class="snapshot-grid">
+
+    <div class="snap-card">
+      <div class="snap-label">Questions Today</div>
+      <div class="snap-value">120</div>
+    </div>
+
+    <div class="snap-card">
+      <div class="snap-label">Likes</div>
+      <div class="snap-value">2K</div>
+    </div>
+
+    <div class="snap-card">
+      <div class="snap-label">Most Asked</div>
+      <div class="snap-value" style="font-size:1.6em;letter-spacing:0;">Gluten Free</div>
+    </div>
+
+  </div>
+
+  <!-- ================================
+       MAIN GRID
+  ================================ -->
+  <div class="main-grid">
+
+    <!-- LEFT — System Overview -->
+    <div class="panel">
+      <div class="panel-label">System Overview</div>
+      <div class="system-stack">
+
+        <div class="system-item active">
+          <span class="system-name">Lunch</span>
+          <span class="system-badge badge-success">Active</span>
+        </div>
+
+        <div class="system-item warning">
+          <span class="system-name">Dinner</span>
+          <span class="system-badge badge-warning">Scheduled</span>
+        </div>
+
+        <div class="system-item active">
+          <span class="system-name">Drinks</span>
+          <span class="system-badge badge-success">Active</span>
+        </div>
+
+        <div class="system-item approved">
+          <span class="system-name">Allergen File</span>
+          <span class="system-badge badge-success">Approved</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT — Recent Activity -->
+    <div class="panel">
+      <div class="panel-label">Recent Activity</div>
+
+      <div class="activity-list" id="activityList">
+
+        {% if updates %}
+          {% for u in updates %}
+            <div class="update-card {{ u.status }}">
+              <div class="update-header">
+                <div class="update-meta">
+                  <div class="status-dot {{ u.status }}"></div>
+                  <span class="update-date">{{ u.date }}</span>
+                </div>
+                <div class="update-right">
+                  {% if u.tag %}
+                    <span class="update-tag">{{ u.tag }}</span>
+                  {% endif %}
+                  <button class="delete-btn" onclick="deleteUpdate(this)">✕ Remove</button>
+                </div>
+              </div>
+              <div class="update-text">{{ u.text }}</div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+
+          <div class="update-card info">
+            <div class="update-header">
+              <div class="update-meta">
+                <div class="status-dot info"></div>
+                <span class="update-date">Today · 2:14 PM</span>
+              </div>
+              <div class="update-right">
+                <span class="update-tag">Upload</span>
+                <button class="delete-btn" onclick="deleteUpdate(this)">✕ Remove</button>
+              </div>
+            </div>
+            <div class="update-text">Menu_Jan_2026.xlsx uploaded. 42 items detected. 7 items flagged for review.</div>
+          </div>
+
+          <div class="update-card success">
+            <div class="update-header">
+              <div class="update-meta">
+                <div class="status-dot success"></div>
+                <span class="update-date">Today · 2:22 PM</span>
+              </div>
+              <div class="update-right">
+                <span class="update-tag">Approved</span>
+                <button class="delete-btn" onclick="deleteUpdate(this)">✕ Remove</button>
+              </div>
+            </div>
+            <div class="update-text">Drink_Jan_2026.json approved and is now live in Customer Chat.</div>
+          </div>
+
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<!-- end .page-shell -->
+
+<!-- ================================
+     SCRIPT
+================================ -->
+<script>
+  function deleteUpdate(btn) {
+    const card = btn.closest('.update-card');
+
+    card.classList.add('removing');
+
+    setTimeout(() => {
+      card.remove();
+
+      const list = document.getElementById('activityList');
+      if (list && list.querySelectorAll('.update-card').length === 0) {
+        list.innerHTML = '<div class="empty-state">No recent activity</div>';
+      }
+    }, 300);
+  }
+</script>
+
+{% endblock %}

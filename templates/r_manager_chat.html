@@ -1,0 +1,264 @@
+{% extends "_r_base.html" %}
+
+{% block page_title %}Manager Chat – Pie AI{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* ================================
+   CHAT PANEL
+================================ */
+
+.chat-section {
+  max-width: 1200px;
+  margin: 40px auto 120px;
+  padding: 36px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.85));
+  border-radius: 28px;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.7),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 260px);
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.chat-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #f5c84c;
+}
+
+.chat-subtext {
+  font-size: 0.95rem;
+  color: #cfcfcf;
+  opacity: 0.85;
+}
+
+/* ================================
+   MODE TOGGLE
+================================ */
+
+.chat-mode-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-label {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.mode-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(245,200,76,0.4);
+  background: rgba(255,255,255,0.06);
+  color: #f5c84c;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.mode-btn.active {
+  background: #f5c84c;
+  color: #000;
+  box-shadow: 0 6px 18px rgba(245,200,76,0.45);
+}
+
+.mode-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ================================
+   MESSAGES
+================================ */
+
+.messages {
+  flex: 1;
+  padding: 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(
+    145deg,
+    rgba(20,20,20,0.85),
+    rgba(0,0,0,0.9)
+  );
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.msg {
+  max-width: 78%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.msg.ai {
+  align-self: flex-start;
+  background: rgba(245,200,76,0.15);
+  color: #fff;
+  border-bottom-left-radius: 6px;
+}
+
+.msg.manager {
+  align-self: flex-end;
+  background: rgba(255,255,255,0.08);
+  color: #eee;
+  border-bottom-right-radius: 6px;
+}
+
+/* ================================
+   INPUT BAR
+================================ */
+
+.input-bar {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+.input-bar input {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(245,200,76,0.4);
+  border-radius: 30px;
+  padding: 14px 20px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+.input-bar button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #f5c84c;
+  color: #000;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(245,200,76,0.45);
+}
+
+.input-bar button:hover {
+  background: #ffe28a;
+}
+
+</style>
+
+<section class="chat-section">
+
+  <!-- HEADER -->
+  <div class="chat-header">
+
+    <div>
+      <div class="chat-title">Manager Chat</div>
+      <div class="chat-subtext" id="chatSubtext">
+        Manager Mode • Pulling from JSON Layer (Live Edit State)
+      </div>
+    </div>
+
+    <div class="chat-mode-toggle">
+      <span class="mode-label">Mode:</span>
+
+      <button type="button"
+              id="managerModeBtn"
+              class="mode-btn active"
+              onclick="setMode('manager')">
+        Manager
+      </button>
+
+      <button type="button"
+              id="customerModeBtn"
+              class="mode-btn"
+              onclick="setMode('customer')">
+        Customer
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="messages">
+
+    <div class="msg ai">
+      Hi. I’m ready to help manage your restaurant.<br>
+      You can remove items, update specials, or mark items unavailable.
+    </div>
+
+  </div>
+
+  <!-- INPUT -->
+  <form class="input-bar" method="POST" action="/r-manager-chat">
+
+    <input type="hidden" name="chat_mode" id="chatModeInput" value="manager">
+
+    <input
+      type="text"
+      name="message"
+      placeholder="Type a command..."
+      autocomplete="off"
+      required
+    >
+
+    <button type="submit">➤</button>
+
+  </form>
+
+</section>
+
+<script>
+
+function setMode(mode) {
+
+  const managerBtn = document.getElementById("managerModeBtn");
+  const customerBtn = document.getElementById("customerModeBtn");
+  const modeInput = document.getElementById("chatModeInput");
+  const subtext = document.getElementById("chatSubtext");
+
+  if (mode === "manager") {
+    managerBtn.classList.add("active");
+    customerBtn.classList.remove("active");
+    modeInput.value = "manager";
+
+    subtext.innerText =
+      "Manager Mode • Pulling from JSON Layer (Live Edit State)";
+
+  } else {
+    customerBtn.classList.add("active");
+    managerBtn.classList.remove("active");
+    modeInput.value = "customer";
+
+    subtext.innerText =
+      "Customer Mode • Pulling from Active Database State";
+  }
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends "_r_base.html" %}
+
+{% block page_title %}Settings – Pie AI{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================================
+   SETTINGS PAGE
+================================ */
+
+.settings {
+  width: 100%;
+  max-width: 860px;
+  margin: 40px auto 120px;
+  padding: 0 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* --------------------------------
+   SECTION CONTAINER
+-------------------------------- */
+.section {
+  margin-bottom: 28px;
+  background: rgba(22, 22, 20, 0.85);
+  border-radius: 18px;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.section-title {
+  padding: 14px 22px 10px;
+  font-size: 0.72em;
+  font-weight: 600;
+  color: #bdb487;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+}
+
+/* --------------------------------
+   ITEM ROW
+-------------------------------- */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  cursor: pointer;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* --------------------------------
+   ICON PILL
+-------------------------------- */
+.item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.icon-gold   { background: rgba(245, 200, 76,  0.22); color: #f5c84c; }
+.icon-blue   { background: rgba(126, 180, 255, 0.22); color: #7eb4ff; }
+.icon-green  { background: rgba(82,  204, 142, 0.22); color: #52cc8e; }
+.icon-purple { background: rgba(196, 150, 255, 0.22); color: #c496ff; }
+.icon-red    { background: rgba(255, 100, 100, 0.22); color: #ff7070; }
+.icon-muted  { background: rgba(255, 255, 255, 0.10); color: #b0b0b0; }
+/* --------------------------------
+   LABELS & ARROW
+-------------------------------- */
+.item-label {
+  flex: 1;
+  font-size: 0.97em;
+  color: #eeeeee;
+  letter-spacing: 0.01em;
+}
+
+.item-label.danger {
+  color: #ff7070;
+}
+
+.item-arrow {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<!-- ================================
+     SETTINGS
+================================ -->
+
+<div class="settings">
+
+  <!-- ACCOUNT -->
+  <div class="section">
+    <div class="section-title">Account</div>
+
+    <div class="item">
+      <div class="item-icon icon-gold"><i class="fas fa-user"></i></div>
+      <span class="item-label">Edit Profile</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-blue"><i class="fas fa-shield-alt"></i></div>
+      <span class="item-label">Security</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-purple"><i class="fas fa-bell"></i></div>
+      <span class="item-label">Notifications</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-green"><i class="fas fa-lock"></i></div>
+      <span class="item-label">My Subscription</span>
+      <span class="item-arrow">›</span>
+    </div>
+  </div>
+
+  <!-- SUPPORT & ABOUT -->
+  <div class="section">
+    <div class="section-title">Support & About</div>
+
+    <div class="item">
+      <div class="item-icon icon-gold"><i class="fas fa-life-ring"></i></div>
+      <span class="item-label">Help & Support</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-muted"><i class="fas fa-exclamation-circle"></i></div>
+      <span class="item-label">Disclaimer</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-muted"><i class="fas fa-user-shield"></i></div>
+      <span class="item-label">Privacy Policy</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-muted"><i class="fas fa-file-alt"></i></div>
+      <span class="item-label">Terms and Conditions</span>
+      <span class="item-arrow">›</span>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section">
+    <div class="section-title">Actions</div>
+
+    <div class="item">
+      <div class="item-icon icon-muted"><i class="fas fa-flag"></i></div>
+      <span class="item-label">Report a Problem</span>
+      <span class="item-arrow">›</span>
+    </div>
+
+    <div class="item">
+      <div class="item-icon icon-red"><i class="fas fa-sign-out-alt"></i></div>
+      <span class="item-label danger">Log Out</span>
+      <span class="item-arrow" style="color:rgba(255,100,100,0.3);">›</span>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

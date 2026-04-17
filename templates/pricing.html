@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pie AI • Pricing</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at center, #1c1c1c 0%, #0f0f0f 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      width: 100%;
+      height: 180px;
+      background-image: url('/static/images/italy_house.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      overflow: hidden;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 12px 20px;
+      font-size: 1em;
+      color: #d9cf93;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .page-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Lustria', serif;
+      font-size: 2.6rem;
+      color: #f5c84c;
+      padding: 16px 40px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+      max-width: 900px;
+      width: 100%;
+      padding: 60px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      color: #d4af37;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 40px;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .card {
+      background: rgba(212,175,55,0.05);
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      opacity: 0.75;
+    }
+
+    .card-content {
+      padding: 24px;
+    }
+
+    .tier {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 2.2rem;
+      color: #d4af37;
+      margin-bottom: 16px;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .features li {
+      padding-left: 26px;
+      margin-bottom: 10px;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #d4af37;
+    }
+
+    .cta {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      background: #d4af37;
+      color: #000;
+      font-weight: 600;
+      border-radius: 14px;
+      text-decoration: none;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    .footer a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+
+    .bottom {
+      margin-top: 40px;
+      text-align: center;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="/" class="back-button">←</a>
+    <div class="page-title">Pricing</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <h2 class="section-title">Early Access Plans</h2>
+    <p class="subtitle">Transparent pricing for restaurants joining Pie AI</p>
+
+ <div class="cards">
+
+  <!-- ENTERPRISE (28) -->
+  <div class="card">
+    <img src="/static/images/soup_bg_65.png">
+    <div class="card-content">
+      <div class="tier">Pie AI – Enterprise (28)</div>
+      <div class="price">$139.28 / month</div>
+      <ul class="features">
+        <li>Highest response speed</li>
+        <li>Full allergy protection</li>
+        <li>Unlimited customer interactions</li>
+      </ul>
+      <a href="/restaurant-setup-1" class="cta">Get Started</a>
+    </div>
+  </div>
+
+  <!-- PRO -->
+  <div class="card">
+    <img src="/static/images/y_bg_s2.png">
+    <div class="card-content">
+      <div class="tier">Pie AI – Pro</div>
+      <div class="price">$69.28 / month</div>
+      <ul class="features">
+        <li>Advanced menu AI</li>
+        <li>Full file processing</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="/restaurant-setup-1" class="cta">Get Started</a>
+    </div>
+  </div>
+
+  <!-- STARTER (U8) -->
+  <div class="card">
+    <img src="/static/images/seg_about_bg.png">
+    <div class="card-content">
+      <div class="tier">Pie AI – Starter (U8)</div>
+      <div class="price">$30.28 / month</div>
+      <ul class="features">
+        <li>Basic AI response speed</li>
+        <li>Menu sync every 6 hours</li>
+        <li>Up to 500 customer interactions</li>
+      </ul>
+      <a href="/restaurant-setup-1" class="cta">Get Started</a>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- FOOTER NAV -->
+    <div class="footer">
+  <strong>Company</strong><br>
+  <a href="/">Home</a> ·
+  <a href="/register">Register</a> ·
+  <a href="/about">About Us</a><br>
+  <a href="/why">Allergy Information</a><br><br>
+
+  <strong>Features</strong><br>
+  Manager Mode · Real-Time Updates · Allergy Safety<br><br>
+
+  <strong>Legal</strong><br>
+  <a href="/terms">Terms of Service</a> ·
+  <a href="/report">Report Issues</a><br><br>
+
+  <strong>Support</strong><br>
+  <a href="/contact">Contact Us</a>
+</div>
+
+<div class="bottom">
+  © 2024–2026 Nexus 33 LLC & Pie-AI.com<br>
+  All Rights Reserved<br>
+  A MRK Project
+</div>
+</body>
+</html>

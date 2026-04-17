@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In | Pie AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+
+    /* ================================
+       ROOT
+    ================================ */
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8cc7a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-border: rgba(201,168,76,0.22);
+      --ink:         #0c0c0a;
+      --surface:     #111108;
+      --surface2:    #161612;
+      --text:        #f0ead8;
+      --text-dim:    rgba(240,234,216,0.45);
+      --text-mid:    rgba(240,234,216,0.7);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ================================
+       BACKGROUND GLOW
+    ================================ */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(201,168,76,0.07) 0%, transparent 60%),
+        linear-gradient(to bottom, #0c0c0a 0%, #1a1508 50%, #0c0c0a 100%);
+      z-index: 0;
+    }
+
+    .bg-grain {
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 128px;
+      z-index: 0;
+    }
+
+    /* ================================
+       CARD
+    ================================ */
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      padding: 56px 44px 48px;
+      background: var(--surface2);
+      border: 0.5px solid var(--gold-border);
+      margin: 24px;
+    }
+
+    /* Gold top accent line */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+
+    /* ================================
+       HEADER
+    ================================ */
+    .login-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .login-eyebrow {
+      font-size: 0.65em;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 500;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.6em;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 0.9;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 60px rgba(201,168,76,0.15);
+    }
+
+    .login-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1em;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+
+    /* ================================
+       RULE
+    ================================ */
+    .login-rule {
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+      margin: 0 0 36px;
+    }
+
+    /* ================================
+       FORM
+    ================================ */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .field {
+      position: relative;
+    }
+
+    .field-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85em;
+      color: var(--gold);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 16px 14px 42px;
+      background: var(--surface);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88em;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 0;
+    }
+
+    .field input::placeholder {
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    .field input:focus {
+      border-color: rgba(201,168,76,0.45);
+      background: rgba(17,17,8,0.9);
+    }
+
+    /* ================================
+       SUBMIT BUTTON
+    ================================ */
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      margin-top: 8px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82em;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-login:hover::before { transform: scaleX(1); }
+    .btn-login:hover { background: var(--gold-light); }
+
+    /* ================================
+       FOOTER LINKS
+    ================================ */
+    .login-footer {
+      margin-top: 28px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .login-footer p {
+      font-size: 0.78em;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+
+    .login-footer a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .login-footer a:hover { color: var(--gold-light); }
+
+    .login-footer .forgot {
+      font-size: 0.75em;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .login-footer .forgot:hover { color: var(--gold); }
+
+    /* ================================
+       BACK LINK
+    ================================ */
+    .back-home {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72em;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-home:hover { color: var(--gold); }
+
+    /* ================================
+       MOBILE
+    ================================ */
+    @media (max-width: 480px) {
+      .login-card { padding: 44px 28px 40px; margin: 16px; }
+      .login-title { font-size: 3em; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-glow"></div>
+  <div class="bg-grain"></div>
+
+  <!-- Back to home -->
+  <a href="/" class="back-home">← Home</a>
+
+  <!-- ================================
+       LOGIN CARD
+  ================================ -->
+  <div class="login-card">
+
+    <!-- Header -->
+    <div class="login-header">
+      <div class="login-eyebrow">Welcome to</div>
+      <div class="login-title">Pie AI</div>
+      <div class="login-subtitle">Your Dedicated Restaurant Assistant</div>
+    </div>
+
+    <div class="login-rule"></div>
+
+    <!-- Form -->
+    <form class="login-form" method="POST" action="/login">
+
+      <div class="field">
+        <span class="field-icon">✉</span>
+        <input
+          type="text"
+          name="username"
+          placeholder="Email or Username"
+          autocomplete="username"
+          required>
+      </div>
+
+      <div class="field">
+        <span class="field-icon">🔒</span>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          required>
+      </div>
+
+      <button type="submit" class="btn-login">Log In</button>
+
+    </form>
+
+    <!-- Footer links -->
+    <div class="login-footer">
+      <p>Don't have an account? <a href="/register">Sign Up</a></p>
+      <a href="/forgot-password" class="forgot">Forgot your password?</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

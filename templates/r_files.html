@@ -1,0 +1,578 @@
+{% extends "_r_base.html" %}
+
+{% block content %}
+
+<style>
+
+.files-section {
+    width: 92%;
+    max-width: 1200px;
+    margin: 48px auto 120px;
+    padding: 44px 48px;
+    background: linear-gradient(to bottom, rgba(18,18,18,0.85), rgba(10,10,10,0.95));
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    box-shadow: 0 32px 100px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.files-title {
+    text-align: center;
+    font-size: 1.55em;
+    font-weight: 600;
+    color: #f5c84c;
+    margin-bottom: 36px;
+    letter-spacing: 0.4px;
+}
+
+.files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 60px;
+}
+
+.file-row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+    box-shadow: 0 16px 40px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.file-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 55px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.file-name { font-size: 1.05em; font-weight: 500; }
+
+.file-status { font-size: 0.9em; font-weight: 500; }
+.file-status.active  { color: #3dff84; }
+.file-status.inactive { color: #c9a86a; }
+
+.file-actions {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 160px;
+    padding: 10px;
+    background: rgba(16,16,16,0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 18px 55px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(255,255,255,0.05);
+    z-index: 20;
+}
+
+.file-row.open .file-actions { display: flex; }
+
+.file-actions button {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    border-radius: 12px;
+    padding: 9px 14px;
+    font-size: 0.9em;
+    color: #ffffff;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.file-actions button:hover { background: rgba(255,255,255,0.18); }
+.file-actions .danger { color: #ff6b6b; }
+
+/* ================================
+   CONFIRM DELETE MODAL
+================================ */
+
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.confirm-overlay.show { display: flex; }
+
+.confirm-modal {
+    width: 90%;
+    max-width: 440px;
+    padding: 26px 28px;
+    background: linear-gradient(145deg, rgba(25,25,25,0.95), rgba(15,15,15,0.98));
+    border-radius: 22px;
+    box-shadow: 0 30px 90px rgba(0,0,0,0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+}
+
+.confirm-title { font-size: 1.3em; font-weight: 600; color: #f5c84c; margin-bottom: 12px; }
+.confirm-text  { font-size: 0.95em; color: #d0d0d0; margin-bottom: 10px; line-height: 1.5; }
+.confirm-warning { font-size: 0.82em; color: #ff6b6b; margin-bottom: 22px; background: rgba(255,76,76,0.08); padding: 10px 14px; border-radius: 10px; }
+
+.confirm-actions { display: flex; gap: 14px; justify-content: center; }
+
+.confirm-cancel, .confirm-delete {
+    padding: 10px 18px;
+    border-radius: 14px;
+    border: none;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.confirm-cancel  { background: rgba(255,255,255,0.08); color: #fff; }
+.confirm-cancel:hover { background: rgba(255,255,255,0.14); }
+.confirm-delete  { background: rgba(255,80,80,0.15); color: #ff6b6b; }
+.confirm-delete:hover { background: rgba(255,80,80,0.25); }
+
+/* ================================
+   PDF WARNING MODAL
+================================ */
+
+.pdf-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.pdf-overlay.show { display: flex; }
+
+.pdf-modal {
+    width: 90%;
+    max-width: 360px;
+    background: #111;
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    border: 1px solid rgba(245,200,76,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* ================================
+   UPLOAD AREA
+================================ */
+
+.manage-title {
+    text-align: center;
+    font-size: 1.35em;
+    font-weight: 500;
+    margin: 60px 0 18px;
+    color: #ffffff;
+}
+
+.knowledge-tip {
+    margin: 0 auto 36px;
+    max-width: 820px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.85em;
+    color: rgba(255,255,255,0.65);
+    text-align: center;
+}
+
+.manage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 80px;
+}
+
+.manage-card {
+    height: 210px;
+    border-radius: 26px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+    backdrop-filter: blur(16px);
+    border: 1px dashed rgba(255,255,255,0.28);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.5);
+}
+
+.manage-card:hover {
+    border-color: #f5c84c;
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 26px 70px rgba(0,0,0,0.7);
+}
+
+.manage-icon  { font-size: 3em; margin-bottom: 14px; opacity: 0.85; }
+.manage-label { font-size: 1.15em; font-weight: 500; }
+.manage-subtext { font-size: 0.9em; color: #bcbcbc; margin-top: 6px; }
+.manage-hint  { font-size: 0.75em; color: rgba(255,255,255,0.5); margin-top: 10px; }
+
+/* ================================
+   UPLOAD MODAL
+================================ */
+
+.upload-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.upload-overlay.show { display: flex; }
+
+.upload-modal {
+    width: 92%;
+    max-width: 640px;
+    background: linear-gradient(145deg, rgba(25,25,25,0.96), rgba(15,15,15,0.98));
+    border-radius: 26px;
+    padding: 28px 30px 24px;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.upload-title { text-align: center; font-size: 1.4em; font-weight: 600; color: #f5c84c; margin-bottom: 24px; }
+
+.upload-left { background: rgba(255,255,255,0.05); border-radius: 18px; padding: 18px; }
+
+.upload-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(245,200,76,0.2);
+    color: #f5c84c;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.file-preview { margin-top: 12px; font-size: 0.9em; color: #bbb; word-break: break-word; }
+
+.upload-actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 26px; }
+
+.cancel-btn { padding: 10px 18px; border-radius: 14px; border: none; cursor: pointer; background: rgba(255,255,255,0.1); color: #fff; }
+.save-btn   { padding: 10px 18px; border-radius: 14px; border: none; cursor: pointer; background: rgba(245,200,76,0.3); color: #f5c84c; font-weight: 600; }
+
+.format-note {
+    background: rgba(245,200,76,0.07);
+    border: 1px solid rgba(245,200,76,0.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    color: #bbb;
+    line-height: 1.6;
+    margin-top: 14px;
+}
+
+.format-note strong { color: #f5c84c; }
+
+</style>
+
+<!-- ================================
+     FILES SECTION
+================================ -->
+
+<div class="files-section">
+
+  <div class="files-title">Uploaded Files</div>
+
+  <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+    <button class="upload-btn" style="width:auto;padding:12px 24px;"
+      onclick="openUploadModal('', '.doc,.docx,.xlsx,.csv,image/*', 'Upload File')">
+      + Add File
+    </button>
+  </div>
+
+  <div class="files-list">
+    {% if files and files|length > 0 %}
+      {% for file in files %}
+        <div class="file-row">
+          <span class="file-name">{{ file.name }}</span>
+          <div class="file-actions">
+            <form method="POST" action="/r-files/delete">
+              <input type="hidden" name="filename" value="{{ file.name }}">
+              <input type="hidden" name="category" value="{{ file.category }}">
+              <button type="button" class="danger js-delete-btn">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center;color:#555;padding:40px 0;">
+        No files uploaded yet. Add your first menu file above.
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- ================================
+     DELETE CONFIRM MODAL
+================================ -->
+
+<div class="confirm-overlay" id="deleteConfirm">
+  <div class="confirm-modal">
+    <div class="confirm-title">Delete File?</div>
+    <div class="confirm-text">
+      Are you sure you want to delete <strong id="confirmFileName"></strong>?
+    </div>
+    <div class="confirm-warning">
+      ⚠️ Any menu items sourced only from this file will also be removed from your dataset.
+    </div>
+    <div class="confirm-actions">
+      <button type="button" class="confirm-cancel" id="cancelDelete">Cancel</button>
+      <button type="button" class="confirm-delete" id="confirmDelete">Delete File & Items</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================
+     PDF WARNING MODAL
+================================ -->
+
+<div class="pdf-overlay" id="pdfWarning">
+  <div class="pdf-modal">
+    <div style="font-size:2rem;margin-bottom:12px">⚠️</div>
+    <div style="color:#f5c84c;font-weight:700;font-size:1.1rem;margin-bottom:10px">PDF Detected</div>
+    <div style="color:#ccc;font-size:0.88rem;line-height:1.7;margin-bottom:22px">
+      PDF files may not read correctly.<br><br>
+      For best results please <strong style="color:#fff">upload as JPG or PNG</strong> instead.<br><br>
+      <span style="font-size:0.8rem;color:#888">
+        Canva → Share → Download → JPG<br>
+        Adobe → Export As → JPEG
+      </span>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button onclick="closePdfWarning()" style="flex:1;padding:12px;border-radius:12px;background:rgba(255,255,255,0.08);border:none;color:#fff;cursor:pointer;">
+        Keep PDF anyway
+      </button>
+      <button onclick="closePdfWarning()" style="flex:1;padding:12px;border-radius:12px;background:#f5c84c;border:none;color:#000;font-weight:700;cursor:pointer;">
+        Got it
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================
+     UPLOAD MODAL
+================================ -->
+
+<div class="upload-overlay" id="uploadModal">
+  <div class="upload-modal">
+
+    <h2 class="upload-title" id="uploadTitle">Upload File</h2>
+
+    <form id="uploadForm" action="/r-files/upload" method="POST" enctype="multipart/form-data">
+
+      <input type="hidden" name="category" id="modalCategory">
+
+      <div class="upload-left">
+
+        <input type="file" id="modalFileInput" name="files" hidden multiple>
+
+        <button type="button" class="upload-btn" onclick="chooseFromDevice()">From Device</button>
+        <button type="button" class="upload-btn" style="margin-top:10px;" onclick="takePhoto()">Take Photo</button>
+
+        <div class="file-preview" id="filePreview">No file selected</div>
+
+        <div class="format-note">
+          ✅ <strong>Best:</strong> JPG, PNG — photos of your menu work perfectly<br>
+          ✅ <strong>Great:</strong> Word (.docx), Excel (.xlsx), CSV<br>
+          ⚠️ <strong>PDF:</strong> May not read correctly — export as JPG/PNG for best results
+        </div>
+
+        <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.95em;color:#ccc;">Restaurant Menu File</span>
+          <input type="checkbox" id="modalActive" checked style="transform:scale(1.2);">
+        </div>
+
+        <input type="hidden" name="active" id="modalActiveHidden" value="true">
+
+      </div>
+
+      <div class="upload-actions">
+        <button type="button" class="cancel-btn" onclick="closeUploadModal()">Cancel</button>
+        <button type="submit" class="save-btn">Upload</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ================================
+  // FILE ROW CLICK → OPEN MENU
+  // ================================
+
+  const fileRows = document.querySelectorAll(".file-row")
+
+  function closeAllFileMenus() {
+    fileRows.forEach(r => r.classList.remove("open"))
+  }
+
+  fileRows.forEach(row => {
+    row.addEventListener("click", (e) => {
+      e.stopPropagation()
+      const isOpen = row.classList.contains("open")
+      closeAllFileMenus()
+      if(!isOpen) row.classList.add("open")
+    })
+  })
+
+  document.addEventListener("click", closeAllFileMenus)
+
+  // ================================
+  // DELETE CONFIRM
+  // ================================
+
+  const confirmOverlay  = document.getElementById("deleteConfirm")
+  const confirmFileName = document.getElementById("confirmFileName")
+  const cancelDeleteBtn = document.getElementById("cancelDelete")
+  const confirmDeleteBtn = document.getElementById("confirmDelete")
+
+  let deleteFormPending = null
+
+  document.querySelectorAll(".js-delete-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      const row  = btn.closest(".file-row")
+      deleteFormPending = btn.closest("form")
+      confirmFileName.textContent = row.querySelector(".file-name")?.textContent || "this file"
+      confirmOverlay.classList.add("show")
+      row.classList.remove("open")
+    })
+  })
+
+  cancelDeleteBtn.addEventListener("click", () => {
+    deleteFormPending = null
+    confirmOverlay.classList.remove("show")
+  })
+
+  confirmDeleteBtn.addEventListener("click", () => {
+    if(deleteFormPending) deleteFormPending.submit()
+  })
+
+  // ================================
+  // PDF WARNING
+  // ================================
+
+  const modalFileInput = document.getElementById("modalFileInput")
+
+  if(modalFileInput) {
+    modalFileInput.addEventListener("change", () => {
+      const files = Array.from(modalFileInput.files || [])
+      const hasPdf = files.some(f => f.name.toLowerCase().endsWith(".pdf"))
+      if(hasPdf) document.getElementById("pdfWarning").classList.add("show")
+
+      // File name preview
+      const preview = document.getElementById("filePreview")
+      if(preview){
+        preview.textContent = files.length > 0
+          ? files.map(f => f.name).join(", ")
+          : "No file selected"
+      }
+    })
+  }
+
+  // ================================
+  // UPLOAD MODAL
+  // ================================
+
+  const modal          = document.getElementById("uploadModal")
+  const uploadTitle    = document.getElementById("uploadTitle")
+  const modalCategory  = document.getElementById("modalCategory")
+  const filePreview    = document.getElementById("filePreview")
+  const modalActive    = document.getElementById("modalActive")
+  const modalActiveHidden = document.getElementById("modalActiveHidden")
+  const uploadForm     = document.getElementById("uploadForm")
+
+  if(modalActive && modalActiveHidden){
+    modalActive.addEventListener("change", () => {
+      modalActiveHidden.value = modalActive.checked ? "true" : "false"
+    })
+  }
+
+  if(uploadForm){
+    uploadForm.addEventListener("submit", (e) => {
+      if(!modalFileInput || !modalFileInput.files || modalFileInput.files.length === 0){
+        e.preventDefault()
+        alert("Please choose a file first.")
+      }
+    })
+  }
+
+  if(modal){
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) closeUploadModal()
+    })
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") closeUploadModal()
+  })
+
+  window.openUploadModal = function(sourceCategory, accept, titleText) {
+    if(!modal) return
+    if(modalCategory)    modalCategory.value    = sourceCategory || ""
+    if(modalFileInput){  modalFileInput.accept  = accept || ""; modalFileInput.value = "" }
+    if(uploadTitle)      uploadTitle.textContent = titleText || "Upload File"
+    if(filePreview)      filePreview.textContent = "No file selected"
+    if(modalActive)      modalActive.checked     = true
+    if(modalActiveHidden) modalActiveHidden.value = "true"
+    modal.classList.add("show")
+  }
+
+  window.closeUploadModal = function() {
+    if(!modal) return
+    modal.classList.remove("show")
+    if(modalFileInput)   modalFileInput.value   = ""
+    if(filePreview)      filePreview.textContent = "No file selected"
+  }
+
+})
+
+window.chooseFromDevice = function() {
+  const input = document.getElementById("modalFileInput")
+  input.removeAttribute("capture")
+  input.click()
+}
+
+window.takePhoto = function() {
+  const input = document.getElementById("modalFileInput")
+  input.setAttribute("capture", "environment")
+  input.accept = "image/*"
+  input.click()
+}
+
+window.closePdfWarning = function() {
+  document.getElementById("pdfWarning").classList.remove("show")
+}
+
+</script>
+
+{% endblock %}

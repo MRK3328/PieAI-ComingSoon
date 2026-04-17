@@ -4,391 +4,670 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Why Pie AI | Safer Dining with AI</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
-  
-<!-- Mobile Fixes + Overrides -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ================================
+       ROOT
+    ================================ */
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8cc7a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-border: rgba(201,168,76,0.22);
+      --ink:         #0c0c0a;
+      --surface:     #111108;
+      --surface2:    #161612;
+      --text:        #f0ead8;
+      --text-dim:    rgba(240,234,216,0.45);
+      --text-mid:    rgba(240,234,216,0.7);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      background-color: #000;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
       overflow-x: hidden;
     }
 
-        /* =========================================================
+    /* ================================
        NAVBAR
-    ========================================================= */
+    ================================ */
     .navbar {
       width: 100%;
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.85);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      height: 68px;
+      background: rgba(12,12,10,0.94);
+      backdrop-filter: blur(24px);
+      border-bottom: 0.5px solid var(--gold-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 40px;
+      padding: 0 40px;
     }
 
-    .navbar img { height: 45px; width: auto; }
+    .nav-logo {
+      height: 44px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(201,168,76,0.25);
+      cursor: pointer;
+    }
 
-    .navbar h1 {
-      color: #d4af37;
-      font-size: 1.6rem;
-      letter-spacing: 3px;
+    .nav-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* DROPDOWN */
+    .dropdown { position: relative; }
+
+    .dropbtn {
+      background: transparent;
+      color: var(--gold);
+      padding: 8px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
       font-weight: 500;
-      flex: 1;
-      text-align: center;
-      margin-right: 80px;
-      transition: color 0.3s ease, text-shadow 0.3s ease;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .navbar h1:hover {
-      color: #fff;
-      text-shadow: 0 0 8px #d4af37;
+    .dropbtn:hover { background: var(--gold-dim); }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: rgba(12,12,10,0.98);
+      min-width: 200px;
+      border: 0.5px solid var(--gold-border);
+      backdrop-filter: blur(20px);
+      z-index: 100;
     }
-/* ================= DROPDOWN MENU ================= */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
 
-.dropbtn {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #d4af37;
-  padding: 10px 20px;
-  font-family: 'Lustria', serif;
-  font-size: 1rem;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
+    .dropdown-content a {
+      color: var(--text-dim);
+      padding: 13px 20px;
+      display: block;
+      text-decoration: none;
+      font-size: 0.78em;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-bottom: 0.5px solid rgba(255,255,255,0.05);
+      transition: color 0.2s, background 0.2s;
+    }
 
-.dropbtn:hover {
-  background-color: #d4af37;
-  color: #000;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
+    .dropdown-content a:last-child { border-bottom: none; }
+    .dropdown-content a:hover { color: var(--gold); background: var(--gold-dim); }
+    .dropdown:hover .dropdown-content { display: block; }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 110%;
-  background-color: rgba(0, 0, 0, 0.95);
-  min-width: 180px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  z-index: 1001;
-}
+    body { padding-top: 68px; }
 
-.dropdown-content a {
-  color: #fff;
-  padding: 12px 16px;
-  display: block;
-  text-decoration: none;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.dropdown-content a:hover {
-  background-color: #d4af37;
-  color: #000;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-    /* === HERO SECTION === */
+    /* ================================
+       HERO
+    ================================ */
     .hero {
-      background: url("{{ url_for('static', filename='images/soup_bg_65.png') }}") no-repeat center center / cover;
-      padding: 160px 40px 120px;
-      text-align: center;
       position: relative;
+      padding: 140px 40px 120px;
+      text-align: center;
+      background-image: url("{{ url_for('static', filename='images/soup_bg_65.png') }}");
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
     }
+
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 0;
+      background: rgba(0,0,0,0.58);
     }
+
+    /* Decorative horizontal rules */
+    .hero-rule-top {
+      position: absolute;
+      top: 100px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+    }
+
+    .hero-rule-bottom {
+      position: absolute;
+      bottom: 100px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+    }
+
     .hero-content {
       position: relative;
-      z-index: 1;
-      max-width: 900px;
+      z-index: 2;
+      max-width: 860px;
       margin: auto;
     }
-    .hero-content h1 {
-      font-family: 'Lustria', serif;
-      color: #fff;
-      font-size: 2.5rem;
-      margin-bottom: 25px;
-      letter-spacing: 1px;
+
+    .hero-eyebrow {
+      font-size: 0.68em;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0.75;
     }
-    .hero-content p {
-      color: #e0e0e0;
-      font-size: 1.2rem;
-      line-height: 1.8;
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 28px;
+      text-shadow: 0 0 60px rgba(201,168,76,0.1);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero p {
+      font-size: 1em;
+      line-height: 1.85;
+      color: var(--text-mid);
+      margin-bottom: 12px;
+      font-weight: 300;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ================================
+       DIVIDER
+    ================================ */
+    .divider {
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+    }
+
+    /* ================================
+       STATS BAR
+    ================================ */
+    .stats {
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 0.5px solid var(--gold-border);
+    }
+
+    .stat {
+      text-align: center;
+      padding: 40px 20px;
+      border-right: 0.5px solid var(--gold-border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8em;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1;
       margin-bottom: 10px;
     }
 
-    /* === QUOTE SECTION === */
-.quote-section {
-  background: url("{{ url_for('static', filename='images/y_bg_s2.png') }}") no-repeat center center / cover;
-  padding: 120px 20px;
-  text-align: center;
-  position: relative;
-}
+    .stat-label {
+      font-size: 0.68em;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-.quote-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 0;
-}
+    /* ================================
+       QUOTE SECTION
+    ================================ */
+    .quote-section {
+      background-image: url("{{ url_for('static', filename='images/y_bg_s2.png') }}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 140px 60px;
+      position: relative;
+    }
 
-.quote-container {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-}
+    .quote-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+    }
 
-/* === QUOTE BOXES === */
-.quote-box {
-  background: rgba(15, 15, 15, 0.75);
-  border-radius: 20px;
-  padding: 40px 30px;
-  width: 350px;
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-}
+    .quote-header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 64px;
+    }
 
-.quote-box:hover {
-  transform: translateY(-8px) scale(1.04);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-  background: rgba(255, 255, 255, 0.05);
-}
+    .section-tag {
+      font-size: 0.68em;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
 
-/* === QUOTE TEXT === */
-.quote-box h3 {
-  color: #d4af37;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  margin-bottom: 18px;
-  text-transform: uppercase;
-}
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.15;
+    }
 
-.quote-box p {
-  color: #ffffff;
-  font-size: 1.05rem;
-  line-height: 1.7;
-  margin-bottom: 18px;
-  font-family: 'Lustria', serif;
-  font-weight: 300;
-}
+    .quote-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
 
-/* === QUOTE SOURCE === */
-.quote-source {
-  color: #c9b573;
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.4);
-  padding-top: 10px;
-  letter-spacing: 0.5px;
-  transition: color 0.3s ease;
-}
+    .quote-box {
+      background: rgba(12,12,10,0.82);
+      border: 0.5px solid var(--gold-border);
+      backdrop-filter: blur(16px);
+      padding: 36px 28px;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s;
+      overflow: hidden;
+    }
 
-.quote-box:hover .quote-source {
-  color: #fff5cc;
-}
+    /* Gold top line on hover */
+    .quote-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
 
+    .quote-box:hover {
+      border-color: rgba(201,168,76,0.45);
+      transform: translateY(-4px);
+    }
 
-    /* =========================================================
-   FOOTER
-========================================================= */
-footer {
-  background: url("{{ url_for('static', filename='images/goldxbg.png') }}") no-repeat center center / cover;
-  color: #d4af37;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-  padding: 60px 80px;
-  flex-wrap: wrap;
-  text-shadow: 0 0 10px rgb(0, 0, 0);
-}
+    .quote-box:hover::before { opacity: 1; }
 
-footer img {
-  height: 50px;
-  margin-bottom: 10px;
-  transition: transform 0.3s ease;
-}
+    .quote-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3em;
+      font-weight: 300;
+      color: rgba(201,168,76,0.14);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
 
-footer img:hover {
-  transform: scale(1.1);
-}
+    .quote-box h3 {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
 
-footer p {
-  max-width: 300px;
-  line-height: 1.6;
-}
+    .quote-box p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15em;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--text-mid);
+      margin-bottom: 24px;
+    }
 
-footer h4 {
-  font-family: 'Lustria', serif;
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  color: #d0c7a1;
-}
+    .quote-source {
+      font-size: 0.68em;
+      color: var(--gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding-top: 16px;
+      border-top: 0.5px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-footer ul {
-  list-style: none;
-  padding: 0;
-}
+    .quote-source::after {
+      content: '→';
+      font-size: 1em;
+      transition: transform 0.2s;
+    }
 
-footer ul li {
-  margin-bottom: 8px;
-}
+    .quote-box:hover .quote-source::after {
+      transform: translateX(4px);
+    }
 
-footer ul li a {
-  color: #d4af37;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
+    /* ================================
+       MISSION STRIP
+    ================================ */
+    .mission {
+      background: var(--surface2);
+      padding: 100px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      border-top: 0.5px solid var(--gold-border);
+      border-bottom: 0.5px solid var(--gold-border);
+    }
 
-footer ul li a:hover {
-  color: #fff;
-}
+    .mission h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8em;
+      font-weight: 400;
+      line-height: 1.18;
+      color: var(--text);
+    }
 
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  color: #d4af37;
-  font-size: 0.9rem;
-  padding: 25px 0;
-  text-shadow: 0 0 8px rgba(127, 129, 17, 0.4);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-}
+    .mission h2 em { font-style: italic; color: var(--gold); }
+
+    .mission-right p {
+      font-size: 0.92em;
+      color: var(--text-dim);
+      line-height: 1.88;
+      margin-bottom: 14px;
+      font-weight: 300;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      padding: 13px 32px;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ================================
+       FOOTER
+    ================================ */
+    footer {
+      background: var(--ink);
+      border-top: 0.5px solid var(--gold-border);
+      padding: 64px 80px 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      height: 42px;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    .footer-desc {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      line-height: 1.85;
+    }
+
+    .footer-col-title {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul { list-style: none; padding: 0; }
+    .footer-col ul li { margin-bottom: 11px; }
+    .footer-col ul li a {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      padding-top: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* ================================
+       MOBILE
+    ================================ */
+    @media (max-width: 900px) {
+      .navbar { padding: 0 20px; }
+      .nav-title { display: none; }
+      .hero { padding: 100px 24px 80px; }
+      .stats { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 0.5px solid var(--gold-border); }
+      .stat:last-child { border-bottom: none; }
+      .quote-section { padding: 80px 24px; }
+      .quote-container { grid-template-columns: 1fr; }
+      .mission { grid-template-columns: 1fr; padding: 70px 24px; gap: 40px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
   </style>
+</head>
 
+<body>
 
-<!-- =========================================================
-       NAVBAR
-  ========================================================= -->
+<!-- ================================
+     NAVBAR
+================================ -->
 <div class="navbar">
-  <img src="{{ url_for('static', filename='images/home_button.svg') }}" 
-       alt="Pie AI Logo" 
-       onclick="window.location.href='/'" 
-       style="cursor: pointer;">
-  
-  <h1>PIE AI</h1>
-
-  <!-- Right-Side Dropdown Menu -->
+  <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+       alt="Pie AI" class="nav-logo"
+       onclick="window.location.href='/'">
+  <div class="nav-title">Pie AI</div>
   <div class="dropdown">
     <button class="dropbtn">Menu ▾</button>
     <div class="dropdown-content">
-      <a href="{{ url_for('about_page') }}">About Us</a>
-      <a href="{{ url_for('contact_page') }}">Contact</a>
-      <a href="{{ url_for('why_page') }}">Allergy Importance</a>
-      <a href="{{ url_for('preregister_page') }}">Pre-Register</a>
+      <a href="/about">About Us</a>
+      <a href="/contact">Contact</a>
+      <a href="/why">Allergy Importance</a>
+      <a href="/restaurant-setup-1">Register</a>
     </div>
   </div>
 </div>
 
-  <!-- === HERO SECTION === -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Every Meal Should Be Safe</h1>
-      <p>Every day, people trust restaurants with their health — yet food allergies continue to cause thousands of emergency visits and hundreds of deaths each year.</p>
-      <p>Many of these incidents happen simply because staff don’t have fast, reliable access to accurate allergen information. Pie AI was created to fix this.</p>
-      <p>Our goal is to make dining safer, smarter, and more human — helping restaurants communicate clearly, update menus in real time, and protect customers from preventable mistakes.</p>
-    </div>
-  </section>
-
- <!-- === QUOTE SECTION === -->
-<section class="quote-section">
-  <div class="quote-container">
-
-    <div class="quote-box" onclick="window.open('https://www.cdc.gov/mmwr/volumes/66/wr/mm6615a2.htm', '_blank')">
-      <h3>ONE MISTAKE CAN BE THE DIFFERENCE</h3>
-      <p>“Nearly half of all fatal food allergy reactions start in restaurants.”</p>
-      <div class="quote-source">CDC, U.S. Centers for Disease Control and Prevention</div>
-    </div>
-
-    <div class="quote-box" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/33338685/', '_blank')">
-      <h3>FOOD SAFETY ISN’T OPTIONAL</h3>
-      <p>“Over 50% of allergy reactions happen even after customers warn restaurant staff.”</p>
-      <div class="quote-source">NIH / PubMed</div>
-    </div>
-
-    <div class="quote-box" onclick="window.open('https://journals.lww.com/jphmp/fulltext/2020/11000/deaths%2C_hospitalizations%2C_and_emergency_department.8.aspx', '_blank')">
-      <h3>A SINGLE INGREDIENT CAN CHANGE EVERYTHING</h3>
-      <p>“More than 30,000 Americans end up in emergency rooms each year because of food served in restaurants.”</p>
-      <div class="quote-source">Journal of Public Health Management & Practice</div>
-    </div>
-
+<!-- ================================
+     HERO
+================================ -->
+<section class="hero">
+  <div class="hero-rule-top"></div>
+  <div class="hero-rule-bottom"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Why it matters</div>
+    <h1>Every meal should<br>always feel <em>Safe</em></h1>
+    <p>Food allergies cause thousands of emergency visits every year  many due to preventable mistakes in restaurants.</p>
+    <p>Pie AI helps restaurants communicate clearly, update menus instantly, and protect every guest at the table.</p>
   </div>
 </section>
 
+<div class="divider"></div>
 
-  <!-- === FOOTER === -->
+<!-- ================================
+     STATS BAR
+================================ -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">30K+</span>
+    <span class="stat-label">ER visits yearly from restaurant food</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">50%</span>
+    <span class="stat-label">Of reactions happen after staff were warned</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">~50%</span>
+    <span class="stat-label">Of fatal reactions start in restaurants</span>
+  </div>
+</div>
+
+<!-- ================================
+     QUOTES
+================================ -->
+<section class="quote-section">
+
+  <div class="quote-header">
+    <div class="section-tag">The data</div>
+    <div class="section-title">This isn't a Small Problem</div>
+  </div>
+
+  <div class="quote-container">
+
+    <div class="quote-box"
+         onclick="window.open('https://www.cdc.gov/mmwr/volumes/66/wr/mm6615a2.htm','_blank')">
+      <div class="quote-num">01</div>
+      <h3>One mistake can be the difference</h3>
+      <p>"Nearly half of fatal food allergy reactions start in restaurants."</p>
+      <div class="quote-source">CDC</div>
+    </div>
+
+    <div class="quote-box"
+         onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/33338685/','_blank')">
+      <div class="quote-num">02</div>
+      <h3>Food safety isn't optional</h3>
+      <p>"Over 50% of reactions happen even after staff are warned."</p>
+      <div class="quote-source">NIH / PubMed</div>
+    </div>
+
+    <div class="quote-box"
+         onclick="window.open('https://journals.lww.com/jphmp/fulltext/2020/11000/deaths%2C_hospitalizations%2C_and_emergency_department.8.aspx','_blank')">
+      <div class="quote-num">03</div>
+      <h3>A single ingredient matters</h3>
+      <p>"Over 30,000 ER visits each year stem from restaurant food."</p>
+      <div class="quote-source">Public Health Journal</div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================================
+     MISSION
+================================ -->
+<section class="mission">
+  <div>
+    <div class="section-tag" style="margin-bottom:16px;">Our answer</div>
+    <h2>We built the bridge between what a restaurant <em>knows</em> and what a guest <em>needs</em></h2>
+  </div>
+  <div class="mission-right">
+    <p>Pie AI gives restaurants a real time AI assistant that knows your menu, your allergens, and your specials  so guests get clear, safe answers the moment they ask.</p>
+    <p>No more guesswork. No more whispered conversations between servers and kitchens. Just clarity, instantly.</p>
+    <a href="/restaurant-setup-1" class="btn-gold">Register your restaurant →</a>
+  </div>
+</section>
+
+<!-- ================================
+     FOOTER
+================================ -->
 <footer>
-  <div class="footer-left">
-    <!-- Home button -->
-    <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='images/home_button.svg') }}" alt="Pie AI Logo">
-    </a>
-    <p>
-      Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
-    </p>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <a href="/">
+        <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+             alt="Pie AI" class="footer-logo">
+      </a>
+      <p class="footer-desc">Pie AI is an AI-powered restaurant assistant focused on allergy safety, real time clarity, and smarter dining experiences.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/why">Allergy Information</a></li>
+        <li><a href="/restaurant-setup-1">Register</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Features</div>
+      <ul>
+        <li><a href="#">Manager Mode</a></li>
+        <li><a href="#">Real-Time Menu Updates</a></li>
+        <li><a href="#">Allergy Safety Intelligence</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal & Support</div>
+      <ul>
+        <li><a href="/terms">Terms of Service</a></li>
+        <li><a href="/report">Report Issues</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+      </ul>
+    </div>
   </div>
-
-  <div class="footer-center">
-    <h4>Company</h4>
-    <ul>
-      <!-- Goes to about.html -->
-      <li><a href="{{ url_for('about_page') }}">About Us</a></li>
-
-      <!-- Scrolls to features section on home page -->
-      <li><a href="{{ url_for('home') }}#features">Features</a></li>
-    </ul>
-  </div>
-
-  <div class="footer-support">
-    <h4>Support</h4>
-    <ul>
-      <!-- Goes to contact.html -->
-      <li><a href="{{ url_for('contact_page') }}">Contact Us</a></li>
-    </ul>
+  <div class="footer-bottom">
+    <p>© 2024–2026 Nexus 33 LLC · Pie-AI.com</p>
+    <p>All Rights Reserved · A MRK Production</p>
   </div>
 </footer>
-
-<div class="footer-bottom">
-  <p>All Rights Reserved © 2024</p>
-  <p>Nexus 33 LLC & Pie-AI.com</p>
-  <p>A MRK Production</p>
-</div>
 
 </body>
 </html>

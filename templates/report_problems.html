@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pie AI • Report a Problem</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lustria&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: radial-gradient(circle at center, #1c1c1c 0%, #0f0f0f 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      width: 100%;
+      height: 180px;
+      background-image: url('/static/images/italy_house.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      overflow: hidden;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 12px 20px;
+      font-size: 1em;
+      font-weight: 500;
+      color: #d9cf93;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .page-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.6em;
+      font-weight: 600;
+      color: #f5c84c;
+      padding: 16px 40px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 900px;
+      width: 100%;
+      padding: 70px 24px;
+      text-align: center;
+    }
+
+    .content h2 {
+      font-family: 'Lustria', serif;
+      font-size: 2.2rem;
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
+
+    .content p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #ddd;
+      max-width: 720px;
+      margin: 0 auto 40px;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 16px 60px;
+      background: linear-gradient(to right, #d4af37, #b48a1d);
+      color: #000;
+      font-family: 'Lustria', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .support-btn:hover {
+      background: #fff5cc;
+      transform: scale(1.07);
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+    }
+
+    /* FOOTER */
+     .footer {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(212, 175, 55, 0.15);
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    .footer a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .bottom {
+      margin-top: 40px;
+      text-align: center;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <a href="/" class="back-button">←</a>
+    <div class="page-title">Report a Problem</div>
+  </div>
+
+  <div class="content">
+    <h2>We’re Sorry to Hear That</h2>
+    <p>
+      Pie AI is built to make dining safer and smoother, and we know that issues can
+      be frustrating. If something didn’t work as expected, we want to fix it.
+    </p>
+    <p>
+      Please contact Pie AI support with any trouble you may have faced while using
+      the app. Your feedback helps us improve and protect every user.
+    </p>
+
+    <a href="mailto:support@pie-ai.com" class="support-btn">
+      support@pie-ai.com
+    </a>
+  </div>
+
+<div class="footer">
+  <strong>Company</strong><br>
+  <a href="/">Home</a> ·
+  <a href="/register">Register</a> ·
+  <a href="/about">About Us</a><br>
+  <a href="/why">Allergy Information</a><br><br>
+
+  <strong>Features</strong><br>
+  Manager Mode · Real-Time Updates · Allergy Safety<br><br>
+
+  <strong>Legal</strong><br>
+  <a href="/terms">Terms of Service</a> ·
+  <a href="/report">Report Issues</a><br><br>
+
+  <strong>Support</strong><br>
+  <a href="/contact">Contact Us</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,723 @@
+{% extends "_r_base.html" %}
+
+{% block page_title %}Activity Dashboard – Pie AI{% endblock %}
+
+{% block content %}
+
+<style>
+
+.activity-section {
+  padding: 44px 36px 36px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.38), rgba(0,0,0,0.85));
+  border-radius: 30px;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.activity-header-text { flex: 1; }
+
+.activity-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #f5c84c;
+  margin-bottom: 6px;
+}
+
+.activity-subtext {
+  font-size: 0.95rem;
+  color: #cfcfcf;
+  opacity: 0.85;
+}
+
+.profile-avatar {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #f5c84c;
+  overflow: hidden;
+  box-shadow: 0 0 0 6px rgba(245,200,76,0.15);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.live-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #3dff84;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(61,255,132,0.9);
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  70%  { transform: scale(1.8); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.customer-chat-btn {
+  padding: 12px 20px;
+  background: #f5c84c;
+  color: #000;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(245,200,76,0.45);
+}
+
+/* ================================
+   STATS GRID
+================================ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.stat-card {
+  padding: 26px;
+  background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+}
+
+.stat-value { font-size: 2.6rem; font-weight: 700; color: #f5c84c; }
+.stat-label { font-size: 0.95rem; color: #cfcfcf; }
+
+.gauge-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(#f5c84c 0% 75%, rgba(255,255,255,0.12) 75% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: inset 0 0 22px rgba(245,200,76,0.28), 0 14px 36px rgba(0,0,0,0.6);
+}
+
+/* ================================
+   INSIGHTS
+================================ */
+
+.activity-insights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.insight {
+  padding: 14px 18px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(145deg, #141414, #0b0b0b);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.insight .label { font-size: 0.8rem; color: #9a9a9a; }
+.insight .value { font-size: 0.95rem; font-weight: 500; color: #ffffff; }
+.insight .value.good { color: #3dff84; }
+
+/* ================================
+   LIVE DATABASE PANEL
+================================ */
+
+.db-panel {
+  margin-top: 28px;
+  padding: 32px;
+  background: linear-gradient(145deg, #141414, #0c0c0c);
+  border-radius: 26px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.db-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.db-header h3 { color: #f5c84c; margin: 0; font-weight: 600; }
+
+.db-sync {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.db-sync-dot {
+  width: 8px;
+  height: 8px;
+  background: #3dff84;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(61,255,132,0.8);
+  animation: pulse 1.6s infinite;
+}
+
+.db-refresh {
+  background: #f5c84c;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.db-refresh:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(245,200,76,0.4); }
+
+.db-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+/* ================================
+   CATEGORY CARDS
+================================ */
+
+.db-card {
+  padding: 22px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.05);
+  transition: 0.25s ease;
+  border-left: 3px solid transparent;
+}
+
+.db-card.is-live {
+  border-left-color: #3dff84;
+  background: linear-gradient(145deg, rgba(61,255,132,0.07), rgba(255,255,255,0.03));
+}
+
+.db-card.is-off {
+  border-left-color: #444;
+  opacity: 0.7;
+}
+
+.db-card:hover { transform: translateY(-4px); }
+
+.db-title { font-weight: 600; margin-bottom: 6px; color: #fff; font-size: 1rem; }
+.db-meta  { font-size: 0.82rem; color: #aaa; line-height: 1.5; }
+
+.db-badge {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.db-badge.live { background: rgba(61,255,132,0.15); color: #3dff84; }
+.db-badge.off  { background: rgba(255,255,255,0.08); color: #888; }
+.db-badge.flag { background: rgba(245,200,76,0.15); color: #f5c84c; margin-left: 6px; }
+
+.db-empty {
+  text-align: center;
+  color: #555;
+  padding: 40px;
+  font-size: 0.9rem;
+}
+
+/* ================================
+   SLIDER / PERSONALITY
+================================ */
+
+.field-label { margin: 22px 0 12px; color: #8b845f; }
+
+.slider-container {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slider-track {
+  width: 100%;
+  max-width: 760px;
+  height: 34px;
+  background: linear-gradient(to right, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 6px 14px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.slider-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #f5c84c, #e0a91c, #c8ff7a);
+  border-radius: 50px;
+  box-shadow: inset 0 0 18px rgba(255,255,255,0.25), 0 6px 18px rgba(245,200,76,0.35);
+  transition: width 0.2s ease;
+}
+
+.slider-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at top left, #fff6d8, #f5c84c);
+  border: 3px solid rgba(0,0,0,0.55);
+  box-shadow: 0 10px 26px rgba(245,200,76,0.55), inset 0 0 14px rgba(255,255,255,0.65);
+  transition: left 0.2s ease;
+}
+
+.slider-labels { width: 82%; display: flex; justify-content: space-between; margin-top: 16px; }
+.slider-labels .roman { font-size: 2.4rem; font-weight: 600; color: #f5c84c; opacity: 0.95; }
+.slider-hint { margin-top: 14px; font-size: 1rem; color: #bfbfbf; text-align: center; }
+
+/* active level highlight */
+.slider-labels .roman.active { opacity: 1; text-shadow: 0 0 18px rgba(245,200,76,0.8); }
+.slider-labels .roman { opacity: 0.4; transition: opacity 0.2s, text-shadow 0.2s; }
+
+.personality-wrapper { margin-top: 30px; }
+
+.personality-toggle {
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(245,200,76,0.3);
+  color: #f5c84c;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.personality-panel { display: none; margin-top: 18px; }
+
+.personality-select {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  color: #fff;
+  border: none;
+  outline: none;
+  margin-top: 8px;
+}
+
+.info-wrapper { margin-top: 30px; }
+
+.info-toggle {
+  padding: 16px 20px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(245,200,76,0.35);
+  color: #f5c84c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-panel {
+  display: none;
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+}
+
+.info-panel.open { display: block; }
+
+.info-panel input, .info-panel textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  border: 1px solid rgba(245,200,76,0.2);
+  color: #fff;
+  outline: none;
+}
+
+.info-panel textarea { min-height: 110px; resize: vertical; }
+
+.save-btn {
+  margin-top: 26px;
+  padding: 20px;
+  width: 100%;
+  background: linear-gradient(135deg, #f5c84c, #d4a017);
+  border-radius: 26px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  font-size: 1rem;
+  transition: opacity 0.2s;
+}
+.save-btn:hover { opacity: 0.9; }
+
+.save-toast {
+  display: none;
+  margin-top: 14px;
+  text-align: center;
+  color: #3dff84;
+  font-size: 0.9rem;
+}
+
+</style>
+
+<section class="activity-section">
+
+  <!-- HEADER -->
+  <div class="activity-header">
+    <div class="profile-avatar">
+      <img src="{{ url_for('static', filename='images/ai_crust.png') }}" alt="AI Avatar">
+      <span class="live-dot"></span>
+    </div>
+    <div class="activity-header-text">
+      <h2 class="activity-title">Activity Dashboard</h2>
+      <p class="activity-subtext">Live view of your menu and AI status</p>
+    </div>
+    <a href="/restaurant/{{ profile.id if profile else '' }}/chat" class="customer-chat-btn">
+      View Customer Chat
+    </a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="gauge-card">
+      <div class="gauge" id="gaugeDisplay">—</div>
+      <div class="stat-label">Avg Liked Responses</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="chatsToday">—</div>
+      <div class="stat-label">Chats Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="totalChats">—</div>
+      <div class="stat-label">Total Chats</div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="activity-insights">
+    <div class="insight">
+      <span class="label">Top Intent Today</span>
+      <span class="value" id="topIntent">—</span>
+    </div>
+    <div class="insight">
+      <span class="label">AI Status</span>
+      <span class="value good" id="aiStatus">Loading…</span>
+    </div>
+  </div>
+
+  <!-- LIVE DATABASE PANEL -->
+  <div class="db-panel">
+    <div class="db-header">
+      <h3>Live Menu Database</h3>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="db-sync">
+          <div class="db-sync-dot"></div>
+          <span id="syncLabel">Syncing…</span>
+        </div>
+        <button class="db-refresh" onclick="loadDashboard()">Refresh</button>
+      </div>
+    </div>
+    <div class="db-grid" id="dbGrid">
+      <div class="db-empty">Loading categories…</div>
+    </div>
+  </div>
+
+  <!-- OFF-SCRIPT SLIDER -->
+  <div class="field-label">Off-Script Flexibility</div>
+  <div class="slider-container">
+    <div class="slider-track" id="sliderTrack">
+      <div class="slider-fill" id="sliderFill"></div>
+      <div class="slider-knob" id="sliderKnob"></div>
+    </div>
+    <div class="slider-labels">
+      <span class="roman" id="label1">I</span>
+      <span class="roman" id="label2">II</span>
+      <span class="roman" id="label3">III</span>
+    </div>
+    <div class="slider-hint">I = Strict · II = Balanced · III = Creative</div>
+  </div>
+
+  <!-- AI PERSONALITY -->
+  <div class="personality-wrapper">
+    <div class="personality-toggle" id="personalityToggle">
+      <span>AI Personality Builder</span>
+      <span id="personalityArrow">▾</span>
+    </div>
+    <div class="personality-panel" id="personalityPanel">
+      <div class="field-label">Tone</div>
+      <select class="personality-select">
+        <option>Friendly & Warm</option>
+        <option>Formal & Professional</option>
+        <option>Witty & Fun</option>
+        <option>Luxury</option>
+      </select>
+      <div class="field-label">Response Length</div>
+      <select class="personality-select">
+        <option>Short</option>
+        <option selected>Balanced</option>
+        <option>Detailed</option>
+      </select>
+      <div class="field-label">Emoji Usage</div>
+      <select class="personality-select">
+        <option selected>None</option>
+        <option>Light</option>
+        <option>Expressive</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- RESTAURANT INFO -->
+  <div class="info-wrapper">
+    <div class="info-toggle" id="infoToggle">
+      <span>Restaurant Info</span>
+      <span id="infoArrow">▾</span>
+    </div>
+    <div class="info-panel" id="infoPanel">
+      <div class="field-label">Restaurant Description</div>
+      <textarea id="infoDescription">{{ profile.description if profile else '' }}</textarea>
+      <div class="field-label">Hours of Operation</div>
+      <input id="infoHours" type="text" placeholder="Mon–Thu 11am–9pm" value="{{ profile.hours if profile else '' }}">
+      <div class="field-label">Website</div>
+      <input id="infoWebsite" type="text" placeholder="https://yourrestaurant.com" value="{{ profile.website if profile else '' }}">
+      <div class="field-label">Location</div>
+      <input id="infoLocation" type="text" placeholder="123 Main Street" value="{{ profile.location if profile else '' }}">
+      <div class="field-label">Phone Number</div>
+      <input id="infoPhone" type="text" placeholder="(262) 245-2100" value="{{ profile.phone if profile else '' }}">
+    </div>
+  </div>
+
+  <button class="save-btn" type="button" onclick="saveSettings()">Save AI Settings</button>
+  <div class="save-toast" id="saveToast">✓ Settings saved!</div>
+
+</section>
+
+<script>
+
+// ================================
+// LOAD DASHBOARD
+// ================================
+
+async function loadDashboard() {
+  const grid      = document.getElementById("dbGrid")
+  const syncLabel = document.getElementById("syncLabel")
+  const aiStatus  = document.getElementById("aiStatus")
+
+  syncLabel.textContent = "Syncing…"
+
+  try {
+    const res  = await fetch("/r-menu-dataset")
+    const data = await res.json()
+
+    const categories = data.categories || []
+    const items      = data.items      || []
+
+    if (categories.length === 0) {
+      grid.innerHTML = '<div class="db-empty">No categories yet. Upload a menu file to get started.</div>'
+      syncLabel.textContent = "No data"
+      return
+    }
+
+    grid.innerHTML = ""
+
+    categories.forEach(cat => {
+      const name      = cat.name || "Unknown"
+      const isLive    = cat.chatActive === true
+      const catItems  = items.filter(i =>
+        (i.categories || []).map(c => c.toLowerCase()).includes(name.toLowerCase())
+      )
+      const totalItems = catItems.length
+      const flagCount  = catItems.filter(i => (i.flags || []).length > 0).length
+      const timeLabel  = (cat.timeStart && cat.timeEnd)
+        ? `${cat.timeStart} – ${cat.timeEnd}`
+        : "All day"
+
+      const card = document.createElement("div")
+      card.className = `db-card ${isLive ? "is-live" : "is-off"}`
+      card.innerHTML = `
+        <div class="db-title">${name}</div>
+        <div class="db-meta">
+          ${totalItems} Items · ${timeLabel}<br>
+          ${cat.location || "Entire Restaurant"}
+        </div>
+        <span class="db-badge ${isLive ? "live" : "off"}">
+          ${isLive ? "● Live" : "Off"}
+        </span>
+        ${flagCount > 0 ? `<span class="db-badge flag">⚑ ${flagCount} flags</span>` : ""}
+      `
+      grid.appendChild(card)
+    })
+
+    const liveCount = categories.filter(c => c.chatActive).length
+    aiStatus.textContent = liveCount > 0
+      ? `Healthy · ${liveCount} categor${liveCount === 1 ? "y" : "ies"} live`
+      : "No categories live yet"
+
+    syncLabel.textContent = "Live"
+
+  } catch (err) {
+    console.error(err)
+    grid.innerHTML = '<div class="db-empty">Error loading data. Try refreshing.</div>'
+    syncLabel.textContent = "Error"
+  }
+}
+
+// ================================
+// PERSONALITY TOGGLE
+// ================================
+
+document.getElementById("personalityToggle").addEventListener("click", () => {
+  const panel = document.getElementById("personalityPanel")
+  const arrow = document.getElementById("personalityArrow")
+  const open  = panel.style.display === "block"
+  panel.style.display = open ? "none" : "block"
+  arrow.textContent   = open ? "▾" : "▴"
+})
+
+// ================================
+// RESTAURANT INFO TOGGLE
+// ================================
+
+document.getElementById("infoToggle").addEventListener("click", () => {
+  const panel = document.getElementById("infoPanel")
+  const arrow = document.getElementById("infoArrow")
+  panel.classList.toggle("open")
+  arrow.textContent = panel.classList.contains("open") ? "▴" : "▾"
+})
+
+// ================================
+// SLIDER — snaps to I / II / III
+// saves current level to window so saveSettings() can read it
+// ================================
+
+;(function(){
+  const track  = document.getElementById("sliderTrack")
+  const fill   = document.getElementById("sliderFill")
+  const knob   = document.getElementById("sliderKnob")
+  const labels = [
+    document.getElementById("label1"),
+    document.getElementById("label2"),
+    document.getElementById("label3"),
+  ]
+
+  // level 1 = 0%, level 2 = 50%, level 3 = 100%
+  const pctMap = { 1: 0, 2: 50, 3: 100 }
+  let currentLevel = 2
+
+  function setLevel(level) {
+    currentLevel = level
+    const pct = pctMap[level]
+    fill.style.width = pct + "%"
+    knob.style.left  = pct + "%"
+    labels.forEach((el, i) => {
+      el.classList.toggle("active", i + 1 === level)
+    })
+    window._sliderLevel = level
+  }
+
+  function levelFromPct(pct) {
+    if (pct < 0.33) return 1
+    if (pct < 0.66) return 2
+    return 3
+  }
+
+  function handleX(clientX) {
+    const rect = track.getBoundingClientRect()
+    let pct    = (clientX - rect.left) / rect.width
+    pct        = Math.max(0, Math.min(1, pct))
+    setLevel(levelFromPct(pct))
+  }
+
+  track.addEventListener("click", e => handleX(e.clientX))
+  let dragging = false
+  knob.addEventListener("mousedown", e => { dragging = true; e.preventDefault() })
+  window.addEventListener("mouseup",  () => dragging = false)
+  window.addEventListener("mousemove", e => { if (dragging) handleX(e.clientX) })
+
+  // Load saved level from backend on boot
+  fetch("/r-ai-profile")
+    .then(r => r.json())
+    .then(data => setLevel(data.off_script_level || 2))
+    .catch(() => setLevel(2))
+})()
+
+// ================================
+// SAVE SETTINGS
+// ================================
+
+async function saveSettings() {
+  const level = window._sliderLevel || 2
+
+  try {
+    const res  = await fetch("/r-save-ai-profile", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ off_script_level: level })
+    })
+
+    const result = await res.json()
+    console.log("Save response:", result)
+    console.log("Status:", res.status)
+    console.log("Level sent:", level)
+
+    if (result.success) {
+      const toast = document.getElementById("saveToast")
+      toast.style.display = "block"
+      setTimeout(() => toast.style.display = "none", 2500)
+    } else {
+      alert("Save failed — not logged in or session expired. Try refreshing the page.")
+    }
+
+  } catch (err) {
+    console.error("Save failed:", err)
+    alert("Save failed: " + err.message)
+  }
+}
+
+// Boot
+document.addEventListener("DOMContentLoaded", loadDashboard)
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pie AI | Live Restaurant Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #0a0a0a;
+  color: #f0ede8;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 68px; flex-shrink: 0;
+  background: #0a0a0a;
+  border-bottom: 0.5px solid rgba(212,175,55,0.15);
+  position: relative; z-index: 50;
+}
+.top-bar-left { display: flex; align-items: center; gap: 1.5rem; }
+.back-link {
+  display: flex; align-items: center; gap: 6px;
+  color: rgba(212,175,55,0.6); text-decoration: none;
+  font-size: 0.8rem; letter-spacing: 0.04em; transition: color 0.2s;
+}
+.back-link:hover { color: #d4af37; }
+.back-link svg { width:13px; height:13px; fill:currentColor; }
+.divider-v { width:0.5px; height:22px; background:rgba(212,175,55,0.2); }
+.top-logo { display: flex; align-items: center; gap: 10px; }
+.top-logo-mark {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: rgba(212,175,55,0.12); border: 0.5px solid rgba(212,175,55,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.75rem; color: #d4af37;
+}
+.top-logo-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; color: #d4af37; letter-spacing: 0.05em; }
+.top-logo-sub { font-size: 0.68rem; color: rgba(212,175,55,0.45); letter-spacing: 0.08em; margin-top: 1px; }
+.top-bar-right { display: flex; align-items: center; gap: 12px; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(212,175,55,0.07); border: 0.5px solid rgba(212,175,55,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.68rem; color: rgba(212,175,55,0.8); letter-spacing: 0.08em;
+}
+.live-dot { width:5px; height:5px; border-radius:50%; background:#d4af37; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.reset-btn {
+  background: transparent; border: 0.5px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4); font-size: 0.72rem; padding: 6px 14px; border-radius: 100px;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.reset-btn:hover { border-color: rgba(212,175,55,0.3); color: rgba(255,255,255,0.7); }
+
+/* ── LAYOUT ── */
+.main { display: flex; flex:1; overflow: hidden; }
+
+/* ── LEFT PANEL ── */
+.menu-panel {
+  width: 300px; flex-shrink: 0;
+  background: #0d0d0d;
+  border-right: 0.5px solid rgba(212,175,55,0.1);
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.25s ease, border-color 0.35s ease;
+}
+.menu-panel.collapsed {
+  width: 0; opacity: 0; border-color: transparent; pointer-events: none;
+}
+
+/* ── PANEL HEADER ── */
+.panel-header {
+  padding: 1.2rem 1.25rem 1rem;
+  border-bottom: 0.5px solid rgba(212,175,55,0.1);
+  flex-shrink: 0;
+}
+.panel-top-row {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem;
+}
+.panel-brand { display: flex; align-items: center; gap: 10px; }
+.panel-logo-mark {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: rgba(212,175,55,0.1); border: 0.5px solid rgba(212,175,55,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem; color: #d4af37;
+}
+.panel-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: #fff; white-space: nowrap; }
+.panel-tag { font-size: 0.67rem; color: #555; margin-top: 2px; white-space: nowrap; }
+
+.hide-panel-btn {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, border-color 0.2s; color: #666;
+}
+.hide-panel-btn:hover { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.25); color: #d4af37; }
+.hide-panel-btn svg { width:14px; height:14px; fill:currentColor; }
+
+.panel-status { display: flex; align-items: center; gap: 6px; }
+.status-dot { width:5px; height:5px; border-radius:50%; background:#4caf7d; }
+.status-text { font-size: 0.67rem; color: #4caf7d; letter-spacing: 0.04em; }
+
+/* ── SHOW PANEL BUTTON ── */
+.show-panel-btn {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 56px; border-radius: 0 10px 10px 0; z-index: 20;
+  background: #111; border: 0.5px solid rgba(212,175,55,0.2);
+  border-left: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease; color: #d4af37;
+}
+.show-panel-btn svg { width:12px; height:12px; fill:currentColor; }
+.show-panel-btn:hover { background: rgba(212,175,55,0.08); }
+.show-panel-btn.visible { opacity: 1; pointer-events: all; }
+
+/* ── MENU ACCORDION ── */
+.menu-scroll {
+  flex:1; overflow-y: auto; padding: 0.5rem 0;
+  scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.08) transparent;
+}
+
+.cat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 1.25rem; cursor: pointer; transition: background 0.15s; user-select: none;
+}
+.cat-header:hover { background: rgba(212,175,55,0.04); }
+.cat-header-left { display: flex; align-items: center; gap: 10px; }
+.cat-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+  background: rgba(212,175,55,0.07); border: 0.5px solid rgba(212,175,55,0.15); flex-shrink: 0;
+}
+.cat-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.82rem; color: #ddd; }
+.cat-count { font-size: 0.65rem; color: #555; margin-top: 1px; }
+.cat-chevron { width: 16px; height: 16px; flex-shrink: 0; color: #555; transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), color 0.2s; }
+.cat-chevron svg { width:16px; height:16px; fill:currentColor; }
+.cat-header.open .cat-chevron { transform: rotate(180deg); color: #d4af37; }
+.cat-header.open .cat-name { color: #fff; }
+.cat-header.open .cat-icon { background: rgba(212,175,55,0.1); border-color: rgba(212,175,55,0.25); }
+
+.cat-items {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  background: rgba(0,0,0,0.2);
+  border-bottom: 0.5px solid rgba(212,175,55,0.05);
+}
+
+.menu-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 9px 1.25rem 9px 3.5rem;
+  border-bottom: 0.5px solid rgba(255,255,255,0.03);
+  cursor: pointer; transition: background 0.15s;
+}
+.menu-row:hover { background: rgba(212,175,55,0.05); }
+.menu-row:last-child { border-bottom: none; }
+.m-name { font-size: 0.8rem; color: #d8d8d8; margin-bottom: 4px; }
+.m-price { font-size: 0.76rem; color: #d4af37; white-space: nowrap; margin-left: 8px; padding-top: 1px; }
+
+/* ── HINTS ── */
+.hint-section {
+  padding: 0.9rem 1.25rem; border-top: 0.5px solid rgba(212,175,55,0.1); flex-shrink: 0;
+}
+.hint-label { font-size: 0.6rem; color: rgba(212,175,55,0.4); letter-spacing: 0.11em; text-transform: uppercase; margin-bottom: 7px; }
+.hint-list { display: flex; flex-direction: column; gap: 5px; }
+.hint-btn {
+  background: rgba(212,175,55,0.03); border: 0.5px solid rgba(212,175,55,0.1);
+  color: #777; font-size: 0.74rem; padding: 7px 10px; border-radius: 8px;
+  cursor: pointer; text-align: left; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.hint-btn:hover { border-color: rgba(212,175,55,0.35); color: #d4af37; background: rgba(212,175,55,0.05); }
+
+/* ── CHAT PANEL ── */
+.chat-panel {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+  background:#0a0a0a; position: relative;
+}
+.chat-messages {
+  flex:1; overflow-y: auto; padding: 2.5rem 2.5rem 1.5rem;
+  display: flex; flex-direction: column; gap: 1.25rem;
+  scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.07) transparent;
+  position: relative;
+}
+.chat-watermark {
+  position: sticky;
+  bottom: 0;
+  text-align: center;
+  pointer-events: none;
+  margin-top: auto;
+  font-size: 0.67rem;
+  color: #1e1e1e;
+  letter-spacing: 0.04em;
+  padding-top: 1rem;
+  user-select: none;
+}
+.msg { display:flex; gap:12px; animation: msgIn 0.22s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+.msg.user { flex-direction: row-reverse; }
+.msg-av {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600;
+}
+.msg.ai .msg-av {
+  background: rgba(212,175,55,0.1); color: #d4af37;
+  border: 0.5px solid rgba(212,175,55,0.25);
+  font-family: 'Syne', sans-serif; font-size: 0.58rem; font-weight: 800;
+}
+.msg.user .msg-av { background: #161616; color: #666; border: 0.5px solid rgba(255,255,255,0.07); }
+.msg-bub {
+  max-width: 72%; padding: 0.9rem 1.15rem; border-radius: 18px; font-size: 0.9rem; line-height: 1.68;
+}
+.msg.ai .msg-bub {
+  background: #111a11; border: 0.5px solid rgba(212,175,55,0.12);
+  border-top-left-radius: 4px; color: #e8e8e8;
+}
+.msg.user .msg-bub {
+  background: #161616; border: 0.5px solid rgba(255,255,255,0.08);
+  border-top-right-radius: 4px; color: #e8e8e8;
+}
+.typing-row { display:flex; gap:12px; }
+.typing-bub {
+  display: flex; align-items: center; gap: 5px; padding: 0.9rem 1.15rem;
+  background: #111a11; border: 0.5px solid rgba(212,175,55,0.12);
+  border-radius: 18px; border-top-left-radius: 4px;
+}
+.td { width:5px; height:5px; border-radius:50%; background:rgba(212,175,55,0.4); animation:tb 1.2s ease-in-out infinite; }
+.td:nth-child(2){animation-delay:0.15s} .td:nth-child(3){animation-delay:0.3s}
+@keyframes tb { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+/* ── INPUT ── */
+.chat-input-area {
+  padding: 1.25rem 2.5rem 1.5rem;
+  border-top: 0.5px solid rgba(212,175,55,0.1);
+  background: #0a0a0a;
+}
+.input-watermark {
+  text-align: center;
+  font-size: 0.67rem;
+  color: #acacac;
+  letter-spacing: 0.04em;
+  user-select: none;
+  pointer-events: none;
+  margin-bottom: 10px;
+}
+.input-row { display: flex; gap: 10px; align-items: flex-end; }
+.chat-input {
+  flex:1; background: #111; border: 0.5px solid rgba(212,175,55,0.15);
+  border-radius: 14px; padding: 0.9rem 1.15rem; color: #f0ede8;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  resize: none; outline: none; min-height: 50px; max-height: 140px;
+  transition: border-color 0.2s; scrollbar-width: thin;
+}
+.chat-input:focus { border-color: rgba(200, 173, 86, 0.445); }
+.chat-input::placeholder { color: #3a3a3a; }
+.send-btn {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: #d4af37; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s, transform 0.15s;
+}
+.send-btn:hover { background: #b48a1d; transform: scale(1.04); }
+.send-btn:disabled { background: #1a1a1a; cursor: not-allowed; opacity: 0.4; }
+.send-btn svg { width:18px; height:18px; fill:#0a0a0a; }
+.send-btn:disabled svg { fill:#444; }
+.input-footer {
+  display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 10px;
+}
+.input-footer span { font-size: 0.67rem; color: #d1d1d1; }
+.input-footer strong { font-family: 'Syne', sans-serif; font-size: 0.67rem; color: rgba(248, 219, 126, 0.756); font-weight: 700; }
+
+/* Mobile */
+@media (max-width: 700px) {
+  .menu-panel { display: none !important; }
+  .show-panel-btn { display: none; }
+  .top-bar { padding: 0 1rem; }
+  .chat-messages { padding: 1.25rem 1rem; }
+  .chat-input-area { padding: 1rem; }
+  .msg-bub { max-width: 90%; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <a href="/" class="back-link">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to Pie AI
+    </a>
+    <div class="divider-v"></div>
+    <div class="top-logo">
+      <div class="top-logo-mark">PI</div>
+      <div>
+        <div class="top-logo-text">PIE AI DEMO</div>
+        <div class="top-logo-sub">DEMO Restaurant Chat</div>
+      </div>
+    </div>
+  </div>
+  <div class="top-bar-right">
+    <button class="reset-btn" onclick="resetChat()">New chat</button>
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="menu-panel" id="menuPanel">
+    <div class="panel-header">
+      <div class="panel-top-row">
+        <div class="panel-brand">
+          <div class="panel-logo-mark">PI</div>
+          <div>
+            <div class="panel-name">Pie AI Demo Menu</div>
+            <div class="panel-tag">Click a category to explore</div>
+          </div>
+        </div>
+        <button class="hide-panel-btn" onclick="togglePanel()" title="Hide menu">
+          <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+      </div>
+      <div class="panel-status">
+        <div class="status-dot"></div>
+        <span class="status-text" id="menuStatus">Loading menu...</span>
+      </div>
+    </div>
+
+    <!-- Dynamic menu built by loadMenu() -->
+    <div class="menu-scroll" id="menuScroll"></div>
+
+    <div class="hint-section">
+      <div class="hint-label">Quick questions</div>
+      <div class="hint-list">
+        <button class="hint-btn" onclick="sendHint('What\'s gluten-free tonight?')">What's gluten-free tonight?</button>
+        <button class="hint-btn" onclick="sendHint('I\'m vegan — what can I eat?')">I'm vegan — what can I eat?</button>
+        <button class="hint-btn" onclick="sendHint('I have a nut allergy, what\'s safe?')">I have a nut allergy — what's safe?</button>
+        <button class="hint-btn" onclick="sendHint('What\'s dairy-free here?')">What's dairy-free?</button>
+        <button class="hint-btn" onclick="sendHint('What would you recommend tonight?')">What do you recommend?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="chat-panel">
+    <button class="show-panel-btn" id="showPanelBtn" onclick="togglePanel()" title="Show menu">
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+    </button>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+<div class="chat-input-area">
+  <div class="input-watermark">“All menu and allergy information is provided by the restaurant and may change at any time. Pie AI does not guarantee accuracy or account for cross-contact. Please inform your server of any allergies or dietary restrictions.”</div>
+  <div class="input-row">
+    <textarea
+      class="chat-input" id="chatInput" rows="1"
+      placeholder="Ask about allergens, ingredients, specials..."
+      onkeydown="handleKey(event)" oninput="autoResize(this)"
+    ></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="input-footer">
+    <span>Powered by</span>
+    <strong>PIE AI</strong>
+    <span>· Live Restaurant Chat</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── Get restaurant ID from URL: /restaurant/<rid>/chat
+const RID = decodeURIComponent(window.location.pathname.split('/')[2] || '');
+
+// ── PANEL TOGGLE
+function togglePanel() {
+  const panel  = document.getElementById('menuPanel');
+  const showBtn = document.getElementById('showPanelBtn');
+  const isCollapsed = panel.classList.toggle('collapsed');
+  showBtn.classList.toggle('visible', isCollapsed);
+}
+
+// ── LOAD MENU FROM BACKEND (only chatActive categories)
+async function loadMenu() {
+  const container = document.getElementById('menuScroll');
+  const statusEl  = document.getElementById('menuStatus');
+
+  try {
+    const res  = await fetch(`/restaurant/${encodeURIComponent(RID)}/menu-data`);
+    const data = await res.json();
+    const categories = data.categories || {};
+
+    container.innerHTML = '';
+
+    if (Object.keys(categories).length === 0) {
+      container.innerHTML = `<div style="padding:1.5rem 1.25rem;color:#555;font-size:0.78rem;">No active menu categories yet.</div>`;
+      statusEl.textContent = 'AI online · No active menu';
+      return;
+    }
+
+    statusEl.textContent = 'AI online · Menu loaded';
+
+    Object.keys(categories).forEach(cat => {
+      const items = categories[cat];
+
+      const header = document.createElement('div');
+      header.className = 'cat-header';
+      header.innerHTML = `
+        <div class="cat-header-left">
+          <div class="cat-icon">🍽️</div>
+          <div>
+            <div class="cat-name">${cat}</div>
+            <div class="cat-count">${items.length} item${items.length !== 1 ? 's' : ''}</div>
+          </div>
+        </div>
+        <div class="cat-chevron"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></div>
+      `;
+
+      const itemBox = document.createElement('div');
+      itemBox.className = 'cat-items';
+
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'menu-row';
+        row.innerHTML = `
+          <div><div class="m-name">${item.name}</div></div>
+          <div class="m-price">${item.price ? '$' + item.price : ''}</div>
+        `;
+        row.onclick = () => sendHint(`Tell me about the ${item.name}`);
+        itemBox.appendChild(row);
+      });
+
+      header.onclick = () => {
+        const isOpen = header.classList.toggle('open');
+        itemBox.style.maxHeight = isOpen ? itemBox.scrollHeight + 'px' : '0';
+      };
+
+      container.appendChild(header);
+      container.appendChild(itemBox);
+    });
+
+  } catch (err) {
+    console.error('Menu load error:', err);
+    container.innerHTML = `<div style="padding:1.5rem 1.25rem;color:#555;font-size:0.78rem;">Could not load menu.</div>`;
+    statusEl.textContent = 'AI online · Menu unavailable';
+  }
+}
+
+// ── CHAT
+let isLoading = false;
+
+function aiAv() {
+  return `<div class="msg-av" style="background:rgba(212,175,55,0.1);color:#d4af37;border:0.5px solid rgba(212,175,55,0.25);font-family:'Syne',sans-serif;font-size:0.58rem;font-weight:800;">PI</div>`;
+}
+
+function init() {
+  document.getElementById('chatMessages').innerHTML = '';
+  const msg = document.createElement('div');
+  msg.className = 'msg ai';
+  msg.innerHTML = aiAv() + `<div class="msg-bub">Hi! I'm Pie AI — your menu assistant. Browse the menu on the left or just ask me anything: allergens, dietary options, ingredients, or what to order tonight. How can I help?</div>`;
+  document.getElementById('chatMessages').appendChild(msg);
+}
+
+function addMessage(role, content) {
+  const container = document.getElementById('chatMessages');
+  const msg = document.createElement('div');
+  msg.className = `msg ${role}`;
+  const av = role === 'ai' ? aiAv() : `<div class="msg-av">You</div>`;
+  const formatted = content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  msg.innerHTML = `${av}<div class="msg-bub">${formatted}</div>`;
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping() {
+  const container = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'typing-row'; row.id = 'typingIndicator';
+  row.innerHTML = aiAv() + `<div class="typing-bub"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
+function removeTyping() { const t = document.getElementById('typingIndicator'); if (t) t.remove(); }
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function sendHint(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('chatInput');
+  const text  = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addMessage('user', text);
+  showTyping();
+
+  try {
+    const res  = await fetch(`/r/${encodeURIComponent(RID)}/customer/chat`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    removeTyping();
+    addMessage('ai', data.reply || "Sorry, I couldn't get a response.");
+  } catch (err) {
+    removeTyping();
+    addMessage('ai', 'Sorry, something went wrong. Please try again.');
+    console.error('Chat error:', err);
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function resetChat() { init(); }
+
+// ── BOOT
+init();
+loadMenu();
+</script>
+</body>
+</html>

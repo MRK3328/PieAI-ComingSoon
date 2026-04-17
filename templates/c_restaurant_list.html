@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant List – Pie AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+
+    /* ================================
+       ROOT
+    ================================ */
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8cc7a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-border: rgba(201,168,76,0.22);
+      --ink:         #0c0c0a;
+      --surface:     #111108;
+      --surface2:    #161612;
+      --text:        #f0ead8;
+      --text-dim:    rgba(240,234,216,0.45);
+      --text-mid:    rgba(240,234,216,0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ================================
+       HEADER
+    ================================ */
+    .header {
+      width: 100%;
+      height: 140px;
+      background-image: url('/static/images/luxury_pie_ai.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.42);
+    }
+
+    /* BACK BUTTON */
+    .back-button {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      background: rgba(12,12,10,0.72);
+      backdrop-filter: blur(12px);
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+
+    .back-button:hover { background: var(--gold-dim); }
+
+    /* TITLE */
+    .restaurant-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8em;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-shadow: 0 0 40px rgba(201,168,76,0.3);
+    }
+
+    /* ================================
+       SEARCH
+    ================================ */
+    .search {
+      margin: 36px auto 24px;
+      position: relative;
+      width: 90%;
+      max-width: 480px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 13px 44px 13px 20px;
+      background: var(--surface2);
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88em;
+      letter-spacing: 0.5px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search input::placeholder { color: var(--text-dim); }
+    .search input:focus { border-color: rgba(201,168,76,0.5); }
+
+    .search-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1em;
+      color: var(--gold);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* ================================
+       LIST CONTAINER
+    ================================ */
+    .restaurant-list-box {
+      width: 90%;
+      max-width: 520px;
+      margin-bottom: 120px;
+      position: relative;
+    }
+
+    /* ================================
+       SECTION LABEL
+    ================================ */
+    .list-label {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 16px;
+      opacity: 0.7;
+    }
+
+    /* ================================
+       RESTAURANT CARDS
+    ================================ */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item {
+      display: block;
+      background: var(--surface2);
+      border: 0.5px solid rgba(255,255,255,0.06);
+      border-radius: 2px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Gold top line on hover */
+    .item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .item:hover { border-color: var(--gold-border); background: rgba(22,22,18,0.95); }
+    .item:hover::before { opacity: 1; }
+
+    .item-inner {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* RESTAURANT IMAGE */
+    .item-inner img {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 0.5px solid var(--gold-border);
+      flex-shrink: 0;
+    }
+
+    /* TEXT */
+    .info { flex: 1; min-width: 0; }
+
+    .info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15em;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .info p {
+      font-size: 0.78em;
+      color: var(--text-dim);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* COUNT BADGE */
+    .count {
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 0.5px solid var(--gold-border);
+      color: var(--gold);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78em;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* ARROW */
+    .item-arrow {
+      flex-shrink: 0;
+      font-size: 0.8em;
+      color: var(--gold-border);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .item:hover .item-arrow {
+      color: var(--gold);
+      transform: translateX(3px);
+    }
+
+    /* ================================
+       DIVIDER BETWEEN LIST AND PIE AI
+    ================================ */
+    .list-divider {
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+      margin: 24px 0;
+    }
+
+    /* ================================
+       PINNED PIE AI CARD
+    ================================ */
+    .item.pie-ai {
+      background: rgba(201,168,76,0.06);
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      position: static;
+      margin-top: 0;
+    }
+
+    .item.pie-ai::before {
+      opacity: 1;
+      background: linear-gradient(to right, var(--gold), var(--gold-light), transparent);
+    }
+
+    .item.pie-ai .info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25em;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .item.pie-ai .info p {
+      color: rgba(201,168,76,0.6);
+      font-size: 0.78em;
+    }
+
+    .item.pie-ai .item-inner img {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(201,168,76,0.2);
+    }
+
+    /* ================================
+       EMPTY STATE
+    ================================ */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+      font-size: 0.82em;
+      letter-spacing: 1px;
+    }
+
+    /* ================================
+       MOBILE
+    ================================ */
+    @media (max-width: 480px) {
+      .restaurant-title { font-size: 2em; }
+      .header { height: 110px; }
+      .search { margin: 24px auto 16px; }
+      .restaurant-list-box { width: 94%; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ================================
+     HEADER
+================================ -->
+<div class="header">
+  <a href="/" class="back-button">← Home</a>
+  <div class="restaurant-title">Pie AI</div>
+</div>
+
+<!-- ================================
+     SEARCH
+================================ -->
+<div class="search">
+  <input type="text" placeholder="Search restaurant...">
+  <span class="search-icon">⌕</span>
+</div>
+
+<!-- ================================
+     RESTAURANT LIST
+================================ -->
+<div class="restaurant-list-box">
+
+  <div class="list-label">Restaurants</div>
+
+  <div class="list" id="restaurantList">
+
+    {% for r in restaurants %}
+  <a href="/restaurant/{{ r.id }}/chat" class="item">
+    <div class="item-inner">
+
+      <div class="avatar">{{ r.name | upper | truncate(2, true, '') }}</div>
+
+      <div class="info">
+        <h3>{{ r.name }}</h3>
+        <p>{{ r.tagline }}</p>
+      </div>
+
+      {% if r.count is defined %}
+        <div class="count">{{ r.count }}</div>
+      {% endif %}
+
+      <span class="item-arrow">→</span>
+
+    </div>
+  </a>
+{% endfor %}
+
+    <!-- Empty state shown by JS when no results -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      No restaurants found
+    </div>
+
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="list-divider"></div>
+
+  <!-- PIE AI PINNED CARD -->
+  <div class="list-label">Assistant</div>
+
+  <div class="item pie-ai">
+    <div class="item-inner">
+
+      <img src="{{ url_for('static', filename='images/logopie.png') }}" alt="Pie AI">
+
+      <div class="info">
+        <h3>Pie AI</h3>
+        <p>How can I help you?</p>
+      </div>
+
+      <span class="item-arrow">→</span>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ================================
+     SCRIPT
+================================ -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput   = document.querySelector(".search input");
+    const restaurantItems = document.querySelectorAll(".list .item:not(.pie-ai)");
+    const emptyState    = document.getElementById("emptyState");
+
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      restaurantItems.forEach(item => {
+        const name    = item.querySelector(".info h3")?.textContent.toLowerCase() || "";
+        const tagline = item.querySelector(".info p")?.textContent.toLowerCase()  || "";
+        const matches = name.includes(query) || tagline.includes(query);
+
+        item.style.display = matches ? "block" : "none";
+        if (matches) visibleCount++;
+      });
+
+      emptyState.style.display = visibleCount === 0 ? "block" : "none";
+    });
+  });
+</script>
+
+</body>
+</html>

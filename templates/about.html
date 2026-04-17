@@ -4,480 +4,696 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About Us | Pie AI</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lustria&display=swap" rel="stylesheet">
-  
-  <!-- Mobile Fixes + Overrides -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
 
   <style>
-    /* =========================================================
-       GLOBAL STYLES
-    ========================================================= */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      background-color: #000;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-      padding-top: 80px;
+
+    /* ================================
+       ROOT
+    ================================ */
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8cc7a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-border: rgba(201,168,76,0.22);
+      --ink:         #0c0c0a;
+      --surface:     #111108;
+      --surface2:    #161612;
+      --text:        #f0ead8;
+      --text-dim:    rgba(240,234,216,0.45);
+      --text-mid:    rgba(240,234,216,0.7);
     }
 
-    /* =========================================================
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
+      overflow-x: hidden;
+      padding-top: 68px;
+    }
+
+    /* ================================
        NAVBAR
-    ========================================================= */
+    ================================ */
     .navbar {
-      width: 100%;
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.85);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      top: 0; left: 0;
+      width: 100%;
+      height: 68px;
+      background: rgba(12,12,10,0.94);
+      backdrop-filter: blur(24px);
+      border-bottom: 0.5px solid var(--gold-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 40px;
+      padding: 0 40px;
+      z-index: 1000;
     }
 
-    .navbar img { height: 45px; width: auto; }
-
-    .navbar h1 {
-      color: #d4af37;
-      font-size: 1.6rem;
-      letter-spacing: 3px;
-      font-weight: 500;
-      flex: 1;
-      text-align: center;
-      margin-right: 80px;
-      transition: color 0.3s ease, text-shadow 0.3s ease;
+    .nav-logo {
+      height: 44px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(201,168,76,0.25);
+      cursor: pointer;
     }
 
-    .navbar h1:hover {
-      color: #fff;
-      text-shadow: 0 0 8px #d4af37;
-    }
-/* ================= DROPDOWN MENU ================= */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropbtn {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #d4af37;
-  padding: 10px 20px;
-  font-family: 'Lustria', serif;
-  font-size: 1rem;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dropbtn:hover {
-  background-color: #d4af37;
-  color: #000;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 110%;
-  background-color: rgba(0, 0, 0, 0.95);
-  min-width: 180px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  z-index: 1001;
-}
-
-.dropdown-content a {
-  color: #fff;
-  padding: 12px 16px;
-  display: block;
-  text-decoration: none;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.dropdown-content a:hover {
-  background-color: #d4af37;
-  color: #000;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* =========================================================
-   ABOUT HERO SECTION — Text as the focal point
-========================================================= */
-.about-hero {
-  position: relative;
-  background:
-    url("{{ url_for('static', filename='images/about_bg_s1.png') }}") no-repeat center center / cover,
-    url("{{ url_for('static', filename='images/about_girl.png') }}") no-repeat right center / contain;
-  color: #fff;
-  min-height: 90vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-  padding: 80px 40px;
-}
-
-.about-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
-  z-index: 0;
-}
-
-.about-text {
-  position: relative;
-  z-index: 2;
-  max-width: 1000px;
-  background: rgba(0, 0, 0, 0.55);
-  padding: 70px 80px;
-  border-radius: 22px;
-  box-shadow: 0 0 50px rgba(212, 175, 55, 0.35);
-  backdrop-filter: blur(6px);
-  animation: fadeUp 1.2s ease-out both;
-  text-align: center;
-}
-
-.about-text h1 {
-  font-family: 'Lustria', serif;
-  color: #ffd75e;
-  font-size: 2.8rem;           /* Increased from 2.2rem */
-  margin-bottom: 16px;
-  text-shadow: 0 0 25px rgba(255, 215, 94, 0.8);
-  letter-spacing: 2px;
-}
-
-.about-text h2 {
-  color: #f9f9f9;
-  font-size: 1.5rem;           /* Increased from 1.2rem */
-  font-weight: 500;
-  margin-bottom: 25px;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-}
-
-.about-text p {
-  color: #ffffff;
-  line-height: 2;
-  font-size: 1.25rem;          /* Increased from 1.1rem */
-  font-weight: 300;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-  opacity: 0.96;
-}
-
-
-/* Subtle fade-up animation for presence */
-@keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-    /* =========================================================
-       THE BEGINNING SECTION
-    ========================================================= */
-    .about-beginning {
-      background: linear-gradient(to bottom, #1a1a1a, #000);
-      text-align: center;
-      padding: 120px 100px;
-      position: relative;
-    }
-
-    .about-beginning h2 {
-      font-family: 'Lustria', serif;
-      color: #d4af37;
-      font-size: 2.2rem;
-      margin-bottom: 30px;
-    }
-
-    .beginning-text {
-      color: #fff;
-      max-width: 900px;
-      margin: 0 auto;
-      font-size: 1.1rem;
-      line-height: 1.8;
-    }
-
-    .logo-left img, .logo-right img {
+    .nav-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
       position: absolute;
-      top: 40px;
-      width: 150px;
-      opacity: 0.4;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
-    .logo-left img { left: 80px; }
-    .logo-right img { right: 80px; }
+    /* ---- Dropdown ---- */
+    .dropdown { position: relative; }
 
-    /* =========================================================
-       WHY PIE AI SECTION
-    ========================================================= */
-    .why-section {
-      background: url("{{ url_for('static', filename='images/bg_y.png') }}") no-repeat center center / cover;
-      text-align: center;
-      padding: 120px 100px;
-      color: #fff;
+    .dropbtn {
+      background: transparent;
+      color: var(--gold);
+      padding: 8px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .dropbtn:hover { background: var(--gold-dim); }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: rgba(12,12,10,0.98);
+      min-width: 200px;
+      border: 0.5px solid var(--gold-border);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+
+    .dropdown-content a {
+      color: var(--text-dim);
+      padding: 13px 20px;
+      display: block;
+      text-decoration: none;
+      font-size: 0.78em;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-bottom: 0.5px solid rgba(255,255,255,0.05);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .dropdown-content a:last-child { border-bottom: none; }
+    .dropdown-content a:hover { color: var(--gold); background: var(--gold-dim); }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    /* ================================
+       SHARED UTILITIES
+    ================================ */
+    .divider {
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+    }
+
+    .section-tag {
+      font-size: 0.68em;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      padding: 13px 32px;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ================================
+       HERO — MISSION
+    ================================ */
+    .about-hero {
       position: relative;
+      min-height: 92vh;
+      background-image: url("{{ url_for('static', filename='images/about_bg_s1.png') }}");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px;
+      overflow: hidden;
     }
 
-    .why-section::before {
+    .about-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 0;
+      background: rgba(0,0,0,0.60);
     }
 
-    .why-text {
-      position: relative;
+    .hero-rule-top {
+      position: absolute;
+      top: 110px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
       z-index: 1;
-      max-width: 1000px;
-      margin: 0 auto;
     }
 
-    .dropcap {
-      font-size: 4rem;
-      font-family: 'Lustria', serif;
-      color: #fff;
+    .hero-rule-bottom {
+      position: absolute;
+      bottom: 110px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+      z-index: 1;
     }
 
-    .why-text h1 { font-size: 2.2rem; margin-bottom: 30px; }
-    .why-text p { font-size: 1.3rem; line-height: 1.7; margin-bottom: 20px; }
+    .about-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
 
-    .why-text .quote {
-      color: #d4af37;
+    .hero-eyebrow {
+      font-size: 0.68em;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0.75;
+    }
+
+    .about-hero-content h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
       font-weight: 600;
-      border-top: 2px solid #d4af37;
-      border-bottom: 2px solid #d4af37;
-      padding: 12px 0;
-      margin: 40px auto 60px;
-      display: inline-block;
+      line-height: 0.9;
+      color: var(--text);
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+      text-shadow: 0 0 80px rgba(201,168,76,0.12);
     }
 
-    .read-more {
-      background: linear-gradient(to right, #d4af37, #b48a1d);
-      color: #000;
-      border: none;
-      border-radius: 40px;
-      padding: 16px 80px;
-      font-family: 'Lustria', serif;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1em;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: 3px;
+      margin-bottom: 44px;
     }
 
-    .read-more:hover {
-      background: #fff5cc;
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.7);
-      transform: scale(1.05);
+    .about-hero-content p {
+      font-size: 0.92em;
+      line-height: 1.88;
+      color: var(--text-mid);
+      font-weight: 300;
+      margin-bottom: 16px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    /* =========================================================
-   FOOTER
-========================================================= */
-footer {
-  background: url("{{ url_for('static', filename='images/goldxbg.png') }}") no-repeat center center / cover;
-  color: #d4af37;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-  padding: 60px 80px;
-  flex-wrap: wrap;
-  text-shadow: 0 0 10px rgb(0, 0, 0);
-}
+    /* ================================
+       THE BEGINNING
+    ================================ */
+    .beginning {
+      background: var(--surface2);
+      padding: 120px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      border-bottom: 0.5px solid var(--gold-border);
+    }
 
-footer img {
-  height: 50px;
-  margin-bottom: 10px;
-  transition: transform 0.3s ease;
-}
+    .beginning-left {
+      position: sticky;
+      top: 100px;
+    }
 
-footer img:hover {
-  transform: scale(1.1);
-}
+    .beginning-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3em;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text);
+    }
 
-footer p {
-  max-width: 300px;
-  line-height: 1.6;
-}
+    .beginning-left h2 em {
+      font-style: italic;
+      color: var(--gold);
+    }
 
-footer h4 {
-  font-family: 'Lustria', serif;
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  color: #d0c7a1;
-}
+    .beginning-right {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
 
-footer ul {
-  list-style: none;
-  padding: 0;
-}
+    .timeline-item {
+      position: relative;
+      padding-left: 28px;
+      border-left: 0.5px solid var(--gold-border);
+    }
 
-footer ul li {
-  margin-bottom: 8px;
-}
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
 
-footer ul li a {
-  color: #d4af37;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
+    .timeline-item p {
+      font-size: 0.92em;
+      color: var(--text-dim);
+      line-height: 1.88;
+      font-weight: 300;
+    }
 
-footer ul li a:hover {
-  color: #fff;
-}
+    /* ================================
+       VALUES
+    ================================ */
+    .values {
+      background: var(--surface);
+      padding: 100px 80px;
+      border-top: 0.5px solid var(--gold-border);
+      border-bottom: 0.5px solid var(--gold-border);
+    }
 
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  color: #d4af37;
-  font-size: 0.9rem;
-  padding: 25px 0;
-  text-shadow: 0 0 8px rgba(127, 129, 17, 0.4);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-}
+    .values-header { margin-bottom: 56px; }
+
+    .values-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3em;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.1;
+      margin-top: 8px;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gold-border);
+      border: 0.5px solid var(--gold-border);
+    }
+
+    .value-card {
+      background: var(--surface);
+      padding: 40px 32px;
+    }
+
+    .value-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5em;
+      font-weight: 300;
+      color: rgba(201,168,76,0.14);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .value-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4em;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      font-size: 0.83em;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    /* ================================
+       WHY PIE AI
+    ================================ */
+    .why {
+      background: var(--ink);
+      padding: 120px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      border-top: 0.5px solid var(--gold-border);
+      border-bottom: 0.5px solid var(--gold-border);
+    }
+
+    .why-label {
+      font-size: 0.68em;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .why h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3em;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .why h2 em { font-style: italic; color: var(--gold); }
+
+    .why p {
+      font-size: 0.92em;
+      color: var(--text-dim);
+      line-height: 1.85;
+      margin-bottom: 16px;
+      font-weight: 300;
+    }
+
+    .why-quote {
+      border-left: 2px solid var(--gold);
+      padding: 16px 24px;
+      margin: 32px 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2em;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .why-source {
+      font-size: 0.68em;
+      color: var(--text-dim);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 10px;
+      display: block;
+      font-style: normal;
+    }
+
+    /* ================================
+       FOOTER
+    ================================ */
+    footer {
+      background: var(--ink);
+      border-top: 0.5px solid var(--gold-border);
+      padding: 64px 80px 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      height: 42px;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    .footer-desc {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      line-height: 1.85;
+    }
+
+    .footer-col-title {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul { list-style: none; padding: 0; }
+    .footer-col ul li { margin-bottom: 11px; }
+    .footer-col ul li a {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      padding-top: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* ================================
+       MOBILE
+    ================================ */
+    @media (max-width: 900px) {
+      .navbar { padding: 0 20px; }
+      .nav-title { display: none; }
+      .about-hero { padding: 80px 24px; min-height: auto; }
+      .beginning {
+        grid-template-columns: 1fr;
+        padding: 70px 24px;
+        gap: 48px;
+      }
+      .beginning-left { position: static; }
+      .values { padding: 70px 24px; }
+      .values-grid { grid-template-columns: 1fr; }
+      .why {
+        grid-template-columns: 1fr;
+        padding: 70px 24px;
+        gap: 40px;
+      }
+      footer { padding: 48px 24px 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
   </style>
+</head>
 
+<body>
 
-<!-- =========================================================
-       NAVBAR
-  ========================================================= -->
+<!-- ================================
+     NAVBAR
+================================ -->
 <div class="navbar">
-  <img src="{{ url_for('static', filename='images/home_button.svg') }}" 
-       alt="Pie AI Logo" 
-       onclick="window.location.href='/'" 
-       style="cursor: pointer;">
-  
-  <h1>PIE AI</h1>
-
-  <!-- Right-Side Dropdown Menu -->
+  <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+       alt="Pie AI" class="nav-logo"
+       onclick="window.location.href='/'">
+  <div class="nav-title">Pie AI</div>
   <div class="dropdown">
     <button class="dropbtn">Menu ▾</button>
     <div class="dropdown-content">
-      <a href="{{ url_for('about_page') }}">About Us</a>
-      <a href="{{ url_for('contact_page') }}">Contact</a>
-      <a href="{{ url_for('why_page') }}">Allergy Importance</a>
-      <a href="{{ url_for('preregister_page') }}">Pre-Register</a>
+      <a href="/about">About Us</a>
+      <a href="/contact">Contact</a>
+      <a href="/why">Allergy Importance</a>
+      <a href="/restaurant-setup-1">Register</a>
     </div>
   </div>
 </div>
 
-  <!-- =========================================================
-       ABOUT HERO SECTION
-  ========================================================= -->
-  <section class="about-hero">
-    <div class="about-text">
-      <h1>- PIE AI -</h1>
-      <h2>Mission</h2>
-      <p>
-        At Pie AI, our mission is to revolutionize the restaurant industry through AI-driven innovation,
-        ensuring a safer and more seamless dining experience for all. We are committed to enhancing food safety
-        and accessibility, particularly for individuals with allergies, by providing real-time, accurate menu
-        information for restaurants. Pie AI reduces operational strain by streamlining customer interactions,
-        minimizing reliance on servers and managers for routine inquiries. By optimizing efficiency and enhancing safety,
-        we empower businesses to deliver exceptional service while creating a more inclusive and effortless dining
-        experience for every guest.
-      </p>
-    </div>
-  </section>
-
-  <!-- =========================================================
-       THE BEGINNING SECTION
-  ========================================================= -->
-  <section class="about-beginning">
-    <div class="logo-left">
-      <img src="{{ url_for('static', filename='images/old_logo_l.png') }}" alt="Old Logo Left">
-    </div>
-    <h2>The Beginning</h2>
-    <div class="beginning-text">
-      <p>
-        Pie AI started as a simple idea — born from firsthand experience in the restaurant industry.
-        I began working at the same local spot when I was 15, starting as a busser. Over time, I worked my way up —
-        through serving and eventually to bartender. I saw the challenges restaurants face in ensuring allergy safety for customers.
-        Servers often struggled to provide accurate allergen information, creating risks for both diners and businesses.
-      </p>
-      <p>
-        With a background in business and a passion for problem-solving, I set out to build a solution.
-        Teaching myself to code and mastering AI technology, I developed Pie AI from the ground up —
-        testing, refining, and optimizing it along the way. Today, Pie AI stands as an innovative tool designed
-        to enhance restaurant efficiency, improve customer safety, and streamline dining experiences for all.
-      </p>
-    </div>
-    <div class="logo-right">
-      <img src="{{ url_for('static', filename='images/old_logo_r.png') }}" alt="Old Logo Right">
-    </div>
-  </section>
-
-<!-- =========================================================
-       WHY PIE AI SECTION
-  ========================================================= -->
-  <section class="why-section">
-    <div class="why-text">
-      <h1><span class="dropcap">D</span>ining out should always feel safe ! </h1>
-      <p>Every year, thousands of people experience allergic reactions in restaurants often because of small, preventable mistakes. Pie AI empowers restaurants to update menus in real time, communicate with clarity, and safeguard every guest, one meal at a time</p>
-      <p class="quote">Quotes from : <span>CDC, U.S : NIH / Pub Med : Public Health Management</span></p>
-      <button class="read-more" onclick="window.location.href='/why'">Read More</button>
-    </div>
-  </section>
-
- <!-- === FOOTER === -->
-<footer>
-  <div class="footer-left">
-    <!-- Home button -->
-    <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='images/home_button.svg') }}" alt="Pie AI Logo">
-    </a>
+<!-- ================================
+     HERO — MISSION
+================================ -->
+<section class="about-hero">
+  <div class="hero-rule-top"></div>
+  <div class="hero-rule-bottom"></div>
+  <div class="about-hero-content">
+    <div class="hero-eyebrow">Our mission</div>
+    <h1>Pie AI</h1>
+    <div class="hero-subtitle">Building a safer table for everyone</div>
     <p>
-      Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.
+      Pie AI exists to modernize the restaurant industry through intelligent automation.
+      Our focus is simple  safer dining, clearer communication, and reduced operational strain.
+    </p>
+    <p>
+      By delivering real time, accurate menu and allergen information, Pie AI improves
+      accessibility for guests with allergies while minimizing reliance on staff for routine questions.
+    </p>
+    <p>
+      The result is a safer guest experience, a more efficient restaurant, and dining that feels
+      confident, inclusive, and effortless.
     </p>
   </div>
+</section>
 
-  <div class="footer-center">
-    <h4>Company</h4>
-    <ul>
-      <!-- Goes to about.html -->
-      <li><a href="{{ url_for('about_page') }}">About Us</a></li>
+<div class="divider"></div>
 
-      <!-- Scrolls to features section on home page -->
-      <li><a href="{{ url_for('home') }}#features">Features</a></li>
-    </ul>
+<!-- ================================
+     THE BEGINNING
+================================ -->
+<section class="beginning">
+  <div class="beginning-left">
+    <div class="section-tag">Origin</div>
+    <h2>Where it All<br><em>Began</em></h2>
   </div>
+  <div class="beginning-right">
+    <div class="timeline-item">
+      <p>
+        Pie AI began as a simple idea shaped by firsthand experience inside real restaurants.
+        Starting work at a local restaurant at fifteen, I moved through nearly every role —
+        from busser to server to bartender.
+      </p>
+    </div>
+    <div class="timeline-item">
+      <p>
+        Over time, one problem became clear: allergy information was often inconsistent,
+        difficult to access, and dependent on rushed staff — creating real risk for guests
+        and businesses alike.
+      </p>
+    </div>
+    <div class="timeline-item">
+      <p>
+        With a background in business and a drive to solve real problems, I taught myself to code
+        and built Pie AI from the ground up. Through constant testing and refinement, it evolved
+        into a platform designed to improve safety, efficiency, and clarity across the dining experience.
+      </p>
+    </div>
+  </div>
+</section>
 
-  <div class="footer-support">
-    <h4>Support</h4>
-    <ul>
-      <!-- Goes to contact.html -->
-      <li><a href="{{ url_for('contact_page') }}">Contact Us</a></li>
-    </ul>
+<!-- ================================
+     VALUES
+================================ -->
+<section class="values">
+  <div class="values-header">
+    <div class="section-tag">What we stand for</div>
+    <div class="values-title">Built on Three<br>Core Principles</div>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-num">01</div>
+      <h3>Safety first</h3>
+      <p>Every feature we build starts with one question — does this make dining safer for guests with allergies and dietary needs?</p>
+    </div>
+    <div class="value-card">
+      <div class="value-num">02</div>
+      <h3>Clarity always</h3>
+      <p>Ambiguity costs lives in the restaurant world. We believe every guest deserves a clear, confident answer — instantly.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-num">03</div>
+      <h3>Built to serve</h3>
+      <p>Pie AI doesn't replace the human touch of hospitality. It backs it up — giving restaurants and guests the tools to thrive together.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================
+     WHY PIE AI
+================================ -->
+<section class="why">
+  <div>
+    <div class="why-label">Why it matters</div>
+    <h2>Dining out should always feel <em>Safe</em></h2>
+    <div class="why-quote">
+      "Thousands of allergic reactions happen in restaurants every year  most from small, preventable mistakes."
+      <span class="why-source">— CDC · NIH / PubMed · Public Health Management</span>
+    </div>
+    <a href="/why" class="btn-gold">Read the full story →</a>
+  </div>
+  <div>
+    <p>Every year, thousands of people experience allergic reactions in restaurants — often because of small, preventable mistakes.</p>
+    <p>Pie AI empowers restaurants to update menus in real time, communicate with total clarity, and safeguard every guest — one meal at a time.</p>
+    <p>We built the bridge between what a restaurant knows and what a customer needs to feel safe at the table.</p>
+  </div>
+</section>
+
+<!-- ================================
+     FOOTER
+================================ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <a href="/">
+        <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+             alt="Pie AI" class="footer-logo">
+      </a>
+      <p class="footer-desc">Pie AI is an AI-powered restaurant assistant focused on allergy safety, real-time clarity, and smarter dining experiences.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/why">Allergy Information</a></li>
+        <li><a href="/restaurant-setup-1">Register</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Features</div>
+      <ul>
+        <li><a href="#">Manager Mode</a></li>
+        <li><a href="#">Real-Time Menu Updates</a></li>
+        <li><a href="#">Allergy Safety Intelligence</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal & Support</div>
+      <ul>
+        <li><a href="/terms">Terms of Service</a></li>
+        <li><a href="/report">Report Issues</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024–2026 Nexus 33 LLC · Pie-AI.com</p>
+    <p>All Rights Reserved · A MRK Production</p>
   </div>
 </footer>
 
-<div class="footer-bottom">
-  <p>All Rights Reserved © 2024</p><p>Nexus 33 LLC & Pie-AI.com</p> <p>A MRK Production</p>
-</div>
+</body>
+</html>

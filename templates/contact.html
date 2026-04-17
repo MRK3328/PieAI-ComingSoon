@@ -2,301 +2,727 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us | Nexus 33</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Lustria&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact & Support – Pie AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================================================
-       GLOBAL STYLES
-    ========================================================= */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8cc7a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-border: rgba(201,168,76,0.22);
+      --ink:         #0c0c0a;
+      --surface:     #111108;
+      --surface2:    #161612;
+      --text:        #f0ead8;
+      --text-dim:    rgba(240,234,216,0.45);
+      --text-mid:    rgba(240,234,216,0.7);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: url("{{ url_for('static', filename='images/room_back.png') }}") no-repeat center center / cover;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      color: #c6bd7b;
       overflow-x: hidden;
     }
 
-    /* =========================================================
-   NAVIGATION BAR (Nexus 33 Banner)
-========================================================= */
-.nexus-nav {
-  width: 100%;
-  background: url("{{ url_for('static', filename='images/nexus_nav.png') }}") 
-              no-repeat center center / cover;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  border-radius: 0 0 15px 15px;
-}
-
-.nexus-nav h1 {
-  font-family: 'Lustria', serif;
-  font-size: 2.6rem;
-  letter-spacing: 3px;
-  color: #837a5e;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
-
-/* =========================================================
-   BACK BUTTON (Left Corner)
-========================================================= */
-.back-button {
-  position: absolute;
-  left: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.back-button img {
-  height: 45px;
-  width: auto;
-  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
-  opacity: 0.9;
-}
-
-.back-button:hover {
-  transform: translateY(-50%) scale(1.1);
-  filter: brightness(1.2);
-  opacity: 1;
-}
-
-    /* =========================================================
-       PAGE HEADER TEXT
-    ========================================================= */
-    .header-text {
-      text-align: center;
-      margin-top: 20px;
-      color: #fff;
+    /* ================================
+       NAVBAR
+    ================================ */
+    .navbar {
+      width: 100%;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 1000;
+      height: 68px;
+      background: rgba(12,12,10,0.94);
+      backdrop-filter: blur(24px);
+      border-bottom: 0.5px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
     }
 
-    .header-text h2 {
-      font-size: 1.4rem;
+    .nav-logo {
+      height: 44px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(201,168,76,0.25);
+      cursor: pointer;
+    }
+
+    .nav-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .dropdown { position: relative; }
+
+    .dropbtn {
+      background: transparent;
+      color: var(--gold);
+      padding: 8px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: 0.5px solid var(--gold-border);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .dropbtn:hover { background: var(--gold-dim); }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: rgba(12,12,10,0.98);
+      min-width: 200px;
+      border: 0.5px solid var(--gold-border);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+
+    .dropdown-content a {
+      color: var(--text-dim);
+      padding: 13px 20px;
+      display: block;
+      text-decoration: none;
+      font-size: 0.78em;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-bottom: 0.5px solid rgba(255,255,255,0.05);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .dropdown-content a:last-child { border-bottom: none; }
+    .dropdown-content a:hover { color: var(--gold); background: var(--gold-dim); }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    body { padding-top: 68px; }
+
+    /* ================================
+       HERO
+    ================================ */
+    .hero {
+      position: relative;
+      height: 280px;
+      background-image: url('/static/images/italy_house.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.58);
+    }
+
+    .hero-rule-top {
+      position: absolute;
+      top: 80px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+      z-index: 1;
+    }
+
+    .hero-rule-bottom {
+      position: absolute;
+      bottom: 80px; left: 0; right: 0;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.65em;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 500;
+      opacity: 0.7;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
       font-weight: 400;
+      color: var(--text);
+      letter-spacing: 1px;
+      text-shadow: 0 0 60px rgba(201,168,76,0.12);
+    }
+
+    /* ================================
+       DIVIDER
+    ================================ */
+    .divider {
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+    }
+
+    /* ================================
+       PAGE WRAP
+    ================================ */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 72px 40px 100px;
+      width: 100%;
+    }
+
+    /* ================================
+       SECTION TAG / TITLE
+    ================================ */
+    .section-tag {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 14px;
+      opacity: 0.7;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4em;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.1;
       margin-bottom: 40px;
     }
 
-   /* =========================================================
-   CONTACT CARD LAYOUT
-========================================================= */
-.contact-section {
+    .section-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    /* ================================
+   CONTACT CARD — FLIP
+================================ */
+.card-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 80px;
+}
+
+.card-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.flip-card {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 35px;
-  margin: 60px 0;
-}
-
-.contact-card {
-  cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.contact-card:hover {
-  transform: scale(1.05);
-  filter: brightness(1.2);
-}
-
-/* =========================================================
-   POPUP STYLING
-========================================================= */
-.popup {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.779);
   justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.popup.active {
-  display: flex;
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.popup-content {
-  background: #11111170;
-  border: 2px solid #837a5e;
-  border-radius: 15px;
-  padding: 40px 60px;
+  padding: 32px;
   text-align: center;
-  color: #f5e7b3;
-  font-family: 'Lustria', serif;
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
-  max-width: 400px;
-  width: 90%;
+  border: 0.5px solid var(--gold-border);
+  background: var(--surface2);
 }
 
-.popup-content h2 {
-  margin-bottom: 20px;
-  color: #d4af37;
+.card-face::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0.5;
 }
 
-.popup-content a {
-  display: block;
-  color: #f5e7b3;
-  text-decoration: none;
-  margin: 10px 0;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
+.card-back {
+  transform: rotateY(180deg);
 }
 
-.popup-content a:hover {
-  color: #fff5cc;
-}
-
-.close-btn {
-  margin-top: 25px;
-  padding: 10px 40px;
-  border: none;
-  background: linear-gradient(to right, #837a5e, #b48a1d);
-  color: #000;
-  border-radius: 30px;
-  font-size: 1rem;
+/* Flip button — top right corner */
+.flip-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: var(--gold-dim);
+  border: 0.5px solid var(--gold-border);
+  color: var(--gold);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.6em;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.close-btn:hover {
-  background: #fff5cc;
-  transform: scale(1.05);
+.flip-btn:hover {
+  background: var(--gold);
+  color: #000;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: scale(0.95);}
-  to   {opacity: 1; transform: scale(1);}
+.card-icon {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2em;
+  font-weight: 600;
+  color: var(--gold);
+  width: 56px;
+  height: 56px;
+  border: 0.5px solid var(--gold-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: var(--gold-dim);
 }
 
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4em;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 6px;
+}
 
-    /* =========================================================
-       REFLECTION EFFECT
-    ========================================================= */
-    .contact-card::after {
-      content: "";
+.card-subtitle {
+  font-size: 0.72em;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.card-email {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2em;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-style: italic;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: block;
+}
+
+.card-email:hover { color: var(--gold-light); }
+
+.card-message {
+  font-size: 0.8em;
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+    /* ================================
+       FAQ
+    ================================ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 0.5px solid var(--gold-border);
+    }
+
+    .faq-item {
+      padding: 24px 28px;
+      border-bottom: 0.5px solid var(--gold-border);
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-item::before {
+      content: '';
       position: absolute;
-      bottom: -110px;
-      left: 0;
-      width: 100%;
-      height: 100px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(0,0,0,0));
-      opacity: 0.25;
-      transform: scaleY(-1);
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
-    /* =========================================================
-       FOOTER TEXT
-    ========================================================= */
-    footer {
-      margin-top: 80px;
-      font-size: 0.9rem;
-      color: #d4af37;
-      text-align: center;
-      text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    .faq-item:hover { background: rgba(201,168,76,0.03); }
+    .faq-item:hover::before { opacity: 1; }
+
+    .faq-question {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15em;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 8px;
     }
+
+    .faq-answer {
+      font-size: 0.82em;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    .faq-answer a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .faq-answer a:hover { color: var(--gold-light); }
+
+    /* ================================
+       CONTACT CTA STRIP
+    ================================ */
+    .cta-strip {
+      margin-top: 60px;
+      background: var(--surface2);
+      border: 0.5px solid var(--gold-border);
+      padding: 40px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-strip::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    .cta-left h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6em;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .cta-left p {
+      font-size: 0.82em;
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78em;
+      font-weight: 500;
+      padding: 13px 32px;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ================================
+       FOOTER
+    ================================ */
+    footer {
+      background: var(--ink);
+      border-top: 0.5px solid var(--gold-border);
+      padding: 64px 80px 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      height: 42px;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    .footer-desc {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      line-height: 1.85;
+    }
+
+    .footer-col-title {
+      font-size: 0.62em;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul { list-style: none; padding: 0; }
+    .footer-col ul li { margin-bottom: 11px; }
+    .footer-col ul li a {
+      font-size: 0.8em;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      padding-top: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.72em;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* ================================
+       MOBILE
+    ================================ */
+    @media (max-width: 900px) {
+      .navbar { padding: 0 20px; }
+      .nav-title { display: none; }
+      .page-wrap { padding: 48px 24px 80px; }
+      .cta-strip { flex-direction: column; text-align: center; padding: 32px 24px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero { height: 220px; }
+    }
+
   </style>
 </head>
-
 <body>
 
-  <!-- =========================================================
-     NAVIGATION BAR (Nexus 33 Banner with Back Button)
-========================================================= -->
-<div class="nexus-nav">
-  <div class="back-button" onclick="window.location.href='/'">
-    <img src="{{ url_for('static', filename='images/back.svg') }}" alt="Back">
-  </div>
-  <h1></h1>
-</div>
-
-  <!-- Header Text -->
-  <div class="header-text">
-    <h2>Pie AI is a Nexus 33 Project</h2>
-  </div>
-
-<!-- =========================================================
-     CONTACT CARDS WITH POPUPS
-========================================================= -->
-<div class="contact-section">
-
-  <!-- PIE AI CARD -->
-  <div class="contact-card" onclick="openPopup('piePopup')">
-    <img src="{{ url_for('static', filename='images/pie_card.svg') }}" alt="Pie AI Contact Card">
-  </div>
-
-  <!-- NEXUS 33 CARD -->
-  <div class="contact-card" onclick="openPopup('nexusPopup')">
-    <img src="{{ url_for('static', filename='images/nexus_card.svg') }}" alt="Nexus 33 Card">
-  </div>
-
-  <!-- JULIAN CARD -->
-  <div class="contact-card" onclick="openPopup('julianPopup')">
-    <img src="{{ url_for('static', filename='images/julian.svg') }}" alt="Julian Klein Contact Card">
+<!-- ================================
+     NAVBAR
+================================ -->
+<div class="navbar">
+  <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+       alt="Pie AI" class="nav-logo"
+       onclick="window.location.href='/'">
+  <div class="nav-title">Pie AI</div>
+  <div class="dropdown">
+    <button class="dropbtn">Menu ▾</button>
+    <div class="dropdown-content">
+      <a href="/about">About Us</a>
+      <a href="/contact">Contact</a>
+      <a href="/why">Allergy Importance</a>
+      <a href="/restaurant-setup-1">Register</a>
+    </div>
   </div>
 </div>
 
-<!-- =========================================================
-     POPUP WINDOWS
-========================================================= -->
-<div id="piePopup" class="popup">
-  <div class="popup-content">
-    <h2>Contact Pie AI Support</h2>
-    <p><a href="mailto:Support@Pie-ai.com">Support@Pie-ai.com</a></p>
-    <p><a href="https://www.pie-ai.com" target="_blank">www.Pie-ai.com</a></p>
-    <button class="close-btn" onclick="closePopup('piePopup')">Close</button>
+<!-- ================================
+     HERO
+================================ -->
+<section class="hero">
+  <div class="hero-rule-top"></div>
+  <div class="hero-rule-bottom"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">We're here to help</div>
+    <div class="hero-title">Contact & Support</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ================================
+     PAGE CONTENT
+================================ -->
+<div class="page-wrap">
+
+  <!-- FLIP CARD -->
+  <div style="text-align:center;margin-bottom:16px;">
+    <div class="section-tag">Get in touch</div>
+    <div class="section-title">Pie AI <em>Support</em></div>
+  </div>
+
+<div class="card-wrap">
+  <div class="card-container">
+    <div class="flip-card" id="flipCard">
+
+      <!-- FLIP BUTTON — top right, works on both faces -->
+      <button class="flip-btn" onclick="toggleFlip(event)">
+        ↺ Flip
+      </button>
+
+      <!-- FRONT -->
+      <div class="card-face card-front">
+        <div class="card-icon">Pie</div>
+        <div class="card-title">Pie AI Support</div>
+        <div class="card-subtitle">Tap flip to see contact info</div>
+      </div>
+
+      <!-- BACK -->
+      <div class="card-face card-back">
+        <div class="card-icon">AI</div>
+        <div class="card-title">Get in Touch</div>
+        <a href="mailto:pie-ai@outlook.com" class="card-email">
+          pie-ai@outlook.com
+        </a>
+        <div class="card-message">We're here to help with setup, menus, allergies, or any platform questions.</div>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<div id="nexusPopup" class="popup">
-  <div class="popup-content">
-    <h2>Nexus 33</h2>
-    <p><a href="https://www.Nexus33LLC.com" target="_blank">www.Nexus33LLC.com</a></p>
-    <button class="close-btn" onclick="closePopup('nexusPopup')">Close</button>
+  <!-- FAQ -->
+  <div class="section-tag">Common questions</div>
+  <div class="section-title">Quick <em>Answers</em></div>
+
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <div class="faq-question">How do I upload my menu?</div>
+      <div class="faq-answer">Go to Files → Food Menus or Drink Menu, tap upload, and select your Excel or PDF. The AI will read it instantly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Can customers see my restaurant without signing up?</div>
+      <div class="faq-answer">Yes — no login needed. They scan your QR code or search and chat directly with no friction.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">How do I update allergy information?</div>
+      <div class="faq-answer">Upload or edit your Allergy Files, or use Item Search to update specific dishes directly from your dashboard.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is my data private?</div>
+      <div class="faq-answer">Yes — each restaurant has its own sealed data container. Nothing transfers between accounts.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Need more help?</div>
+      <div class="faq-answer">Email us at <a href="mailto:pie-ai@outlook.com">pie-ai@outlook.com</a> — we respond quickly.</div>
+    </div>
+
   </div>
+
+  <!-- CTA STRIP -->
+  <div class="cta-strip">
+    <div class="cta-left">
+      <h3>Still have questions?</h3>
+      <p>Reach out directly — we'll get back to you fast.</p>
+    </div>
+    <a href="mailto:pie-ai@outlook.com" class="btn-gold">Email Us →</a>
+  </div>
+
 </div>
 
-<div id="julianPopup" class="popup">
-  <div class="popup-content">
-    <h2>Julian Klein — CEO</h2>
-    <p><a href="mailto:CEO@Nexus33LLC.com">CEO@Nexus33LLC.com</a></p>
-    <p><a href="https://www.Nexus33LLC.com" target="_blank">www.Nexus33LLC.com</a></p>
-    <button class="close-btn" onclick="closePopup('julianPopup')">Close</button>
+<!-- ================================
+     FOOTER
+================================ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <a href="/">
+        <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+             alt="Pie AI" class="footer-logo">
+      </a>
+      <p class="footer-desc">Pie AI is an AI-powered restaurant assistant focused on allergy safety, real-time clarity, and smarter dining experiences.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/why">Allergy Information</a></li>
+        <li><a href="/restaurant-setup-1">Register</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Features</div>
+      <ul>
+        <li><a href="#">Manager Mode</a></li>
+        <li><a href="#">Real-Time Menu Updates</a></li>
+        <li><a href="#">Allergy Safety Intelligence</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal & Support</div>
+      <ul>
+        <li><a href="/terms">Terms of Service</a></li>
+        <li><a href="/report">Report Issues</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+      </ul>
+    </div>
   </div>
-</div>
-
-  <!-- Footer -->
-  <footer>
-    © 2024 Nexus 33 LLC. All rights reserved.
-  </footer>
+  <div class="footer-bottom">
+    <p>© 2024–2026 Nexus 33 LLC · Pie-AI.com</p>
+    <p>All Rights Reserved · A MRK Production</p>
+  </div>
+</footer>
 <script>
-function openPopup(id) {
-  document.getElementById(id).classList.add('active');
-}
-
-function closePopup(id) {
-  document.getElementById(id).classList.remove('active');
-}
-
-// Allow clicking outside popup to close it
-window.addEventListener('click', e => {
-  document.querySelectorAll('.popup.active').forEach(popup => {
-    if (e.target === popup) popup.classList.remove('active');
-  });
-});
+  function toggleFlip(e) {
+    e.stopPropagation();
+    document.getElementById('flipCard').classList.toggle('flipped');
+  }
 </script>
-
 </body>
 </html>

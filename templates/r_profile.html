@@ -1,0 +1,588 @@
+{% extends "_r_base.html" %}
+
+{% block page_title %}My Profile – Pie AI{% endblock %}
+
+{% block extra_styles %}
+
+{% set cur_accent  = profile.get("accent") or profile.get("accent_color") or "#f5c84c" %}
+{% set cur_bg      = profile.get("background_color") or "#0f0f0f" %}
+{% set cur_mode    = profile.get("background_mode") or "dark" %}
+{% set cur_theme   = profile.get("theme") or "gold" %}
+{% set cur_header  = profile.get("header_image") or "" %}
+{% set cur_profile = profile.get("profile_image") or "" %}
+{% set cur_preset  = profile.get("header_preset") or "" %}
+
+<style>
+:root {
+  --accent-color: {{ cur_accent }};
+}
+
+/* ============================================================
+   MAIN CARD
+============================================================ */
+.card {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto 140px;
+    padding: 48px;
+    border-radius: 28px;
+    background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(0,0,0,0.98));
+    box-shadow: 0 30px 80px rgba(0,0,0,0.85), inset 0 0 0 1px rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+}
+
+/* ============================================================
+   SECTIONS
+============================================================ */
+.section {
+    margin-bottom: 28px;
+}
+
+.section h2 {
+    font-size: 1em;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #ddd;
+}
+
+/* ============================================================
+   INPUT
+============================================================ */
+input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 1.05em;
+    text-align: center;
+}
+
+/* ============================================================
+   THEME PICKER
+============================================================ */
+.theme-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.theme {
+    width: 100px;
+    height: 100px;
+    border-radius: 16px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    position: relative;
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border 0.25s ease;
+}
+
+.theme:hover { transform: scale(1.03); }
+
+.theme.active {
+    border-color: #BAA473;
+    box-shadow: 0 0 28px rgba(245,200,76,0.75);
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.theme.gold { background: #f5c84c; }
+.theme.dark { background: linear-gradient(135deg, #7e2929, #250C0C); }
+.theme.warm { background: #FFA1E3; }
+.theme.blue { background: #2398CE; }
+
+/* ============================================================
+   COLOR PICKER
+============================================================ */
+.color-picker {
+    margin-top: 12px;
+}
+
+.color-picker input[type="color"] {
+    width: 54px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+/* ============================================================
+   BACKGROUND MODE SWITCH
+============================================================ */
+.bg-switch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
+}
+
+.bg-label {
+    font-size: 0.9em;
+    opacity: 0.75;
+}
+
+.switch {
+    width: 64px;
+    height: 34px;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #1c1c1c, #121212);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 6px 16px rgba(0,0,0,0.45);
+    transition: background 0.3s ease;
+}
+
+.switch .knob {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.25);
+    transition: transform 0.3s ease;
+}
+
+.switch.light { background: linear-gradient(180deg, #e4e4e4, #d2d2d2); }
+.switch.light .knob { transform: translateX(30px); }
+
+body.bg-light { background: #e7e6e1; color: #111; }
+body.bg-light .switch { background: linear-gradient(180deg, #e4e4e4, #d2d2d2); }
+body.bg-light .switch .knob { transform: translateX(30px); }
+
+/* ============================================================
+   HEADER PRESET SELECTION
+============================================================ */
+.header-preset-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+}
+
+.header-preset {
+    position: relative;
+    width: 100%;
+    height: 90px;
+    border-radius: 16px;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.45);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
+}
+
+.header-preset:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 55px rgba(0,0,0,0.65);
+}
+
+.header-preset.active {
+    border-color: #BAA473;
+    box-shadow: 0 0 0 2px rgba(186,164,115,0.9), 0 0 32px rgba(186,164,115,0.65), 0 26px 70px rgba(0,0,0,0.7);
+}
+
+.header-preset::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
+    pointer-events: none;
+}
+
+.header-preset-label {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    font-size: 0.8em;
+    font-weight: 500;
+    color: #fff;
+    opacity: 0.9;
+    z-index: 2;
+}
+
+/* ============================================================
+   IMAGE UPLOADS
+============================================================ */
+.image-section {
+    margin-top: 22px;
+}
+
+.image-section h3 {
+    font-size: 0.95em;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #ddd;
+}
+
+.upload {
+    background: #1b1b1b;
+    padding: 14px;
+    border-radius: 14px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: #bbb;
+    transition: background 0.2s ease;
+    display: block;
+}
+
+.upload:hover { background: #222; }
+
+/* ============================================================
+   SAVE BUTTON
+============================================================ */
+.save {
+    margin-top: 28px;
+    width: 100%;
+    padding: 16px 18px;
+    background: var(--accent-color);
+    color: #111;
+    border: none;
+    border-radius: 22px;
+    font-size: 1.05em;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(245,200,76,0.35);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(245,200,76,0.5);
+}
+
+.save:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(245,200,76,0.4);
+}
+
+.save:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form class="card" method="POST" action="/my-profile" enctype="multipart/form-data">
+
+  <!-- NAME -->
+  <div class="section">
+    <h2>Restaurant Name</h2>
+    <input type="text" name="name" value="{{ profile.get('name', '') }}">
+  </div>
+
+  <!-- THEME -->
+  <div class="section">
+    <h2>Profile Theme</h2>
+    <div class="theme-row">
+      <div class="theme gold {% if cur_theme == 'gold' %}active{% endif %}"
+           data-theme="gold" aria-label="Gold theme"></div>
+      <div class="theme dark {% if cur_theme == 'dark' %}active{% endif %}"
+           data-theme="dark" aria-label="Red wine theme"></div>
+      <div class="theme warm {% if cur_theme == 'warm' %}active{% endif %}"
+           data-theme="warm" aria-label="Cherry blossom theme"></div>
+      <div class="theme blue {% if cur_theme == 'blue' %}active{% endif %}"
+           data-theme="blue" aria-label="Lackey theme"></div>
+    </div>
+  </div>
+
+  <!-- ACCENT COLOR -->
+  <div class="section">
+    <h2>Accent Color</h2>
+    <div class="color-picker">
+      <input type="color" id="customColorPicker"
+             value="{{ cur_accent }}"
+             aria-label="Accent color picker">
+    </div>
+  </div>
+
+  <!-- BACKGROUND MODE -->
+  <div class="section">
+    <h2>Background Mode</h2>
+    <div class="bg-switch">
+      <span class="bg-label">Dark</span>
+      <div class="switch {% if cur_mode == 'light' %}light{% endif %}" id="bgSwitch">
+        <div class="knob"></div>
+      </div>
+      <span class="bg-label">Light</span>
+    </div>
+  </div>
+
+  <!-- BACKGROUND COLOR -->
+  <div class="section">
+    <h2>Background Color</h2>
+    <div class="color-picker">
+      <input type="color" id="backgroundColorPicker"
+             value="{{ cur_bg }}"
+             aria-label="Background color picker">
+    </div>
+  </div>
+
+  <!-- HEADER PRESETS -->
+  <div class="section">
+    <h2>Header Presets</h2>
+    <div class="header-preset-grid">
+
+      <div class="header-preset {% if cur_preset == 'cherry_blossom' %}active{% endif %}"
+           data-preset="cherry_blossom"
+           style="background-image:url('/static/images/cherry_blossom.png');">
+        <div class="header-preset-label">Cherry Blossom</div>
+      </div>
+
+      <div class="header-preset {% if cur_preset == 'lake_view' %}active{% endif %}"
+           data-preset="lake_view"
+           style="background-image:url('/static/images/lackey.png');">
+        <div class="header-preset-label">Lake View</div>
+      </div>
+
+      <div class="header-preset {% if cur_preset == 'red_wine' %}active{% endif %}"
+           data-preset="red_wine"
+           style="background-image:url('/static/images/red_wine.png');">
+        <div class="header-preset-label">Red Wine</div>
+      </div>
+
+      <div class="header-preset {% if cur_preset == 'pie_ai_default' %}active{% endif %}"
+           data-preset="pie_ai_default"
+           style="background-image:url('/static/images/italy_house.jpg');">
+        <div class="header-preset-label">Pie AI (Default)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HEADER IMAGE -->
+  <div class="image-section">
+    <h3>Header Image</h3>
+    <label class="upload">
+      {{ "Replace header image" if cur_header else "Upload header image" }}
+      <input type="file" name="header_image" id="headerFile" accept="image/*" hidden>
+    </label>
+  </div>
+
+  <!-- PROFILE IMAGE -->
+  <div class="image-section">
+    <h3>Profile Image</h3>
+    <label class="upload">
+      {{ "Replace logo" if cur_profile else "Upload logo" }}
+      <input type="file" name="profile_image" id="profileFile" accept="image/*" hidden>
+    </label>
+  </div>
+
+  <!-- HIDDEN STATE — pre-filled so untouched fields never submit blank -->
+  <input type="hidden" name="theme"            id="themeInput"           value="{{ cur_theme }}">
+  <input type="hidden" name="accent"           id="accentInput"          value="{{ cur_accent }}">
+  <input type="hidden" name="background_mode"  id="backgroundModeInput"  value="{{ cur_mode }}">
+  <input type="hidden" name="background_color" id="backgroundColorInput" value="{{ cur_bg }}">
+  <input type="hidden" name="header_preset"    id="headerPresetInput"    value="{{ cur_preset }}">
+
+  <button class="save" type="submit">Save Profile Settings</button>
+
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const root = document.documentElement;
+  const body = document.body;
+
+  const themeButtons      = document.querySelectorAll(".theme");
+  const headerPresets     = document.querySelectorAll(".header-preset");
+  const accentPicker      = document.getElementById("customColorPicker");
+  const backgroundPicker  = document.getElementById("backgroundColorPicker");
+  const bgSwitch          = document.getElementById("bgSwitch");
+  const pageHeader        = document.querySelector(".header");
+  const headerFileInput   = document.getElementById("headerFile");
+  const profileFileInput  = document.getElementById("profileFile");
+
+  const themeInput           = document.getElementById("themeInput");
+  const accentInput          = document.getElementById("accentInput");
+  const backgroundModeInput  = document.getElementById("backgroundModeInput");
+  const backgroundColorInput = document.getElementById("backgroundColorInput");
+  const headerPresetInput    = document.getElementById("headerPresetInput");
+
+  /* ===============================
+     STATE — seeded from saved profile
+  =============================== */
+  let selectedTheme    = "{{ cur_theme }}";
+  let backgroundMode   = "{{ cur_mode }}";
+  let customAccent     = "{{ cur_accent }}";
+  let customBackground = null;
+  let customHeader     = "{{ cur_header }}" || null;
+
+  /* ===============================
+     THEME CONFIG
+  =============================== */
+  const THEME_CONFIG = {
+    gold: { accent: "#f5c84c", header: "/static/images/temporary_background.png" },
+    dark: { accent: "#7e2929", header: "/static/images/red_wine.png" },
+    warm: { accent: "#FFA1E3", header: "/static/images/cherry_blossom.png" },
+    blue: { accent: "#2398CE", header: "/static/images/lackey.png" }
+  };
+
+  /* ===============================
+     APPLY THEME
+  =============================== */
+  function applyTheme(themeKey) {
+    const theme = THEME_CONFIG[themeKey];
+    if (!theme) return;
+    root.style.setProperty("--accent-color", theme.accent);
+    if (!customHeader && pageHeader) {
+      pageHeader.style.backgroundImage = `url('${theme.header}')`;
+    }
+  }
+
+  /* ===============================
+     INIT — re-applies saved settings on load
+  =============================== */
+  function initFromProfile() {
+    // Apply saved accent
+    root.style.setProperty("--accent-color", customAccent);
+
+    // Apply saved bg mode
+    if (backgroundMode === "light") {
+      body.classList.add("bg-light");
+    }
+
+    // Apply saved custom bg color
+    if (backgroundMode === "custom") {
+      body.style.background = "{{ cur_bg }}";
+    }
+
+    // Apply saved header or fall back to theme
+    if (customHeader && pageHeader) {
+      pageHeader.style.backgroundImage = `url('${customHeader}')`;
+    } else {
+      applyTheme(selectedTheme);
+    }
+  }
+
+  initFromProfile();
+
+  /* ===============================
+     THEME BUTTONS
+  =============================== */
+  themeButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      themeButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedTheme = btn.dataset.theme;
+      customAccent  = THEME_CONFIG[selectedTheme]?.accent || customAccent;
+      customHeader  = null;
+      applyTheme(selectedTheme);
+      if (themeInput) themeInput.value = selectedTheme;
+      if (accentInput) accentInput.value = customAccent;
+    });
+  });
+
+  /* ===============================
+     ACCENT COLOR PICKER
+  =============================== */
+  if (accentPicker) {
+    accentPicker.addEventListener("input", e => {
+      customAccent = e.target.value;
+      root.style.setProperty("--accent-color", customAccent);
+      if (accentInput) accentInput.value = customAccent;
+    });
+  }
+
+  /* ===============================
+     DARK / LIGHT SWITCH
+  =============================== */
+  if (bgSwitch) {
+    bgSwitch.addEventListener("click", () => {
+      customBackground = null;
+      body.style.background = "";
+      if (backgroundMode !== "light") {
+        backgroundMode = "light";
+        body.classList.add("bg-light");
+        bgSwitch.classList.add("light");
+      } else {
+        backgroundMode = "dark";
+        body.classList.remove("bg-light");
+        bgSwitch.classList.remove("light");
+      }
+      if (backgroundModeInput) backgroundModeInput.value = backgroundMode;
+    });
+  }
+
+  /* ===============================
+     BACKGROUND COLOR PICKER
+  =============================== */
+  if (backgroundPicker) {
+    backgroundPicker.addEventListener("input", e => {
+      customBackground = e.target.value;
+      backgroundMode   = "custom";
+      body.classList.remove("bg-light");
+      body.style.background = customBackground;
+      if (backgroundModeInput)  backgroundModeInput.value  = "custom";
+      if (backgroundColorInput) backgroundColorInput.value = customBackground;
+    });
+  }
+
+  /* ===============================
+     HEADER PRESETS
+  =============================== */
+  headerPresets.forEach(preset => {
+    preset.addEventListener("click", () => {
+      headerPresets.forEach(p => p.classList.remove("active"));
+      preset.classList.add("active");
+      const bg = preset.style.backgroundImage;
+      if (pageHeader) pageHeader.style.backgroundImage = bg;
+      customHeader = bg;
+      if (headerPresetInput) headerPresetInput.value = preset.dataset.preset;
+    });
+  });
+
+  /* ===============================
+     FILE UPLOAD HANDLERS
+  =============================== */
+  if (headerFileInput) {
+    headerFileInput.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      if (pageHeader) pageHeader.style.backgroundImage = `url('${url}')`;
+      customHeader = url;
+    });
+  }
+
+  if (profileFileInput) {
+    profileFileInput.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+    });
+  }
+
+  /* ===============================
+     FORM SUBMIT — sync state to hidden fields
+  =============================== */
+  const form = document.querySelector("form.card");
+  if (form) {
+    form.addEventListener("submit", () => {
+      if (themeInput)           themeInput.value           = selectedTheme;
+      if (accentInput)          accentInput.value          = customAccent;
+      if (backgroundModeInput)  backgroundModeInput.value  = backgroundMode;
+      if (backgroundColorInput) backgroundColorInput.value = backgroundPicker ? backgroundPicker.value : "{{ cur_bg }}";
+    });
+  }
+
+});
+</script>
+
+{% endblock %}

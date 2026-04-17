@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> {{ profile.name if profile is defined and profile.name else "Pie AI" }} </title>
+
+  <style>
+    /* --------------------------------------------
+       ROOT VARIABLES (THEME / COLORS)
+    -------------------------------------------- */
+:root {
+  --accent-color: {{ profile.accent_color if profile is defined else "#f5c84c" }};
+  --primary-color: {{ profile.primary_color if profile is defined else "#ffffff" }};
+  --bg-color: {{ profile.background_color if profile is defined else "#0f0f0f" }};
+}
+
+
+    /* --------------------------------------------
+       BASE PAGE / BODY (MRK GLASS FOUNDATION)
+    -------------------------------------------- */
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: radial-gradient(circle at center, #3d3d3d 0%, var(--bg-color) 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* --------------------------------------------
+       HEADER (IMAGE + TITLE)
+    -------------------------------------------- */
+    .header {
+      height: 360px;
+      background-image: url('{{ profile.header_image if profile is defined else "/static/images/default_header.jpg" }}');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    /* Manager mode reduces header height */
+    body.manager-mode .header {
+      height: 220px;
+    }
+
+    /* --------------------------------------------
+       RESTAURANT TITLE (CENTER GLASS)
+    -------------------------------------------- */
+    .restaurant-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--accent-color);
+      font-size: 3.2em;
+      background: rgba(0,0,0,0.45);
+      padding: 18px 44px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 45px rgba(0,0,0,0.6);
+
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* --------------------------------------------
+       BACK BUTTON
+    -------------------------------------------- */
+    .back-button {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 10px 18px;
+      font-size: 1em;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    /* --------------------------------------------
+       TOP NAVIGATION BAR
+    -------------------------------------------- */
+    .nav {
+      width: 90%;
+      max-width: 1100px;
+      margin: -40px auto 0;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      background: rgba(19, 19, 19, 0.47);
+      backdrop-filter: blur(20px);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15em;
+      padding: 6px 12px;
+      border-radius: 10px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--accent-color);
+    }
+
+    .nav a:hover {
+      color: var(--accent-color);
+    }
+    /* --------------------------------------------
+       BOTTOM NAV BAR (GLOBAL)
+    -------------------------------------------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      width: 90%;
+      max-width: 520px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 14px 18px;
+
+      backdrop-filter: blur(20px);
+      background: rgba(19, 19, 19, 0.47);
+
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+
+      z-index: 1000;
+    }
+
+    .bottom-nav a {
+      color: var(--accent-color);
+      font-size: 1em;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+
+    .bottom-nav a:hover {
+      color: var(--primary-color);
+    }
+
+    /* --------------------------------------------
+       PAGE CONTENT WRAPPER
+    -------------------------------------------- */
+   .page-content {
+  position: relative;
+  z-index: 2;
+
+  max-width: 1200px;
+  margin: 0 auto 160px;
+  padding: 60px 24px 0;
+}
+    </style>
+
+  {% block extra_styles %}{% endblock %}
+
+</head>
+
+<body class="{% if manager_mode %}manager-mode{% endif %}">
+
+  <!-- --------------------------------------------
+       HEADER STRUCTURE
+  -------------------------------------------- -->
+  <div class="header">
+    <a href="javascript:history.back()" class="back-button">←</a>
+    <div class="restaurant-title"> {{ profile.name if profile is defined else "Pie AI" }} </div>
+    
+  </div>
+
+<!-- --------------------------------------------
+     TOP NAVIGATION
+-------------------------------------------- -->
+<nav class="nav">
+  <a href="/manager-chat"
+     class="{% if request.path == '/manager-chat' %}active{% endif %}">
+     Manager Chat
+  </a>
+
+  <a href="/activity-dashboard"
+     class="{% if request.path == '/activity-dashboard' %}active{% endif %}">
+     Active Dashboard
+  </a>
+
+  <a href="/control-panel"
+     class="{% if request.path == '/control-panel' %}active{% endif %}">
+     Control Panel
+  </a>
+
+  <a href="/r-files"
+     class="{% if request.path == '/r-files' %}active{% endif %}">
+     Files
+  </a>
+</nav>
+
+
+  <!-- --------------------------------------------
+       BOTTOM NAVIGATION
+  -------------------------------------------- -->
+  <div class="bottom-nav">
+    <a href="/restaurant-home">Home</a>
+    <a href="/my-profile">My profile</a>
+    <a href="/r-settings">Settings</a>
+  </div>
+
+  <!-- --------------------------------------------
+       PAGE-SPECIFIC CONTENT
+  -------------------------------------------- -->
+  <div class="page-content">
+    {% block content %}{% endblock %}
+  </div> 
+
+</body>
+</html>

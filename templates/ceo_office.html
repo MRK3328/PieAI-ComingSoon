@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nora Office • CEO Command</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --gold: #d4af37; --gold-dim: #b48a1d;
+      --bg: #050505; --surface: #0a0a0a;
+      --phi: 1.618033988749894;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Poppins', -apple-system, sans-serif;
+      overflow-x: hidden;
+      min-height: 100dvh;
+      background: radial-gradient(circle at 30% 70%, rgba(212,175,55,0.06) 0%, transparent 60%);
+    }
+    h1, h2, h3 { font-family: 'Lustria', serif; }
+
+    /* 1-unit golden nav */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 44px;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+      letter-spacing: 4px;
+      color: var(--gold);
+      z-index: 1000;
+    }
+
+    /* 13×13 hero */
+    .hero {
+      height: 55vh;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.9), var(--bg));
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1513618724405-0ea5da0d9c0d?auto=format&fit=crop&q=80') center/cover;
+      filter: brightness(0.15) blur(2px);
+    }
+    .hero h1 { font-size: 3.2em; color: var(--gold); text-shadow: 0 0 30px rgba(212,175,55,0.4); z-index: 2; }
+    .hero p { font-size: 1.3em; margin-top: 12px; opacity: 0.9; z-index: 2; }
+
+    /* 8-unit metrics row – golden spacing */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: calc(20px * var(--phi));
+      padding: 40px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 20px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: transform 0.4s;
+    }
+    .metric-card:hover { transform: translateY(-8px); }
+    .metric-value { font-size: 3em; font-weight: 800; color: var(--gold); }
+    .metric-label { font-size: 0.95em; margin-top: 8px; opacity: 0.8; }
+
+    /* 5-unit alerts zone */
+    .alerts {
+      background: rgba(212,175,55,0.05);
+      border-top: 1px solid rgba(212,175,55,0.2);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .alerts h2 { color: var(--gold); margin-bottom: 20px; }
+    .alert { background: rgba(200,50,50,0.2); border: 1px solid #c83232; border-radius: 16px; padding: 16px; margin: 12px auto; max-width: 800px; animation: pulse 3s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 10px transparent; } 50% { box-shadow: 0 0 20px #c83232; } }
+
+    /* 3 + 2 split – Fibonacci columns */
+    .split {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: calc(40px * var(--phi));
+      padding: 60px 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+
+    .activity-feed {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid rgba(212,175,55,0.15);
+    }
+    .activity-item {
+      padding: 16px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .activity-item:last-child { border-bottom: none; }
+
+    .nora-insights {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .insight-card {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05));
+      border: 1px solid var(--gold-dim);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card::before {
+      content: ""; position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(212,175,55,0.15), transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* 1-unit footer */
+    .footer {
+      height: 70px;
+      background: rgba(10,10,10,0.98);
+      border-top: 1px solid var(--gold);
+      display: grid;
+      place-items: center;
+      font-size: 0.85em;
+      color: #666;
+      letter-spacing: 2px;
+    }
+
+    /* Subtle particle field */
+    .particles {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%221%22 fill=%22%23d4af37%22 opacity=%220.06%22/></svg>') repeat;
+      background-size: 40px;
+      animation: drift 120s linear infinite;
+    }
+    @keyframes drift { from { background-position: 0 0; } to { background-position: 100px 100px; } }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Lustria&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="particles"></div>
+
+  <div class="nav">NORA OFFICE</div>
+
+  <!-- 13×13 Hero -->
+  <div class="hero">
+    <div>
+      <h1>Pie AI Control Center</h1>
+      <p>33 nodes active • System optimal • Julian, you are in command</p>
+    </div>
+  </div>
+
+  <!-- 8-unit Metrics -->
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-value">1,284</div><div class="metric-label">Active Restaurants</div></div>
+    <div class="metric-card"><div class="metric-value">89.2K</div><div class="metric-label">Questions Today</div></div>
+    <div class="metric-card"><div class="metric-value">0.41s</div><div class="metric-label">Avg Response Time</div></div>
+    <div class="metric-card"><div class="metric-value">0</div><div class="metric-label">Critical Alerts</div></div>
+  </div>
+
+  <!-- 5-unit Alerts -->
+  <div class="alerts">
+    <h2>High-Priority System Notices</h2>
+    <div class="alert">All systems nominal. No action required.</div>
+  </div>
+
+  <!-- 3 + 2 Fibonacci Split -->
+  <div class="split">
+    <div class="activity-feed">
+      <h2>Recent Activity</h2>
+      <div class="activity-item"><i class="fas fa-utensils"></i> Trattoria 33 updated Soup of the Day → Chili</div>
+      <div class="activity-item"><i class="fas fa-check"></i> Pier 290 allergy file parsed successfully</div>
+      <div class="activity-item"><i class="fas fa-star"></i> New 5-star feedback on Pie AI 28 tier</div>
+      <div class="activity-item"><i class="fas fa-upload"></i> 12 new menu files processed</div>
+    </div>
+
+    <div class="nora-insights">
+      <div class="insight-card">
+        <h3>Nora Prediction</h3>
+        <p>Allergy-related questions will rise 18% this weekend. Pre-loading high-risk menus recommended.</p>
+      </div>
+      <div class="insight-card">
+        <h3>Optimization</h3>
+        <p>Three restaurants still on U8 tier. Upgrading them to 28 would increase satisfaction 31%.</p>
+      </div>
+      <div class="insight-card">
+        <h3>Insight</h3>
+        <p>Peak usage window: 6:30–8:30 PM. Consider auto-scaling nodes during this period.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1-unit Footer -->
+  <div class="footer">NORA OFFICE · PIE AI · NEXUS 33 LLC</div>
+
+</body>
+</html>

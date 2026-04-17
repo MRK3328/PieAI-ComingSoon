@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Pie AI | Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --gold:#c9a84c;--gold-light:#e8cc7a;
+    --gold-dim:rgba(201,168,76,0.15);--gold-border:rgba(201,168,76,0.22);
+    --ink:#0c0c0a;--surface:#111108;--surface2:#161612;
+    --text:#f0ead8;--text-dim:rgba(240,234,216,0.45);--text-mid:rgba(240,234,216,0.7);
+  }
+
+  body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);overflow-x:hidden;opacity:0;animation:pageFade 0.8s ease forwards;}
+  @keyframes pageFade{to{opacity:1}}
+
+  /* ================================
+     NAV
+  ================================ */
+  .nav{
+    position:fixed;top:0;left:0;width:100%;
+    background:rgba(12,12,10,0.92);backdrop-filter:blur(24px);
+    border-bottom:0.5px solid var(--gold-border);
+    padding:0 40px;height:68px;
+    display:flex;align-items:center;justify-content:space-between;
+    z-index:1000;
+  }
+  .nav-logo{height:44px;border-radius:50px;box-shadow:0 0 20px rgba(201,168,76,0.3);}
+  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.8em;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--gold)}
+  .hamburger{display:none;flex-direction:column;gap:6px;cursor:pointer;}
+  .hamburger span{width:28px;height:2px;background:var(--gold);border-radius:2px;}
+  .mobile-menu{position:fixed;top:68px;left:0;width:100%;background:rgba(10,10,8,0.98);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--gold-border);padding:20px 0;transform:translateY(-120%);transition:transform 0.4s ease;z-index:999;}
+  .mobile-menu.active{transform:translateY(0)}
+  .mobile-menu a{display:block;color:var(--text-mid);font-size:1rem;padding:16px 40px;letter-spacing:1px;text-decoration:none;transition:0.2s;}
+  .mobile-menu a:hover{background:var(--gold-dim);color:var(--gold)}
+  body{padding-top:68px}
+
+  /* ================================
+     HERO
+  ================================ */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background-image:url("{{ url_for('static', filename='images/full_pc_bg.png') }}");
+    background-size:cover;background-position:center;z-index:0;
+  }
+  .hero-bg::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.55);}
+  .hero-grain{position:absolute;inset:0;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:128px;pointer-events:none;z-index:1;}
+  .hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);pointer-events:none;z-index:1;}
+  .hero-rule-top{position:absolute;top:120px;left:0;right:0;height:0.5px;background:linear-gradient(to right,transparent,var(--gold-border),transparent);z-index:2;}
+  .hero-rule-bottom{position:absolute;bottom:120px;left:0;right:0;height:0.5px;background:linear-gradient(to right,transparent,var(--gold-border),transparent);z-index:2;}
+  .hero-content{position:relative;z-index:3;padding:0 24px;display:flex;flex-direction:column;align-items:center;}
+  .hero-eyebrow{font-size:0.7em;font-weight:500;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:28px;opacity:0.8;animation:fadeUp 1s ease both;}
+  .hero-welcome{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:300;color:var(--text-mid);font-style:italic;letter-spacing:2px;margin-bottom:8px;animation:fadeUp 1s 0.1s ease both;}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(6rem,18vw,13rem);font-weight:600;line-height:0.85;color:var(--text);letter-spacing:-4px;margin-bottom:32px;animation:fadeUp 1s 0.2s ease both;text-shadow:0 0 80px rgba(201,168,76,0.15),0 2px 0 rgba(201,168,76,0.3);}
+  .hero-subtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:300;font-style:italic;color:var(--gold);letter-spacing:3px;margin-bottom:52px;animation:fadeUp 1s 0.3s ease both;}
+
+  /* ─── DEMO BUTTON (replaces chat box) ─── */
+  .hero-btn{display:inline-flex;align-items:center;gap:12px;background:rgba(12,12,10,0.7);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82em;font-weight:500;padding:16px 44px;border-radius:2px;border:0.5px solid var(--gold-border);text-decoration:none;letter-spacing:2.5px;text-transform:uppercase;backdrop-filter:blur(10px);transition:all 0.35s ease;animation:fadeUp 1s 0.4s ease both;position:relative;overflow:hidden;cursor:pointer;}
+  .hero-btn::before{content:'';position:absolute;inset:0;background:var(--gold-dim);transform:scaleX(0);transform-origin:left;transition:transform 0.35s ease;}
+  .hero-btn:hover::before{transform:scaleX(1)}
+  .hero-btn:hover{border-color:rgba(201,168,76,0.5);color:var(--gold-light)}
+  .hero-btn span{position:relative;z-index:1}
+  .hero-arrow{position:relative;z-index:1;font-size:1.1em;transition:transform 0.3s}
+  .hero-btn:hover .hero-arrow{transform:translateX(4px)}
+
+  .hero-coming-note{margin-top:18px;font-size:0.72em;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;font-weight:400;animation:fadeUp 1s 0.5s ease both;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ================================
+     DIVIDER
+  ================================ */
+  .divider{height:0.5px;background:linear-gradient(to right,transparent,var(--gold-border),transparent);margin:0;}
+
+  /* ================================
+     EARLY ACCESS — WAVE SECTION
+     (replaces register)
+  ================================ */
+  .wave-section{
+    background:var(--surface2);
+    padding:120px 80px;
+    text-align:center;
+    border-top:0.5px solid var(--gold-border);
+    border-bottom:0.5px solid var(--gold-border);
+    position:relative;
+    overflow:hidden;
+  }
+  .wave-glow{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:600px;height:600px;
+    background:radial-gradient(circle,rgba(201,168,76,0.05) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .wave-inner{position:relative;z-index:1;max-width:620px;margin:0 auto;}
+
+  .section-label{
+    font-size:0.68em;color:var(--gold);letter-spacing:3px;
+    text-transform:uppercase;font-weight:500;margin-bottom:16px;
+  }
+  .wave-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:3.5em;font-weight:300;
+    color:var(--text);margin-bottom:16px;line-height:1.1;
+  }
+  .wave-sub{
+    font-size:0.88em;color:var(--text-dim);
+    line-height:1.85;margin-bottom:48px;
+    max-width:500px;margin-left:auto;margin-right:auto;
+  }
+
+  /* Toggle selector */
+  .wave-selector{
+    display:inline-flex;gap:0;
+    border:0.5px solid var(--gold-border);
+    border-radius:2px;
+    overflow:hidden;
+    margin-bottom:32px;
+  }
+  .wave-type-btn{
+    background:transparent;
+    color:var(--text-dim);
+    font-family:'DM Sans',sans-serif;
+    font-size:0.78em;
+    font-weight:500;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:12px 28px;
+    border:none;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    position:relative;
+  }
+  .wave-type-btn + .wave-type-btn{
+    border-left:0.5px solid var(--gold-border);
+  }
+  .wave-type-btn.active{
+    background:var(--gold-dim);
+    color:var(--gold);
+  }
+  .wave-type-btn:hover:not(.active){
+    color:var(--text-mid);
+    background:rgba(255,255,255,0.03);
+  }
+
+  /* Form */
+  .wave-form{
+    display:flex;
+    gap:0;
+    border:0.5px solid var(--gold-border);
+    border-radius:2px;
+    overflow:hidden;
+    margin-bottom:16px;
+    max-width:480px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .wave-input{
+    flex:1;
+    background:rgba(255,255,255,0.03);
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-size:0.86em;
+    padding:14px 20px;
+    letter-spacing:0.3px;
+  }
+  .wave-input::placeholder{color:var(--text-dim);}
+  .wave-submit{
+    background:var(--gold);
+    color:#000;
+    border:none;
+    font-family:'DM Sans',sans-serif;
+    font-size:0.76em;
+    font-weight:500;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    padding:14px 28px;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    white-space:nowrap;
+  }
+  .wave-submit:hover{background:var(--gold-light);}
+
+  /* Success state */
+  .wave-success{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:14px 24px;
+    border:0.5px solid rgba(201,168,76,0.4);
+    border-radius:2px;
+    color:var(--gold);
+    font-size:0.82em;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    max-width:480px;
+    margin:0 auto 16px;
+  }
+  .wave-success.visible{display:flex;}
+
+  .wave-fine{
+    font-size:0.7em;color:var(--text-dim);
+    letter-spacing:1.5px;text-transform:uppercase;
+  }
+
+  /* ================================
+     STATS
+  ================================ */
+  .stats{background:var(--surface);display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid var(--gold-border);}
+  .stat{text-align:center;padding:36px 20px;border-right:0.5px solid var(--gold-border);}
+  .stat:last-child{border-right:none}
+  .stat-num{display:block;font-family:'Cormorant Garamond',serif;font-size:2.4em;font-weight:600;color:var(--gold);line-height:1;margin-bottom:8px;}
+  .stat-label{font-size:0.68em;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;font-weight:400;}
+
+  /* ================================
+     GALLERY
+  ================================ */
+  .gallery-section{background:var(--ink);padding:120px 80px;border-top:0.5px solid var(--gold-border);border-bottom:0.5px solid var(--gold-border);}
+  .gallery-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px;flex-wrap:wrap;gap:20px;}
+  .gallery-sub{font-size:0.86em;color:var(--text-dim);max-width:340px;line-height:1.75;text-align:right;}
+  .gallery-frame{position:relative;width:100%;aspect-ratio:16/7;background:var(--surface2);border:0.5px solid var(--gold-border);overflow:hidden;margin-bottom:20px;}
+  .gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity 0.5s ease;display:flex;align-items:center;justify-content:center;}
+  .gallery-slide.active{opacity:1}
+  .gallery-slide img{width:100%;height:100%;object-fit:cover;}
+  .slide-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:100%;height:100%;color:var(--text-dim);}
+  .slide-placeholder-label{font-size:0.68em;letter-spacing:3px;text-transform:uppercase;opacity:0.35;}
+  .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:rgba(12,12,10,0.82);border:0.5px solid var(--gold-border);color:var(--gold);font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s;z-index:10;backdrop-filter:blur(8px);}
+  .gallery-arrow:hover{background:var(--gold-dim);border-color:rgba(201,168,76,0.5);}
+  .gallery-arrow.left{left:16px}
+  .gallery-arrow.right{right:16px}
+  .gallery-caption{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-top:0.5px solid var(--gold-border);flex-wrap:wrap;gap:12px;}
+  .caption-left{display:flex;align-items:center;gap:20px;}
+  .caption-count{font-family:'Cormorant Garamond',serif;font-size:1.1em;color:var(--gold);font-weight:300;letter-spacing:2px;white-space:nowrap;}
+  .caption-title{font-family:'Cormorant Garamond',serif;font-size:1.3em;font-weight:400;color:var(--text);}
+  .caption-desc{font-size:0.82em;color:var(--text-dim);max-width:440px;line-height:1.7;text-align:right;}
+  .gallery-dots{display:flex;justify-content:center;gap:8px;margin-top:20px;}
+  .g-dot{width:6px;height:6px;background:var(--gold-border);border:none;cursor:pointer;transition:all 0.25s;padding:0;}
+  .g-dot.active{background:var(--gold);width:24px;}
+
+  /* ================================
+     WHY
+  ================================ */
+  .why{background:var(--surface2);padding:120px 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-top:0.5px solid var(--gold-border);border-bottom:0.5px solid var(--gold-border);}
+  .why-label{font-size:0.68em;color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-weight:500;margin-bottom:20px;}
+  .why h2{font-family:'Cormorant Garamond',serif;font-size:3em;font-weight:400;line-height:1.15;color:var(--text);margin-bottom:28px;}
+  .why h2 em{font-style:italic;color:var(--gold)}
+  .why p{font-size:0.92em;color:var(--text-dim);line-height:1.85;margin-bottom:16px;}
+  .why-quote{border-left:2px solid var(--gold);padding:16px 24px;margin:32px 0;font-family:'Cormorant Garamond',serif;font-size:1.2em;font-style:italic;color:var(--text-mid);line-height:1.6;}
+  .why-source{font-size:0.68em;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:10px;display:block;font-style:normal;}
+
+  /* ================================
+     HOW IT WORKS
+  ================================ */
+  .steps-section{background:var(--ink);padding:120px 80px;border-bottom:0.5px solid var(--gold-border);}
+  .section-header{margin-bottom:64px}
+  .section-tag{font-size:0.68em;color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-weight:500;margin-bottom:16px;}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:3.2em;font-weight:400;color:var(--text);line-height:1.1;}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gold-border);border:0.5px solid var(--gold-border);}
+  .step{background:var(--ink);padding:40px 32px;}
+  .step-num{font-family:'Cormorant Garamond',serif;font-size:4em;font-weight:300;color:var(--gold-border);line-height:1;margin-bottom:20px;}
+  .step h3{font-family:'Cormorant Garamond',serif;font-size:1.4em;font-weight:400;color:var(--text);margin-bottom:12px;}
+  .step p{font-size:0.83em;color:var(--text-dim);line-height:1.75;}
+  .step-role{font-size:0.62em;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+
+  /* ================================
+     FEATURES
+  ================================ */
+  .features{background:var(--surface);padding:120px 80px;border-top:0.5px solid var(--gold-border);border-bottom:0.5px solid var(--gold-border);}
+  .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:64px;}
+  .feature-card{background:var(--ink);border:0.5px solid rgba(255,255,255,0.06);padding:36px 32px;position:relative;transition:border-color 0.3s;}
+  .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+  .feature-card:hover{border-color:var(--gold-border)}
+  .feature-card:hover::before{opacity:1}
+  .feature-tag{font-size:0.62em;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-weight:500;margin-bottom:16px;}
+  .feature-card h3{font-family:'Cormorant Garamond',serif;font-size:1.5em;font-weight:400;color:var(--text);margin-bottom:12px;}
+  .feature-card p{font-size:0.83em;color:var(--text-dim);line-height:1.75;}
+
+  /* ================================
+     ABOUT SEGMENT
+  ================================ */
+  .about-segment{background:url("{{ url_for('static', filename='images/seg_about_bg.png') }}") no-repeat center center/cover;position:relative;height:100vh;display:flex;justify-content:center;align-items:center;text-align:center;}
+  .about-segment::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:0;}
+  .about-overlay{position:relative;z-index:1;max-width:900px;padding:40px;}
+  .about-overlay h2{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:400;margin-bottom:20px;color:var(--text);text-shadow:0 0 20px rgba(201,168,76,0.4);letter-spacing:1px;}
+  .about-overlay p{font-size:1.3rem;color:var(--text-mid);margin-bottom:44px;font-weight:300;line-height:1.6;}
+  .about-btn{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#000;border:none;padding:16px 52px;font-family:'DM Sans',sans-serif;font-size:0.88em;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.3s ease;border-radius:2px;}
+  .about-btn:hover{background:var(--gold-light);transform:translateY(-2px);}
+
+  /* ================================
+     FOOTER
+  ================================ */
+  footer{background:var(--ink);border-top:0.5px solid var(--gold-border);padding:64px 80px 40px;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+  .footer-logo{height:44px;margin-bottom:14px;opacity:0.8;}
+  .footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.6em;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;display:block;}
+  .footer-desc{font-size:0.8em;color:var(--text-dim);line-height:1.8;}
+  .footer-col-title{font-size:0.65em;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-weight:500;margin-bottom:20px;}
+  .footer-col ul{list-style:none;padding:0}
+  .footer-col ul li{margin-bottom:12px}
+  .footer-col ul li a{font-size:0.8em;color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
+  .footer-col ul li a:hover{color:var(--gold)}
+  .footer-bottom{border-top:0.5px solid rgba(255,255,255,0.06);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .footer-bottom p{font-size:0.72em;color:var(--text-dim);letter-spacing:1px;}
+
+
+
+  /* ================================
+     MOBILE
+  ================================ */
+  @media(max-width:900px){
+    .nav{padding:0 20px}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+    .why{grid-template-columns:1fr;padding:70px 24px;gap:40px}
+    .steps-section,.features,.gallery-section,.wave-section{padding:70px 24px}
+    .steps-grid{grid-template-columns:1fr}
+    .feature-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:none}
+    .stat:nth-child(3){border-top:0.5px solid var(--gold-border)}
+    .stat:nth-child(4){border-top:0.5px solid var(--gold-border);border-right:none}
+    .gallery-top{flex-direction:column;align-items:flex-start}
+    .gallery-sub,.caption-desc{text-align:left;max-width:100%}
+    .about-overlay h2{font-size:2.2rem}
+    .about-overlay p{font-size:1.05rem}
+    footer{padding:48px 24px 32px}
+    .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .wave-selector{flex-direction:column;width:100%;}
+    .wave-type-btn + .wave-type-btn{border-left:none;border-top:0.5px solid var(--gold-border);}
+    .wave-form{flex-direction:column;}
+    .wave-input,.wave-submit{width:100%;text-align:center;}
+    .wave-title{font-size:2.4em;}
+  }
+  @media(max-width:480px){
+    .stats{grid-template-columns:1fr 1fr}
+    .footer-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/">
+    <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+         alt="Pie AI" class="nav-logo">
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/why">Why it matters</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/why">Why It Matters</a>
+  <a href="/contact">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-rule-top"></div>
+  <div class="hero-rule-bottom"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. 2026 · Restaurant AI</div>
+    <div class="hero-welcome">Welcome to</div>
+    <div class="hero-title">Pie AI</div>
+    <div class="hero-subtitle">Your Dedicated Restaurant Assistant</div>
+    <a href="/restaurant-list" class="hero-btn">
+      <span>Restaurant Chat Demo</span>
+      <span class="hero-arrow">→</span>
+    </a>
+    <div class="hero-coming-note">Coming Soon · Phase 1.1 Launching</div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+<!-- ================================
+     EARLY ACCESS — WAVE SECTION
+     (replaces register/pricing)
+================================ -->
+<section class="wave-section">
+  <div class="wave-glow"></div>
+  <div class="wave-inner">
+    <p class="section-label" style="color:#d4af37;">Early Access</p>
+    <h2 class="wave-title">Be Part of the First Wave</h2>
+    <p class="wave-sub">
+      Restaurants that register get hands on setup support, priority onboarding, and early access when Phase 1.1 launches. Supporters help make safer dining a reality
+    </p>
+
+    <!-- Type selector -->
+    <div class="wave-selector">
+      <button class="wave-type-btn active" data-type="restaurant" onclick="selectType(this, 'restaurant')">
+        I'm a Restaurant
+      </button>
+      <button class="wave-type-btn" data-type="supporter" onclick="selectType(this, 'supporter')">
+        I'm Supporting the Project
+      </button>
+    </div>
+
+    <!-- Email form -->
+    <div class="wave-form">
+      <input class="wave-input" type="email" id="waveEmail" placeholder="Your email address" />
+      <button class="wave-submit" onclick="submitWave()">Join the Movement</button>
+    </div>
+
+    <!-- Success message (hidden until submit) -->
+    <div class="wave-success" id="waveSuccess">
+      ✦ You're in — we'll be in touch.
+    </div>
+
+    <p class="wave-fine">No spam. No pitch decks. Just updates when you're in.</p>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">32K+</span>
+    <span class="stat-label">Annual Allergic Reactions"</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">Real-time</span>
+    <span class="stat-label">Menu updates</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">0</span>
+    <span class="stat-label">App downloads needed</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">Free</span>
+    <span class="stat-label">For every customer</span>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section class="gallery-section">
+  <div class="gallery-top">
+    <div>
+      <div class="section-tag">First look</div>
+      <div class="section-title">See Pie AI<br>In Action</div>
+    </div>
+    <p class="gallery-sub">Shuffle through real screenshots of the platform — the customer chat, manager tools, and more.</p>
+  </div>
+
+  <div class="gallery-frame" id="galleryFrame">
+    <button class="gallery-arrow left" id="galleryPrev">←</button>
+
+    <div class="gallery-slide active">
+      <img src="{{ url_for('static', filename='images/Customer_chat.jpg') }}" alt="Customer Chat">
+    </div>
+    <div class="gallery-slide">
+      <img src="{{ url_for('static', filename='images/Manager Dashboard.jpg') }}" alt="Manager Dashboard">
+    </div>
+    <div class="gallery-slide">
+      <img src="{{ url_for('static', filename='images/Control Panel.jpg') }}" alt="Control Panel">
+    </div>
+    <div class="gallery-slide">
+      <img src="{{ url_for('static', filename='images/File Upload.jpg') }}" alt="File Upload">
+    </div>
+    <div class="gallery-slide">
+      <img src="{{ url_for('static', filename='images/Item Editor.jpg') }}" alt="Item Editor">
+    </div>
+
+    <button class="gallery-arrow right" id="galleryNext">→</button>
+  </div>
+
+  <div class="gallery-caption">
+    <div class="caption-left">
+      <span class="caption-count" id="galleryCount">01 / 05</span>
+      <span class="caption-title" id="galleryTitle">Customer Chat</span>
+    </div>
+    <span class="caption-desc" id="galleryDesc">Customers scan a QR or open the site and get instant answers — no account needed.</span>
+  </div>
+
+  <div class="gallery-dots">
+    <button class="g-dot active" data-i="0"></button>
+    <button class="g-dot" data-i="1"></button>
+    <button class="g-dot" data-i="2"></button>
+    <button class="g-dot" data-i="3"></button>
+    <button class="g-dot" data-i="4"></button>
+  </div>
+</section>
+
+<!-- WHY PIE AI -->
+<section class="why">
+  <div>
+    <div class="why-label">Why it matters</div>
+    <h2>Dining out should always feel <em>safe</em></h2>
+    <div class="why-quote">
+      "Thousands of allergic reactions happen in restaurants every year — most from small, preventable mistakes."
+      <span class="why-source">— CDC · NIH / PubMed · Public Health Management</span>
+    </div>
+    <a href="/why" class="about-btn" style="text-decoration:none;">Read the full story →</a>
+  </div>
+  <div>
+    <p>Every year, thousands of people experience allergic reactions in restaurants  often because of small, preventable mistakes</p>
+    <p>Pie AI empowers restaurants to update menus in real time, communicate with total clarity, and safeguard every guest  one meal at a time</p>
+    <p>We built the bridge between what a restaurant knows and what a customer needs to feel safe at the table</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-section">
+  <div class="section-header">
+    <div class="section-tag">How it works</div>
+    <div class="section-title">Simple for Restaurants.<br>Lifesaving for Guests</div>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-role">Restaurant</div>
+      <h3>Upload your menu</h3>
+      <p>Upload any format | Excel, PDF, Word, image. Pie AI parses it automatically and builds your complete menu profile in minutes.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-role">Manager</div>
+      <h3>Approve &amp; control</h3>
+      <p>Review parsed items, activate categories, update specials or mark items out of stock instantly from your dashboard.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-role">Customer</div>
+      <h3>Ask anything</h3>
+      <p>Scan a QR or visit the site. Ask allergy questions, get ingredient details — no account, no app, no friction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-tag">Features</div>
+  <div class="section-title">Built for both Sides<br>of the Table</div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-tag">Restaurant</div>
+      <h3>Real-time menu updates</h3>
+      <p>Soup of the day, out-of-stock items, daily specials — update once, reflected everywhere for every customer instantly.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag">Safety</div>
+      <h3>Allergy intelligence</h3>
+      <p>FDA-aligned allergen communication built in. No more whispered guesses between staff and guests at the table.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag">Manager</div>
+      <h3>Manager chat mode</h3>
+      <p>Chat with your AI, correct data, and see exactly what customers are asking — all from your account dashboard.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag">Insights</div>
+      <h3>Activity dashboard</h3>
+      <p>Track top questions, engagement, and which menu items attract the most interest from your guests over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SEGMENT -->
+<section class="about-segment">
+  <div class="about-overlay">
+    <h2>Learn the Story Behind Pie AI</h2>
+    <p>Discover our mission and the journey that inspired Pie AI.</p>
+    <button class="about-btn" onclick="window.location.href='/about'">Read More →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <a href="/">
+        <img src="{{ url_for('static', filename='images/home_button.svg') }}"
+             alt="Pie AI" class="footer-logo">
+      </a>
+      <p class="footer-desc">An AI-powered restaurant assistant focused on allergy safety, real-time menu clarity, and smarter dining experiences for everyone at the table.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/why">Why it matters</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Features</div>
+      <ul>
+        <li><a href="#">Manager mode</a></li>
+        <li><a href="#">Real-time updates</a></li>
+        <li><a href="#">Allergy intelligence</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <ul>
+        <li><a href="/terms">Terms of service</a></li>
+        <li><a href="/report">Report issues</a></li>
+        <li><a href="/contact">Contact us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024–2026 Nexus 33 LLC · All Rights Reserved</p>
+    <p>Pie-AI.com · A MRK Production</p>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('active');
+  });
+
+  // Wave type selector
+  let selectedType = 'restaurant';
+  function selectType(btn, type) {
+    document.querySelectorAll('.wave-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedType = type;
+  }
+
+  // Wave form submit
+  function submitWave() {
+    const email = document.getElementById('waveEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('waveEmail').style.borderBottom = '1px solid rgba(201,168,76,0.6)';
+      document.getElementById('waveEmail').placeholder = 'Please enter a valid email';
+      return;
+    }
+    // Hide form, show success
+    document.querySelector('.wave-form').style.display = 'none';
+    document.querySelector('.wave-selector').style.opacity = '0.4';
+    document.querySelector('.wave-selector').style.pointerEvents = 'none';
+    document.getElementById('waveSuccess').classList.add('visible');
+
+    // In production: POST to your Flask endpoint here
+    // fetch('/join-wave', { method:'POST', body: JSON.stringify({email, type: selectedType}), headers:{'Content-Type':'application/json'} })
+  }
+
+  // Gallery
+  document.addEventListener('DOMContentLoaded', () => {
+    const slides = [
+      { title: "Customer Chat",     desc: "Customers scan a QR or open the site and get instant answers — no account needed" },
+      { title: "Manager Dashboard", desc: "A live view of questions, top intents, and engagement. Update specials in seconds" },
+      { title: "Control Panel",     desc: "Activate categories, set availability windows, and control exactly what customers see" },
+      { title: "File Upload",       desc: "Upload any format — Excel, PDF, Word, image. Pie AI parses it and builds your profile" },
+      { title: "Item Editor",       desc: "Custom accent colors, header images, and AI personality tailored to your brand" }
+    ];
+    let current = 0;
+    const total = slides.length;
+    const allSlides = document.querySelectorAll('.gallery-slide');
+    const allDots   = document.querySelectorAll('.g-dot');
+    const countEl   = document.getElementById('galleryCount');
+    const titleEl   = document.getElementById('galleryTitle');
+    const descEl    = document.getElementById('galleryDesc');
+
+    function goTo(n) {
+      allSlides[current].classList.remove('active');
+      allDots[current].classList.remove('active');
+      current = (n + total) % total;
+      allSlides[current].classList.add('active');
+      allDots[current].classList.add('active');
+      countEl.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+      titleEl.textContent = slides[current].title;
+      descEl.textContent  = slides[current].desc;
+    }
+
+    document.getElementById('galleryPrev').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('galleryNext').addEventListener('click', () => goTo(current + 1));
+    allDots.forEach(dot => dot.addEventListener('click', () => goTo(parseInt(dot.dataset.i))));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft')  goTo(current - 1);
+      if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+
+    let tx = 0;
+    const frame = document.getElementById('galleryFrame');
+    frame.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+    frame.addEventListener('touchend', e => {
+      const diff = tx - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+    });
+
+    goTo(0);
+  });
+</script>
+
+</body>
+</html>

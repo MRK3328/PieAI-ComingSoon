@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pie AI • Disclaimer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lustria&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#000;
+      color:#fff;
+      min-height:100vh;
+      background:linear-gradient(to bottom,#0c0a05,#000);
+    }
+    .header{
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(212,175,55,0.15);
+    }
+    .logo{width:36px;}
+    .login{color:#d4af37;font-size:0.9rem;text-decoration:none;}
+    .container{
+      max-width:640px;
+      margin:0 auto;
+      padding:30px 20px;
+    }
+    .title{
+      font-family:'Lustria',serif;
+      font-size:2.2rem;
+      text-align:center;
+      margin:30px 0;
+      color:#d4af37;
+      text-shadow:0 0 30px rgba(212,175,55,0.4);
+    }
+    .section{
+      margin-bottom:40px;
+    }
+    .section h3{
+      color:#d4af37;
+      font-size:1.2rem;
+      margin:24px 0 12px;
+    }
+    .section p,
+    .section li{
+      font-size:1rem;
+      line-height:1.8;
+      margin-bottom:12px;
+      color:#ddd;
+    }
+    .section ul{
+      padding-left:20px;
+    }
+    .card{
+      background:rgba(212,175,55,0.05);
+      border:1px solid rgba(212,175,55,0.2);
+      border-radius:20px;
+      padding:30px 24px;
+      margin:50px 0;
+      text-align:center;
+    }
+    .card p{
+      font-size:0.95rem;
+      color:#ccc;
+    }
+    .footer{
+      margin-top:80px;
+      padding-top:40px;
+      border-top:1px solid rgba(212,175,55,0.15);
+      font-size:0.85rem;
+      color:#777;
+    }
+    .footer a{
+      color:#d4af37;
+      text-decoration:none;
+    }
+    .footer a:hover{
+      text-decoration:underline;
+    }
+    .bottom{
+      margin-top:40px;
+      text-align:center;
+      color:#555;
+      font-size:0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="{{ url_for('static', filename='images/ai_logo.svg') }}" alt="Pie AI" class="logo">
+    <a href="/login" class="login">Login →</a>
+  </div>
+
+  <div class="container">
+    <h1 class="title">Disclaimer</h1>
+
+    <div class="section">
+      <h3>1. General Information</h3>
+      <p>Pie AI is an AI-powered restaurant assistant designed to provide menu updates, allergen information, and operational support for restaurants. While we strive for accuracy, Pie AI does not replace professional restaurant management, staff, or legal food safety guidelines.</p>
+    </div>
+
+    <div class="section">
+      <h3>2. No Guarantee of Accuracy</h3>
+      <ul>
+        <li>Menu items, ingredients, and allergen information are provided by restaurant partners. Pie AI is not responsible for outdated, incorrect, or missing details.</li>
+        <li>Customers with food allergies should always confirm allergen information directly with restaurant staff before ordering.</li>
+        <li>Restaurant managers are responsible for verifying that their menu and allergen data are up to date.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>3. Limitation of Liability</h3>
+      <ul>
+        <li>Pie AI is not liable for any allergic reactions, health issues, or damages resulting from incorrect menu or allergen information.</li>
+        <li>We are not responsible for financial losses, business disruptions, or operational errors caused by reliance on Pie AI’s services.</li>
+        <li>Pie AI does not provide legal, medical, or business advice — users should consult professionals for such matters.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>4. AI-Assisted Responses</h3>
+      <p>Pie AI uses AI-driven responses based on user input. While we aim for helpful and relevant answers, AI-generated content may not always be fully accurate or contextually appropriate.</p>
+      <p>Users are responsible for reviewing and confirming any AI-assisted recommendations.</p>
+    </div>
+
+    <div class="section">
+      <h3>5. Service Availability & Changes</h3>
+      <p>Pie AI services are provided “as is” and “as available” without warranties of any kind.</p>
+      <p>We reserve the right to modify, suspend, or discontinue any features without prior notice.</p>
+    </div>
+
+    <div class="section">
+      <h3>6. External Links & Integrations</h3>
+      <p>Pie AI may link to third-party websites or integrate with external tools. We do not control or endorse third-party content and are not responsible for external services.</p>
+    </div>
+
+    <div class="card">
+      <p>Pie AI is an advanced AI-powered restaurant assistant designed to streamline operations and enhance the dining experience.</p>
+    </div>
+
+    <div class="footer">
+      <strong>Company</strong><br>
+      About us · Pricing<br><br>
+      <strong>Features</strong><br>
+      Manager Mode · Real-time Updates · Allergy Safety<br><br>
+      <strong>Legal</strong><br>
+      <a href="/privacy">Privacy policy</a> · <a href="/terms">Terms & Conditions</a><br>
+      <a href="/disclaimer">Disclaimer</a> · <a href="/affiliate">Affiliate programme</a><br><br>
+      <strong>Support</strong><br>
+      <a href="/contact">Contact us</a>
+    </div>
+
+    <div class="bottom">
+      © 2024 Nexus 33 LLC & Pie-AI.com<br>
+      All Rights Reserved<br>
+      A MRK Project
+    </div>
+  </div>
+
+</body>
+</html>

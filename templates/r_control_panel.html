@@ -1,0 +1,875 @@
+{% extends "_r_base.html" %}
+
+{% block page_title %}Control Panel – Pie AI{% endblock %}
+
+{% block content %}
+
+<style>
+
+.content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 60px 24px 120px;
+}
+
+.file-table {
+  background: rgba(0,0,0,0.65);
+  border-radius: 28px;
+  padding: 34px;
+  margin-bottom: 60px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.file-table h2 { color: #f5c84c; margin-bottom: 10px; font-weight: 600; }
+.file-explain  { color: #bdbdbd; font-size: 0.85rem; margin-bottom: 26px; }
+.file-table-scroll { overflow-y: auto; }
+
+.cat-header-row {
+  display: grid;
+  grid-template-columns: 44px 1.8fr 1.4fr 1.4fr 1fr 1fr 1fr 1.4fr;
+  padding: 10px 16px;
+  color: #f5c84c;
+  font-weight: 600;
+  font-size: 0.82rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 8px;
+}
+
+.cat-row-wrap {
+  border-radius: 16px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+  transition: background 0.18s;
+}
+
+.cat-row-wrap:hover    { background: rgba(245,200,76,0.10); }
+.cat-row-wrap.selected { background: rgba(245,200,76,0.14); outline: 1px solid rgba(245,200,76,0.35); }
+
+.cat-data-row {
+  display: grid;
+  grid-template-columns: 44px 1.8fr 1.4fr 1.4fr 1fr 1fr 1fr 1.4fr;
+  padding: 14px 16px;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+.cat-data-row > div                   { text-align: center; }
+.cat-data-row > div:nth-child(2)      { text-align: left; font-weight: 600; }
+.cat-data-row > div:nth-child(3),
+.cat-data-row > div:nth-child(4)      { font-size: 0.85rem; color: #ccc; }
+
+.cat-expand-btn {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: #ccc; cursor: pointer;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+
+.cat-expand-btn:hover { background: rgba(255,255,255,0.14); }
+.cat-expand-btn.open  { background: rgba(245,200,76,0.18); border-color: rgba(245,200,76,0.5); color: #f5c84c; }
+
+.cat-expand-panel {
+  display: none;
+  padding: 18px 20px 22px 60px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.2);
+}
+
+.cat-expand-panel.open { display: block; }
+
+.expand-label { font-size: 0.78rem; color: #aaa; margin-bottom: 8px; display: block; }
+.expand-label span { color: #666; font-style: italic; margin-left: 6px; }
+
+.cat-location-select {
+  padding: 10px 14px; border-radius: 12px; border: none;
+  background: rgba(255,255,255,0.09); color: #fff;
+  font-size: 0.85rem; min-width: 200px; cursor: pointer;
+}
+.cat-location-select option { background: #1e1e1e; color: #fff; }
+
+.cat-custom-location {
+  padding: 10px 14px; border-radius: 12px; border: none;
+  background: rgba(255,255,255,0.09); color: #fff;
+  font-size: 0.85rem; min-width: 180px; margin-left: 10px;
+}
+
+.time-input-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+
+.time-input-row input {
+  padding: 10px 14px; border-radius: 12px; border: none;
+  background: rgba(255,255,255,0.09); color: #fff;
+  font-size: 0.9rem; width: 140px; text-align: center;
+}
+
+.time-input-row input::placeholder { color: #555; }
+.time-dash { color: #666; font-size: 1rem; }
+.time-hint { font-size: 0.75rem; color: #555; margin-top: 10px; }
+.flag-warn { color: #f5c84c; font-weight: 600; }
+
+.delete-cat-btn {
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid rgba(255,76,76,0.4);
+  color: #ff4c4c; font-size: 0.78rem;
+  padding: 6px 14px; border-radius: 10px;
+  cursor: pointer; transition: all 0.18s; display: inline-block;
+}
+.delete-cat-btn:hover { background: rgba(255,76,76,0.12); border-color: #ff4c4c; }
+
+.chat-toggle-cell { display: flex; align-items: center; gap: 8px; justify-content: center; }
+.chat-toggle-label { font-size: 0.82rem; font-weight: 500; }
+.chat-toggle-label.active { color: #4caf50; }
+.chat-toggle-label.off    { color: #666; }
+
+.toggle-switch { position: relative; display: inline-block; width: 46px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+.slider { position: absolute; inset: 0; background-color: #3c3c3c; border-radius: 22px; cursor: pointer; }
+.slider:before {
+  content: ""; position: absolute; height: 16px; width: 16px;
+  left: 3px; bottom: 3px; background-color: #111; border-radius: 50%; transition: .2s;
+}
+.toggle-switch input:checked + .slider            { background-color: #2a2a2a; }
+.toggle-switch input:checked + .slider:before     { transform: translateX(24px); background: #00ff5a; }
+
+/* Delete category modal */
+.delete-cat-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center; z-index: 999;
+}
+.delete-cat-box {
+  background: #111; padding: 30px; border-radius: 20px;
+  width: 340px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+
+/* Item list */
+.review-container { display: grid; grid-template-columns: 320px 1fr; gap: 36px; }
+
+.item-list {
+  background: rgba(0,0,0,0.7); border-radius: 28px;
+  padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.item-list-title { color: #f5c84c; font-weight: 600; text-align: center; margin-bottom: 4px; }
+
+.item-count-bar {
+  margin-top: 10px; margin-bottom: 18px; padding: 8px 12px;
+  background: rgba(255,255,255,0.05); border-radius: 12px;
+  font-size: 0.8rem; text-align: center; color: #cfcfcf;
+}
+
+.item-list-body { display: flex; flex-direction: column; gap: 16px; }
+
+.item-row {
+  background: rgba(255,255,255,0.07); border-radius: 14px; padding: 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: .18s; cursor: pointer; border: 1px solid rgba(255,255,255,0.06);
+}
+.item-row:hover { background: rgba(245,200,76,0.15); border: 1px solid rgba(245,200,76,0.35); }
+
+/* Item editor */
+.edit-panel { background: rgba(0,0,0,0.6); border-radius: 24px; padding: 32px; }
+.edit-panel h3 { color: #f5c84c; margin-bottom: 20px; }
+.field-label   { margin-top: 20px; font-size: 0.9em; }
+.field-label.small { font-size: 0.75em; opacity: .8; }
+
+.edit-panel input, .edit-panel textarea, .edit-panel select {
+  width: 100%; margin-top: 6px; padding: 14px;
+  border-radius: 16px; border: none;
+  background: rgba(255,255,255,0.08); color: #fff;
+}
+textarea { min-height: 140px; }
+.editor-header { display: flex; justify-content: space-between; align-items: center; }
+
+.delete-item-btn {
+  background: transparent; border: 1px solid rgba(255,76,76,0.5);
+  color: #ff4c4c; font-size: 0.8rem; padding: 6px 12px;
+  border-radius: 10px; cursor: pointer; transition: all 0.18s ease;
+}
+.delete-item-btn:hover { background: rgba(255,76,76,0.1); border-color: #ff4c4c; }
+
+.delete-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center; z-index: 999;
+}
+.delete-box {
+  background: #111; padding: 30px; border-radius: 20px;
+  width: 320px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+
+.delete-title   { color: #ff4c4c; font-weight: 600; margin-bottom: 10px; }
+.delete-text    { color: #ddd; margin-bottom: 6px; }
+.delete-text span { color: #fff; font-weight: 600; }
+.delete-warning { font-size: 0.8rem; color: #ff6b6b; margin-bottom: 20px; }
+.delete-actions { display: flex; justify-content: space-between; gap: 10px; }
+.cancel-btn         { flex:1; background:#2a2a2a; border:none; padding:10px; border-radius:10px; color:#fff; cursor:pointer; }
+.confirm-delete-btn { flex:1; background:#ff4c4c; border:none; padding:10px; border-radius:10px; color:#fff; cursor:pointer; }
+
+.category-block  { margin-top:12px; background:rgba(255,255,255,0.05); padding:18px; border-radius:16px; }
+.category-header { display:flex; align-items:center; gap:10px; }
+.category-header select { flex:1; background:rgba(255,255,255,0.08); color:#fff; }
+.category-header select option         { background:#1e1e1e; color:#fff; }
+.category-header select option:checked { background:#f5c84c; color:#000; }
+.delete-category { border:none; background:rgba(255,255,255,0.1); color:#ff4c4c; border-radius:10px; padding:6px 10px; cursor:pointer; }
+.add-category    { margin-top:10px; color:#4caf50; cursor:pointer; font-size:0.9rem; }
+.add-item-btn    { color:#4caf50; cursor:pointer; font-size:0.9rem; margin-top:8px; display:inline-block; }
+
+.status-btn           { padding:14px 40px; border-radius:26px; border:2px solid rgba(255,255,255,0.25); background:#1e1e1e; font-weight:700; cursor:pointer; transition:all .2s; }
+.status-btn.active    { color:#4caf50; border-color:#4caf50; }
+.status-btn.inactive  { color:#ff4c4c; border-color:#ff4c4c; }
+.status-warning { margin-top:14px; padding:12px; border-radius:12px; background:rgba(255,0,0,0.08); color:#ff6b6b; font-size:0.9rem; }
+.save-btn { margin-top:30px; width:100%; padding:18px; border-radius:28px; border:none; font-weight:600; background:#f5c84c; color:#000; cursor:pointer; }
+
+.hidden { display: none !important; }
+
+</style>
+
+<div class="content">
+
+<div class="file-table">
+  <h2>Restaurant Uploads</h2>
+  <div class="file-explain">
+    Uploaded files are sources of data.
+    Items extracted from them can be reviewed and activated for Customer Chat.
+  </div>
+  <div class="file-table-scroll">
+    <div class="cat-header-row">
+      <div></div>
+      <div>Category</div>
+      <div>Location</div>
+      <div>Time window</div>
+      <div>Total items</div>
+      <div>Flags</div>
+      <div>Active items</div>
+      <div>Customer chat</div>
+    </div>
+    <div id="fileList"></div>
+  </div>
+</div>
+
+<!-- Delete category modal -->
+<div id="deleteCatModal" class="delete-cat-modal hidden">
+  <div class="delete-cat-box">
+    <div class="delete-title">Delete Category</div>
+    <div class="delete-text">Delete <span id="deleteCatName" style="color:#fff;font-weight:600"></span>?</div>
+    <div class="delete-warning" style="margin-top:8px;margin-bottom:20px">
+      Items in this category will not be deleted — they will become uncategorized.
+    </div>
+    <div class="delete-actions">
+      <button class="cancel-btn" onclick="closeCatDeleteModal()">Cancel</button>
+      <button class="confirm-delete-btn" onclick="confirmDeleteCategory()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="review-container">
+
+  <div class="item-list">
+    <div class="item-list-title">Item List</div>
+    <div class="add-item-btn" onclick="addNewItem()">Add +</div>
+    <div class="item-count-bar" id="itemCount">0 Items Loaded</div>
+    <div class="item-list-body" id="itemList"></div>
+  </div>
+
+  <div class="edit-panel">
+
+    <div class="editor-header">
+      <h3>Item Editor</h3>
+      <button class="delete-item-btn" onclick="openDeleteModal()">Delete Item</button>
+    </div>
+
+    <div class="field-label">Item ID</div>
+    <input type="text" id="itemID" readonly>
+
+    <div class="field-label">Item Name</div>
+    <input type="text" id="itemName">
+
+    <div id="deleteModal" class="delete-modal hidden">
+      <div class="delete-box">
+        <div class="delete-title">Delete Item</div>
+        <div class="delete-text">Are you sure you want to delete <span id="deleteItemName"></span>?</div>
+        <div class="delete-warning">This action cannot be undone.</div>
+        <div class="delete-actions">
+          <button class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+          <button class="confirm-delete-btn" onclick="confirmDeleteItem()">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-label">Menu Category</div>
+    <div id="categoryContainer">
+      <div class="category-block">
+        <div class="category-header">
+          <select class="category-select"></select>
+          <input type="text" class="custom-category-input hidden" placeholder="Enter category name...">
+          <button class="delete-category">✕</button>
+        </div>
+        <div class="category-settings hidden"></div>
+      </div>
+    </div>
+
+    <div class="add-category" onclick="addCategory()">Add +</div>
+
+    <div class="field-label">Allergens</div>
+    <input type="text" id="allergens">
+
+    <div class="field-label">Price</div>
+    <input type="text" id="price">
+
+    <div class="field-label">Description</div>
+    <textarea id="description"></textarea>
+
+    <div class="field-label">Special Notes</div>
+    <textarea id="specialNotes" placeholder="Example: Only available when seated at the bar."></textarea>
+
+    <div class="status-row">
+      <div class="status-left">
+        <div class="field-label">Item Status</div>
+        <button id="statusButton" class="status-btn active">ACTIVE</button>
+      </div>
+    </div>
+
+    <div id="statusWarning" class="status-warning hidden">
+      Deactivating this item will hide it from the customer chat but will NOT delete it.
+    </div>
+
+    <button class="save-btn" onclick="saveItem()">Save Item Changes</button>
+
+  </div>
+
+</div>
+
+</div>
+
+<script>
+
+let DATASET          = []
+let CATEGORIES       = []
+let CURRENT_ITEM     = null
+let CURRENT_CATEGORY = null
+let itemActive       = false
+let CAT_TO_DELETE    = null
+
+const statusButton  = document.getElementById("statusButton")
+const statusWarning = document.getElementById("statusWarning")
+
+/* ================================
+   BOOT
+================================ */
+
+async function loadMenuDataset(){
+    const res  = await fetch("/r-menu-dataset")
+    const data = await res.json()
+    DATASET    = data.items || []
+
+    CATEGORIES = (data.categories || []).map(c => {
+        if(typeof c === "string"){
+            return { name: c, location: "Entire Restaurant", timeStart: "", timeEnd: "", chatActive: false }
+        }
+        return {
+            name:       c.name       || "Unnamed",
+            location:   c.location   || "Entire Restaurant",
+            timeStart:  c.timeStart  || "",
+            timeEnd:    c.timeEnd    || "",
+            chatActive: c.chatActive ?? false
+        }
+    })
+
+    buildCategoryTable()
+    buildCategoryDropdowns()
+
+    if(CATEGORIES.length > 0){
+        CURRENT_CATEGORY = CATEGORIES[0].name.toLowerCase()
+        loadCategoryItems(CURRENT_CATEGORY)
+    }
+}
+
+/* ================================
+   SAVE CATEGORIES TO SERVER
+   Called automatically after any category change
+================================ */
+
+async function saveCategories(){
+    await fetch("/r-save-categories", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ categories: CATEGORIES })
+    })
+}
+
+/* ================================
+   BUILD CATEGORY TABLE
+================================ */
+
+function buildCategoryTable(){
+    const container = document.getElementById("fileList")
+    container.innerHTML = ""
+
+    CATEGORIES.forEach(cat => {
+        const items       = getCategoryItems(cat.name)
+        const totalItems  = items.length
+        const flagCount   = items.filter(i => getItemIssues(i) > 0).length
+        const activeCount = items.filter(i => i.active !== false).length
+        const timeLabel   = (cat.timeStart && cat.timeEnd) ? `${cat.timeStart} – ${cat.timeEnd}` : "All day"
+        const presetLocs  = ["Entire Restaurant","Bar","Patio","Dining Room"]
+        const isCustomLoc = cat.location && !presetLocs.includes(cat.location)
+
+        const wrap = document.createElement("div")
+        wrap.className   = "cat-row-wrap"
+        wrap.dataset.cat = cat.name.toLowerCase()
+
+        const dataRow = document.createElement("div")
+        dataRow.className = "cat-data-row"
+        dataRow.innerHTML = `
+            <div><button class="cat-expand-btn" data-cat="${cat.name}">▶</button></div>
+            <div>${cat.name}</div>
+            <div>${cat.location}</div>
+            <div>${timeLabel}</div>
+            <div>${totalItems}</div>
+            <div class="${flagCount > 0 ? "flag-warn" : ""}">${flagCount || "—"}</div>
+            <div>${activeCount}</div>
+            <div class="chat-toggle-cell" onclick="event.stopPropagation()">
+                <label class="toggle-switch">
+                    <input type="checkbox" class="chat-toggle" data-cat="${cat.name}" ${cat.chatActive ? "checked" : ""}>
+                    <span class="slider"></span>
+                </label>
+                <span class="chat-toggle-label ${cat.chatActive ? "active" : "off"}">
+                    ${cat.chatActive ? "Active" : "Off"}
+                </span>
+            </div>
+        `
+
+        const expandPanel = document.createElement("div")
+        expandPanel.className   = "cat-expand-panel"
+        expandPanel.dataset.cat = cat.name.toLowerCase()
+        expandPanel.innerHTML   = `
+            <span class="expand-label">Location restriction</span>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+                <select class="cat-location-select" data-cat="${cat.name}">
+                    <option value="Entire Restaurant" ${cat.location==="Entire Restaurant"?"selected":""}>Entire Restaurant</option>
+                    <option value="Bar"               ${cat.location==="Bar"              ?"selected":""}>Bar</option>
+                    <option value="Patio"             ${cat.location==="Patio"            ?"selected":""}>Patio</option>
+                    <option value="Dining Room"       ${cat.location==="Dining Room"      ?"selected":""}>Dining Room</option>
+                    <option value="custom"            ${isCustomLoc                       ?"selected":""}>+ Custom…</option>
+                </select>
+                <input type="text"
+                    class="cat-custom-location ${isCustomLoc ? "" : "hidden"}"
+                    placeholder="Type location name…"
+                    value="${isCustomLoc ? cat.location : ""}"
+                    data-cat="${cat.name}">
+            </div>
+            <span class="expand-label">Time window <span>(all items in this category)</span></span>
+            <div class="time-input-row">
+                <input type="text" class="cat-time-start" placeholder="e.g. 7:00 AM"  value="${cat.timeStart}" data-cat="${cat.name}">
+                <span class="time-dash">–</span>
+                <input type="text" class="cat-time-end"   placeholder="e.g. 11:00 AM" value="${cat.timeEnd}"   data-cat="${cat.name}">
+            </div>
+            <div class="time-hint">Leave time blank to make this category available all day.</div>
+            <button class="delete-cat-btn" onclick="openCatDeleteModal('${cat.name}')">Delete this category</button>
+        `
+
+        wrap.appendChild(dataRow)
+        wrap.appendChild(expandPanel)
+        container.appendChild(wrap)
+
+        dataRow.addEventListener("click", () => {
+            document.querySelectorAll(".cat-row-wrap").forEach(w => w.classList.remove("selected"))
+            wrap.classList.add("selected")
+            CURRENT_CATEGORY = cat.name.toLowerCase()
+            loadCategoryItems(CURRENT_CATEGORY)
+        })
+    })
+}
+
+/* ================================
+   DELETE CATEGORY
+================================ */
+
+function openCatDeleteModal(catName){
+    CAT_TO_DELETE = catName
+    document.getElementById("deleteCatName").textContent = catName
+    document.getElementById("deleteCatModal").classList.remove("hidden")
+}
+
+function closeCatDeleteModal(){
+    document.getElementById("deleteCatModal").classList.add("hidden")
+    CAT_TO_DELETE = null
+}
+
+async function confirmDeleteCategory(){
+    if(!CAT_TO_DELETE) return
+    const res  = await fetch("/r-delete-category", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ name: CAT_TO_DELETE })
+    })
+    const data = await res.json()
+    if(!data.success){ alert("Delete failed"); return }
+    CATEGORIES = CATEGORIES.filter(c => c.name !== CAT_TO_DELETE)
+    closeCatDeleteModal()
+    buildCategoryTable()
+    buildCategoryDropdowns()
+    if(CATEGORIES.length > 0){
+        CURRENT_CATEGORY = CATEGORIES[0].name.toLowerCase()
+        loadCategoryItems(CURRENT_CATEGORY)
+    } else {
+        document.getElementById("itemList").innerHTML = ""
+        document.getElementById("itemCount").textContent = "0 Items Loaded"
+    }
+}
+
+/* ================================
+   EVENT DELEGATION
+================================ */
+
+document.addEventListener("click", function(e){
+
+    if(e.target.classList.contains("cat-expand-btn")){
+        e.stopPropagation()
+        const wrap   = e.target.closest(".cat-row-wrap")
+        const panel  = wrap.querySelector(".cat-expand-panel")
+        const isOpen = panel.classList.contains("open")
+        document.querySelectorAll(".cat-expand-panel.open").forEach(p => {
+            p.classList.remove("open")
+            p.closest(".cat-row-wrap").querySelector(".cat-expand-btn").classList.remove("open")
+            p.closest(".cat-row-wrap").querySelector(".cat-expand-btn").textContent = "▶"
+        })
+        if(!isOpen){
+            panel.classList.add("open")
+            e.target.classList.add("open")
+            e.target.textContent = "▼"
+        }
+    }
+
+    if(e.target.classList.contains("delete-category")){
+        const container = document.getElementById("categoryContainer")
+        const blocks    = container.querySelectorAll(".category-block")
+        if(blocks.length <= 1){ alert("At least one category is required."); return }
+        e.target.closest(".category-block").remove()
+    }
+
+})
+
+document.addEventListener("change", function(e){
+
+    // Location dropdown — save after change
+    if(e.target.classList.contains("cat-location-select")){
+        const cat         = getCategoryByName(e.target.dataset.cat)
+        const wrap        = e.target.closest(".cat-row-wrap")
+        const customInput = wrap.querySelector(".cat-custom-location")
+        if(e.target.value === "custom"){
+            customInput.classList.remove("hidden"); customInput.focus()
+        } else {
+            customInput.classList.add("hidden"); customInput.value = ""
+            if(cat) cat.location = e.target.value
+            updateCategoryRowDisplay(e.target.dataset.cat)
+            saveCategories()
+        }
+    }
+
+    // Chat toggle — save immediately after change
+    if(e.target.classList.contains("chat-toggle")){
+        const cat   = getCategoryByName(e.target.dataset.cat)
+        const label = e.target.closest(".chat-toggle-cell").querySelector(".chat-toggle-label")
+        if(cat) cat.chatActive = e.target.checked
+        label.textContent = e.target.checked ? "Active" : "Off"
+        label.className   = "chat-toggle-label " + (e.target.checked ? "active" : "off")
+        saveCategories()   // ← persist to JSON immediately
+    }
+
+    if(e.target.classList.contains("category-select")){
+        const block = e.target.closest(".category-block")
+        if(!block) return
+        const input = block.querySelector(".custom-category-input")
+        if(e.target.value === "custom"){
+            input.classList.remove("hidden"); input.focus()
+        } else {
+            input.classList.add("hidden"); input.value = ""
+        }
+    }
+
+})
+
+// Debounced save for time/location text inputs
+let saveTimer = null
+function debouncedSave(){
+    clearTimeout(saveTimer)
+    saveTimer = setTimeout(saveCategories, 800)
+}
+
+document.addEventListener("input", function(e){
+    if(e.target.classList.contains("cat-custom-location")){
+        const cat = getCategoryByName(e.target.dataset.cat)
+        if(cat) cat.location = e.target.value
+        updateCategoryRowDisplay(e.target.dataset.cat)
+        debouncedSave()
+    }
+    if(e.target.classList.contains("cat-time-start")){
+        const cat = getCategoryByName(e.target.dataset.cat)
+        if(cat) cat.timeStart = e.target.value
+        updateCategoryRowDisplay(e.target.dataset.cat)
+        debouncedSave()
+    }
+    if(e.target.classList.contains("cat-time-end")){
+        const cat = getCategoryByName(e.target.dataset.cat)
+        if(cat) cat.timeEnd = e.target.value
+        updateCategoryRowDisplay(e.target.dataset.cat)
+        debouncedSave()
+    }
+})
+
+function updateCategoryRowDisplay(catName){
+    const cat  = getCategoryByName(catName)
+    if(!cat) return
+    const wrap = document.querySelector(`.cat-row-wrap[data-cat="${catName.toLowerCase()}"]`)
+    if(!wrap) return
+    const cells = wrap.querySelectorAll(".cat-data-row > div")
+    cells[2].textContent = cat.location || "Entire Restaurant"
+    cells[3].textContent = (cat.timeStart && cat.timeEnd) ? `${cat.timeStart} – ${cat.timeEnd}` : "All day"
+}
+
+/* ================================
+   HELPERS
+================================ */
+
+function getCategoryByName(name){
+    return CATEGORIES.find(c => c.name.toLowerCase() === (name||"").toLowerCase()) || null
+}
+
+function getCategoryItems(catName){
+    return DATASET.filter(i =>
+        (i.categories||[]).map(c=>c.toLowerCase()).includes(catName.toLowerCase())
+    )
+}
+
+function getItemIssues(item){
+    let issues = 0
+    if(!item.name        || item.name.trim()        === "") issues++
+    if(!item.description || item.description.trim() === "") issues++
+    if(!item.price       || item.price.trim()        === "") issues++
+    const hasAllergens = (item.allergens && item.allergens.trim() !== "") ||
+                         (Array.isArray(item.allergies) && item.allergies.length > 0)
+    if(!hasAllergens) issues++
+    if(!item.categories  || item.categories.length  === 0)  issues++
+    return issues
+}
+
+function loadCategoryItems(category){
+    CURRENT_CATEGORY = category
+    const list    = document.getElementById("itemList")
+    const counter = document.getElementById("itemCount")
+    list.innerHTML = ""
+    const filtered = getCategoryItems(category)
+    counter.innerText = filtered.length + " Items Loaded"
+    filtered.forEach(item => {
+        const el = document.createElement("div")
+        el.className = "item-row"
+        el.innerHTML = `<span>${item.name}</span><span>${getItemIssues(item)}</span>`
+        el.onclick = () => loadItem(item)
+        list.appendChild(el)
+    })
+}
+
+/* ================================
+   ITEM EDITOR
+================================ */
+
+function addNewItem(){
+    const newItem = {
+        id:"NEW_"+Date.now(), name:"", price:"", description:"",
+        allergens:"", allergies:[], categories:[],
+        notes:"", special_notes:"", item_status:"active", active:true,
+        user_set: true
+    }
+    CURRENT_ITEM = newItem
+    document.getElementById("itemID").value       = newItem.id
+    document.getElementById("itemName").value     = ""
+    document.getElementById("price").value        = ""
+    document.getElementById("allergens").value    = ""
+    document.getElementById("description").value  = ""
+    document.getElementById("specialNotes").value = ""
+    itemActive = true
+    updateStatusUI()
+}
+
+function loadItem(item){
+    CURRENT_ITEM = item
+    document.getElementById("itemID").value       = item.id          || ""
+    document.getElementById("itemName").value     = item.name        || ""
+    document.getElementById("price").value        = item.price       || ""
+    document.getElementById("allergens").value    = item.allergens   || ""
+    document.getElementById("description").value  = item.description || ""
+    document.getElementById("specialNotes").value = item.notes       || ""
+
+    const container     = document.getElementById("categoryContainer")
+    const originalBlock = container.querySelector(".category-block")
+    if(!container || !originalBlock) return
+
+    const categoryList = Array.isArray(item.categories) && item.categories.length
+        ? item.categories : ["uncategorized"]
+
+    container.innerHTML = ""
+    categoryList.forEach(cat => {
+        const block       = originalBlock.cloneNode(true)
+        const select      = block.querySelector(".category-select")
+        const customInput = block.querySelector(".custom-category-input")
+        container.appendChild(block)
+        buildCategoryDropdowns()
+        if(select){
+            const normalized   = String(cat).toLowerCase()
+            const optionExists = Array.from(select.options).some(o => o.value === normalized)
+            if(optionExists){ select.value = normalized }
+            else {
+                select.value = "custom"
+                if(customInput){ customInput.classList.remove("hidden"); customInput.value = cat }
+            }
+        }
+    })
+
+    itemActive = item.active !== false
+    updateStatusUI()
+}
+
+function updateStatusUI(){
+    if(itemActive){
+        statusButton.textContent = "ACTIVE"
+        statusButton.classList.remove("inactive"); statusButton.classList.add("active")
+        statusWarning.classList.add("hidden")
+    } else {
+        statusButton.textContent = "DEACTIVATED"
+        statusButton.classList.remove("active"); statusButton.classList.add("inactive")
+        statusWarning.classList.remove("hidden")
+    }
+}
+
+function buildCategoryDropdowns(){
+    document.querySelectorAll(".category-select").forEach(select => {
+        const cur = select.value
+        select.innerHTML = ""
+        CATEGORIES.forEach(cat => {
+            const name = typeof cat === "string" ? cat : cat.name
+            if(!name) return
+            const opt = document.createElement("option")
+            opt.value = name.toLowerCase(); opt.textContent = name
+            select.appendChild(opt)
+        })
+        const custom = document.createElement("option")
+        custom.value = "custom"; custom.textContent = "+ Custom Category"
+        select.appendChild(custom)
+        if(cur) select.value = cur
+    })
+}
+
+function addCategory(){
+    const container = document.getElementById("categoryContainer")
+    if(!container) return
+    const first = container.querySelector(".category-block")
+    if(!first) return
+    const clone    = first.cloneNode(true)
+    const settings = clone.querySelector(".category-settings")
+    if(settings) settings.classList.add("hidden")
+    container.appendChild(clone)
+    buildCategoryDropdowns()
+}
+
+/* ================================
+   DELETE ITEM
+================================ */
+
+function openDeleteModal(){
+    if(!CURRENT_ITEM) return
+    document.getElementById("deleteItemName").textContent = CURRENT_ITEM.name || "this item"
+    document.getElementById("deleteModal").classList.remove("hidden")
+}
+
+function closeDeleteModal(){
+    document.getElementById("deleteModal").classList.add("hidden")
+}
+
+async function confirmDeleteItem(){
+    if(!CURRENT_ITEM) return
+    const res  = await fetch("/r-delete-item", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ id: CURRENT_ITEM.id })
+    })
+    const data = await res.json()
+    if(!data.success){ alert("Delete failed"); return }
+    DATASET = DATASET.filter(i => i.id !== CURRENT_ITEM.id)
+    closeDeleteModal()
+    buildCategoryTable()
+    if(CURRENT_CATEGORY) loadCategoryItems(CURRENT_CATEGORY)
+    document.getElementById("itemID").value       = ""
+    document.getElementById("itemName").value     = ""
+    document.getElementById("price").value        = ""
+    document.getElementById("allergens").value    = ""
+    document.getElementById("description").value  = ""
+    document.getElementById("specialNotes").value = ""
+    CURRENT_ITEM = null
+    alert("Item Deleted")
+}
+
+statusButton.addEventListener("click", function(){
+    itemActive = !itemActive
+    updateStatusUI()
+})
+
+/* ================================
+   SAVE ITEM
+================================ */
+
+async function saveItem(){
+    if(!CURRENT_ITEM){ alert("No item selected"); return }
+    const item        = { ...CURRENT_ITEM }
+    item.name         = document.getElementById("itemName").value.trim()
+    item.price        = document.getElementById("price").value.trim()
+    item.description  = document.getElementById("description").value.trim()
+    item.special_notes = document.getElementById("specialNotes").value.trim()
+    item.notes        = item.special_notes
+    item.active       = itemActive
+    item.item_status  = itemActive ? "active" : "inactive"
+    item.customer_visible = itemActive
+    item.user_set     = true
+    const allergyValue = document.getElementById("allergens").value.trim()
+    item.allergies = allergyValue ? allergyValue.split(",").map(x=>x.trim()).filter(Boolean) : []
+    item.allergens = allergyValue
+    item.categories = []
+    document.querySelectorAll(".category-block").forEach(block => {
+        const select      = block.querySelector(".category-select")
+        const customInput = block.querySelector(".custom-category-input")
+        let catName       = select ? select.value : ""
+        if(catName === "custom") catName = customInput ? customInput.value.trim() : ""
+        if(catName) item.categories.push(catName)
+    })
+    if(item.categories.length === 0) item.categories = ["Uncategorized"]
+    delete item.location_restriction
+    delete item.available_from
+    delete item.available_until
+    const res  = await fetch("/r-save-item", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(item)
+    })
+    const data = await res.json()
+    if(data.success){
+        const idx = DATASET.findIndex(i => i.id === item.id)
+        if(idx !== -1) DATASET[idx] = item
+        else DATASET.push(item)
+        buildCategoryTable()
+        if(CURRENT_CATEGORY) loadCategoryItems(CURRENT_CATEGORY)
+        CURRENT_ITEM = item
+        alert("Item Saved")
+    } else {
+        alert("Error saving item")
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadMenuDataset)
+
+</script>
+
+{% endblock %}
